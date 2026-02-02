@@ -11,7 +11,7 @@ export const createProject = async (req, res, next) => {
     const project = await Project.create({
       name,
       description,
-      owner_id: req.user.id, // Provided by Keycloak middleware
+      owner_id: req.user.id, 
     });
 
     res.status(201).json(project);

@@ -1,3 +1,7 @@
+/**
+ * Defines API endpoints for creating and retrieving projects.
+ */
+
 import express from 'express';
 import {
   createProject,

@@ -1,3 +1,8 @@
+/**
+ * Represents a Project workspace that groups related tickets and tasks.
+ * Each project belongs to a single user.
+ */
+
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 

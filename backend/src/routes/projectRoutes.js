@@ -37,7 +37,7 @@ const router = express.Router();
  *       400:
  *         description: Validation error
  */
-router.post('/', verifyToken, createProject);
+router.post('/', createProject);
 
 /**
  * @openapi
@@ -60,7 +60,7 @@ router.post('/', verifyToken, createProject);
  *       200:
  *         description: Project list
  */
-router.get('/', verifyToken, getProjects);
+router.get('/', getProjects);
 
 /**
  * @openapi
@@ -82,6 +82,6 @@ router.get('/', verifyToken, getProjects);
  *       404:
  *         description: Not found
  */
-router.get('/:id', verifyToken, getProjectById);
+router.get('/:id', getProjectById);
 
 export default router;

@@ -16,7 +16,7 @@ export const createProject = async (req, res, next) => {
     const project = await Project.create({
       name,
       description,
-      owner_id: req.user.sub, 
+      owner_id: req.user.sub,
     });
 
     res.status(201).json(project);

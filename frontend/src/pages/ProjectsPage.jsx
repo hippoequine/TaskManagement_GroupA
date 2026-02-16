@@ -117,7 +117,8 @@ function CreateProjectDialog({ open, onClose, onCreate }) {
       onClose();
     } catch (err) {
       setError(
-        err?.response?.data?.error || 'Failed to create project. Please try again.'
+        err?.response?.data?.error ||
+          'Failed to create project. Please try again.'
       );
     } finally {
       setSubmitting(false);
@@ -138,7 +139,12 @@ function CreateProjectDialog({ open, onClose, onCreate }) {
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 500 }}>Create Project</DialogTitle>
       <DialogContent
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          pt: '16px !important',
+        }}
       >
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
@@ -192,7 +198,11 @@ function CreateProjectDialog({ open, onClose, onCreate }) {
           disabled={submitting}
           sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
         >
-          {submitting ? <CircularProgress size={20} color="inherit" /> : 'Create'}
+          {submitting ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            'Create'
+          )}
         </Button>
       </DialogActions>
     </Dialog>
@@ -287,7 +297,11 @@ export default function ProjectsPage() {
         {/* Projects Table Card */}
         <Paper
           elevation={0}
-          sx={{ border: '1px solid #e0e0e0', borderRadius: 1, overflow: 'hidden' }}
+          sx={{
+            border: '1px solid #e0e0e0',
+            borderRadius: 1,
+            overflow: 'hidden',
+          }}
         >
           {/* Search and Filter Row */}
           <Box
@@ -356,20 +370,22 @@ export default function ProjectsPage() {
                 <TableHead>
                   <TableRow sx={{ bgcolor: '#fafafa' }}>
                     <TableCell sx={{ width: 50 }} />
-                    {['Name', 'Key', 'Category', 'Owner', 'Created'].map((col) => (
-                      <TableCell
-                        key={col}
-                        sx={{
-                          fontWeight: 500,
-                          color: '#666',
-                          textTransform: 'uppercase',
-                          fontSize: '0.75rem',
-                          letterSpacing: 0.5,
-                        }}
-                      >
-                        {col}
-                      </TableCell>
-                    ))}
+                    {['Name', 'Key', 'Category', 'Owner', 'Created'].map(
+                      (col) => (
+                        <TableCell
+                          key={col}
+                          sx={{
+                            fontWeight: 500,
+                            color: '#666',
+                            textTransform: 'uppercase',
+                            fontSize: '0.75rem',
+                            letterSpacing: 0.5,
+                          }}
+                        >
+                          {col}
+                        </TableCell>
+                      )
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -447,7 +463,13 @@ export default function ProjectsPage() {
 
                         {/* Owner */}
                         <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
                             <Avatar
                               sx={{
                                 width: 24,

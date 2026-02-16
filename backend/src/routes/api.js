@@ -95,6 +95,6 @@ router.get('/clinician-only', verifyToken, requireRole('clinician'), handler);
  */
 router.get('/developer-only', verifyToken, requireRole('developer'), handler);
 
-router.use('/projects', verifyToken, projectRoutes);
+router.use('/projects', projectRoutes);
 
 export default router;

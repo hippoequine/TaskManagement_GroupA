@@ -51,7 +51,7 @@ export const getProjects = async (req, res, next) => {
     const where = { owner_id: req.user.sub };
     if (req.query.category) {
       where.category = req.query.category;
-    }  
+    }
 
     const { count, rows } = await Project.findAndCountAll({
       where,

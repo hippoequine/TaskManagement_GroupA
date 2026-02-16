@@ -1,6 +1,8 @@
 import express from 'express';
 import { verifyToken } from '../middleware/auth.js';
 import { requireRole } from '../middleware/authorize.js';
+import { syncUser } from '../middleware/syncUser.js';
+import userRoutes from './users.js';
 import projectRoutes from './projectRoutes.js';
 
 const router = express.Router();
@@ -19,23 +21,51 @@ router.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+router.use(verifyToken, syncUser);
+
+router.use('/users', userRoutes);
+
 /**
  * @openapi
  * /api/me:
  *   get:
- *     summary: Current user
+ *     summary: Get current authenticated user
  *     tags: [Accounts]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: OK
+ *         description: Token user + optional dbUser shadow record
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     sub: { type: string }
+ *                     email: { type: string, nullable: true }
+ *                     name: { type: string, nullable: true }
+ *                     preferred_username: { type: string, nullable: true }
+ *                     roles:
+ *                       type: array
+ *                       items: { type: string }
+ *                     iat: { type: integer, nullable: true }
+ *                     dbUser:
+ *                       allOf:
+ *                         - $ref: '#/components/schemas/User'
+ *                       nullable: true
  *       401:
- *         description: Missing or invalid token
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/me', verifyToken, (req, res) => {
-  res.json({ user: req.user });
-});
+router.get('/me', (req, res) =>
+  res.json({ user: { ...req.user, dbUser: req.dbUser ?? null } })
+);
 
 const handler = (req, res) => {
   res.json({ ok: true, role: req.user.roles });
@@ -57,7 +87,7 @@ const handler = (req, res) => {
  *       403:
  *         description: Forbidden
  */
-router.get('/admin-only', verifyToken, requireRole('admin'), handler);
+router.get('/admin-only', requireRole('admin'), handler);
 
 /**
  * @openapi
@@ -75,7 +105,7 @@ router.get('/admin-only', verifyToken, requireRole('admin'), handler);
  *       403:
  *         description: Forbidden
  */
-router.get('/clinician-only', verifyToken, requireRole('clinician'), handler);
+router.get('/clinician-only', requireRole('clinician'), handler);
 
 /**
  * @openapi
@@ -93,7 +123,7 @@ router.get('/clinician-only', verifyToken, requireRole('clinician'), handler);
  *       403:
  *         description: Forbidden
  */
-router.get('/developer-only', verifyToken, requireRole('developer'), handler);
+router.get('/developer-only', requireRole('developer'), handler);
 
 router.use('/projects', projectRoutes);
 

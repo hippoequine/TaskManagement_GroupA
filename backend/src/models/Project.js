@@ -15,6 +15,12 @@ const Project = sequelize.define(
       primaryKey: true,
     },
 
+    key: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      unique: true,
+    },
+
     name: {
       type: DataTypes.STRING,
       allowNull: false,

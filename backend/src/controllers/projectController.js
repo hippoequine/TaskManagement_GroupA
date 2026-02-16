@@ -7,14 +7,29 @@ import Project from '../models/Project.js';
 // POST /api/projects
 export const createProject = async (req, res, next) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, key } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: 'Project name is required' });
+    if (!name || !key) {
+      return res.status(400).json({
+        error: 'Project name and key are required',
+      });
+    }
+
+    const normalizedKey = key.toUpperCase();
+
+    const existing = await Project.findOne({
+      where: { key: normalizedKey },
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        error: 'Project key already exists',
+      });
     }
 
     const project = await Project.create({
       name,
+      key: normalizedKey,
       description,
       owner_id: req.user.sub,
     });

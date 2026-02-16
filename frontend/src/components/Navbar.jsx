@@ -16,15 +16,22 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import useAuth from '../auth/useAuth';
 import keycloak from '../keycloak';
+import { useProject } from '../context/ProjectContext';
 
 export default function Navbar() {
   const { user } = useAuth();
+  const { projects, currentProject, switchProject } = useProject();
 
   const [yourWorkAnchor, setYourWorkAnchor] = useState(null);
   const [projectsAnchor, setProjectsAnchor] = useState(null);
   const [filtersAnchor, setFiltersAnchor] = useState(null);
   const [dashboardsAnchor, setDashboardsAnchor] = useState(null);
   const [userAnchor, setUserAnchor] = useState(null);
+
+  const handleProjectSelect = (project) => {
+    switchProject(project);
+    setProjectsAnchor(null);
+  };
 
   return (
     <AppBar
@@ -124,7 +131,6 @@ export default function Navbar() {
               </Menu>
 
               <Button
-                disabled
                 endIcon={<KeyboardArrowDown />}
                 onClick={(e) => setProjectsAnchor(e.currentTarget)}
                 sx={{
@@ -132,20 +138,38 @@ export default function Navbar() {
                   textTransform: 'none',
                 }}
               >
-                Projects
+                {currentProject ? currentProject.name : 'Projects'}
               </Button>
+
               <Menu
                 anchorEl={projectsAnchor}
                 open={Boolean(projectsAnchor)}
                 onClose={() => setProjectsAnchor(null)}
               >
+                <Typography
+                  variant="overline"
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    display: 'block',
+                    color: 'text.secondary',
+                  }}
+                >
+                  Recent
+                </Typography>
+                {projects.map((project) => (
+                  <MenuItem
+                    key={project.id}
+                    onClick={() => handleProjectSelect(project)}
+                    selected={currentProject?.id === project.id} // Highlight active project
+                  >
+                    {project.name}
+                  </MenuItem>
+                ))}
+                <Divider />
                 <MenuItem onClick={() => setProjectsAnchor(null)}>
                   View all projects
                 </MenuItem>
-                <MenuItem onClick={() => setProjectsAnchor(null)}>
-                  Recent projects
-                </MenuItem>
-                <Divider />
                 <MenuItem onClick={() => setProjectsAnchor(null)}>
                   <Add sx={{ mr: 1, fontSize: 20 }} />
                   Create project

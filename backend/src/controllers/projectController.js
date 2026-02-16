@@ -7,30 +7,31 @@ import Project from '../models/Project.js';
 // POST /api/projects
 export const createProject = async (req, res, next) => {
   try {
-    const { name, description, key } = req.body;
+    const { name, key, description, category } = req.body;
 
-    if (!name || !key) {
-      return res.status(400).json({
-        error: 'Project name and key are required',
-      });
+    if (!name) {
+      return res.status(400).json({ error: 'Project name is required.' });
+    }
+    if (!key) {
+      return res.status(400).json({ error: 'Project key is required.' });
     }
 
-    const normalizedKey = key.toUpperCase();
+    //Validation checks can go here
 
     const existing = await Project.findOne({
-      where: { key: normalizedKey },
+      where: { key: key.toUpperCase() },
     });
-
     if (existing) {
-      return res.status(400).json({
-        error: 'Project key already exists',
+      return res.status(409).json({
+        error: `Project key '${key.toUpperCase()}' is already in use.`,
       });
     }
 
     const project = await Project.create({
       name,
-      key: normalizedKey,
+      key,
       description,
+      category: category || null,
       owner_id: req.user.sub,
     });
 
@@ -47,8 +48,13 @@ export const getProjects = async (req, res, next) => {
     const limit = Math.max(1, parseInt(req.query.limit) || 10);
     const offset = (page - 1) * limit;
 
+    const where = { owner_id: req.user.sub };
+    if (req.query.category) {
+      where.category = req.query.category;
+    }  
+
     const { count, rows } = await Project.findAndCountAll({
-      where: { owner_id: req.user.sub },
+      where,
       limit,
       offset,
       order: [['created_at', 'DESC']],
@@ -57,6 +63,7 @@ export const getProjects = async (req, res, next) => {
     res.json({
       total: count,
       page,
+      totalPages: Math.ceil(count / limit),
       projects: rows,
     });
   } catch (err) {

@@ -31,6 +31,11 @@ const Project = sequelize.define(
       allowNull: true,
     },
 
+    category: {
+      type: DataTypes.ENUM('New Development', 'Maintenance'), //this can change
+      allowNull: true,
+    },
+
     owner_id: {
       type: DataTypes.STRING,
       allowNull: false,

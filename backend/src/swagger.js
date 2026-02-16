@@ -22,6 +22,29 @@ const options = {
           bearerFormat: 'JWT',
         },
       },
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            email: { type: 'string', format: 'email' },
+            role: {
+              type: 'string',
+              enum: ['admin', 'developer', 'clinician'],
+            },
+            timezone: { type: 'string' },
+            lastSyncedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+        ErrorResponse: {
+          type: 'object',
+          properties: {
+            error: { type: 'string' },
+          },
+        },
+      },
     },
   },
   apis: ['src/routes/*.js'],

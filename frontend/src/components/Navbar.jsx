@@ -168,7 +168,12 @@ export default function Navbar() {
                   </MenuItem>
                 ))}
                 <Divider />
-                <MenuItem onClick={() => { setProjectsAnchor(null); navigate('/projects'); }}>
+                <MenuItem
+                  onClick={() => {
+                    setProjectsAnchor(null);
+                    navigate('/projects');
+                  }}
+                >
                   View all projects
                 </MenuItem>
                 <MenuItem onClick={() => setProjectsAnchor(null)}>

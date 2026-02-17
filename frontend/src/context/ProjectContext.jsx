@@ -30,7 +30,7 @@ export function ProjectProvider({ children }) {
     setLoading(true);
     try {
       const { data } = await projectsApi.getAll();
-      setProjects(data);
+      setProjects(data.projects ?? []);
     } catch (err) {
       setError(err.message);
     } finally {

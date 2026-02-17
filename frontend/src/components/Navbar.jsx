@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useAuth from '../auth/useAuth';
 import keycloak from '../keycloak';
 import { useProject } from '../context/ProjectContext';
@@ -21,6 +21,7 @@ import { useProject } from '../context/ProjectContext';
 export default function Navbar() {
   const { user } = useAuth();
   const { projects, currentProject, switchProject } = useProject();
+  const navigate = useNavigate();
 
   const [yourWorkAnchor, setYourWorkAnchor] = useState(null);
   const [projectsAnchor, setProjectsAnchor] = useState(null);
@@ -167,7 +168,7 @@ export default function Navbar() {
                   </MenuItem>
                 ))}
                 <Divider />
-                <MenuItem onClick={() => setProjectsAnchor(null)}>
+                <MenuItem onClick={() => { setProjectsAnchor(null); navigate('/projects'); }}>
                   View all projects
                 </MenuItem>
                 <MenuItem onClick={() => setProjectsAnchor(null)}>

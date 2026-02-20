@@ -5,7 +5,9 @@ import sequelize from './config/db.js';
 import './models/models.js';
 import apiRoutes from './routes/api.js';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './swagger.js';
+import fs from 'fs';
+import yaml from 'yaml';
+import path from 'path';
 
 const app = express();
 const port = 5050;
@@ -18,7 +20,23 @@ app.use(
 );
 
 app.use(express.json());
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+const specPath = path.resolve('./openapi.yaml');
+
+app.get('/docs/swagger.json', (_req, res) => {
+  const file = fs.readFileSync(specPath, 'utf8');
+  const swaggerDocument = yaml.parse(file);
+  res.json(swaggerDocument);
+});
+
+const swaggerOptions = {
+  swaggerOptions: {
+    url: '/docs/swagger.json',
+  },
+};
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(null, swaggerOptions));
+
 app.use('/api', apiRoutes);
 
 app.use((err, _req, res, _next) => {

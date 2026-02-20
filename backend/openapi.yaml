@@ -506,14 +506,13 @@ paths:
       requestBody:
         required: true
         content:
-          # Notice this is multipart/form-data, not application/json!
           multipart/form-data:
             schema:
               type: object
               properties:
                 file:
                   type: string
-                  format: binary # This tells Swagger it's an actual file upload
+                  format: binary
                   description: The file to upload
       responses:
         '201':

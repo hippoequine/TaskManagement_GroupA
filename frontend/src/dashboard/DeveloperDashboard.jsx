@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -14,6 +15,7 @@ import {
 import StatCard from '../components/StatCard';
 import GetTodaysDate from '../components/GetTodaysDate';
 import NotificationPanel from '../components/NotificationPanel';
+import DeleteIssueButton from '../components/DeleteIssueButton';
 
 /**
  * Displays a sample Workload Table information
@@ -28,7 +30,7 @@ function createSampleData(assignee, work, datecreated, priority, status) {
   return { assignee, work, datecreated, priority, status };
 }
 
-const rows = [
+const initialRows = [
   createSampleData(
     'Name #1',
     'Description goes here',
@@ -71,6 +73,14 @@ function DeveloperDashboard() {
     { id: 1, message: 'Ticket #1 Cat ipsum dolor sit amet', read: false },
     { id: 2, message: 'Ticket #2 Cat ipsum dolor sit amet', read: false },
   ];
+
+  const [workRows, setWorkRows] = useState(initialRows);
+
+  const handleIssueDeleted = (deletedId) => {
+    // here we use `assignee` as the unique key for the sample rows; in a real
+    // integration use the real issue id field instead.
+    setWorkRows((prev) => prev.filter((r) => r.assignee !== deletedId));
+  };
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -169,10 +179,13 @@ function DeveloperDashboard() {
                   <TableCell align="left" sx={{ fontWeight: 'bold' }}>
                     Status
                   </TableCell>
+                  <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {workRows.map((row) => (
                   <TableRow
                     key={row.assignee}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -184,6 +197,13 @@ function DeveloperDashboard() {
                     <TableCell align="left">{row.datecreated}</TableCell>
                     <TableCell align="left">{row.priority}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>
+                    <TableCell align="left">
+                      <DeleteIssueButton
+                        issueId={row.assignee}
+                        onDeleted={handleIssueDeleted}
+                        className="delete-issue-button"
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

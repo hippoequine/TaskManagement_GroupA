@@ -1,6 +1,6 @@
 import express from 'express';
 import { Op } from 'sequelize';
-import { User } from '../models/models.js';
+import { User } from '../models/model.js';
 
 const router = express.Router();
 

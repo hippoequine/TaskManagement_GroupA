@@ -8,8 +8,10 @@ import PriorityLabel from './PriorityLabel';
 import StoryPointButtonGroup from './StoryPointButtonGroup';
 import TitleField from './TitleField';
 import { Button, Box, Snackbar, Alert } from '@mui/material';
+import PropTypes from 'prop-types';
 
-function CreateTicketForm() {
+
+function CreateTicketForm({onIssueCreation}) {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [ticketData, setTicketData] = useState({
@@ -32,14 +34,17 @@ function CreateTicketForm() {
 
   const handleCreateTicketSubmit = async (e) => {
     e.preventDefault();
+
+    onIssueCreation(false);
+
     const payload = {
       project: ticketData.project?.id ?? null,
       issueType: ticketData.issueType,
       description: ticketData.description,
       dueDate: ticketData.dueDate?.toISOString() ?? null,
-      reporterID: ticketData.reporter?.id ?? null,
+      reporterId: ticketData.reporter?.id ?? null,
       priority: ticketData.priority,
-      title: ticketData.labels.split(',').map((l) => l.trim()),
+      title: ticketData.title,
       storyPoints: ticketData.storyPoints,
     };
     //console.log(payload);
@@ -82,7 +87,7 @@ function CreateTicketForm() {
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
       >
         <TitleField
-          title={ticketData.labels}
+          title={ticketData.title}
           onUpdateTitle={handleChange('title')}
         />
         <ProjectAutocomplete
@@ -131,5 +136,9 @@ function CreateTicketForm() {
     </div>
   );
 }
+
+CreateTicketForm.propTypes = {
+  onIssueCreation: PropTypes.func.isRequired,
+};
 
 export default CreateTicketForm;

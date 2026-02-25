@@ -349,7 +349,9 @@ export default function Navbar() {
             )}
           </Menu>
         </Box>
-        {createIssue && <CreateTicketForm />}
+        {createIssue && <CreateTicketForm 
+          onIssueCreation={setCreateIssue}
+        />}
       </Toolbar>
     </AppBar>
   );

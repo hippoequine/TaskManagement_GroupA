@@ -7,6 +7,10 @@ import Project from '../models/Project.js';
 // POST /api/projects
 export const createProject = async (req, res, next) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Authentication required.' });
+    }
+
     const { name, key, description, category } = req.body;
 
     if (!name) {
@@ -16,20 +20,30 @@ export const createProject = async (req, res, next) => {
       return res.status(400).json({ error: 'Project key is required.' });
     }
 
+    const normalizedKey = key.trim().toUpperCase();
+
+    //Key format validation
+    if (!/^[A-Z0-9]{1,10}$/.test(normalizedKey)) {
+      return res.status(400).json({
+        error:
+          'Project key must be 1–10 alphanumeric characters (e.g. PROJ, APP1).',
+      });
+    }
+
     //Validation checks can go here
 
     const existing = await Project.findOne({
-      where: { key: key.toUpperCase() },
+      where: { key: normalizedKey },
     });
     if (existing) {
       return res.status(409).json({
-        error: `Project key '${key.toUpperCase()}' is already in use.`,
+        error: `Project key '${normalizedKey}' is already in use.`,
       });
     }
 
     const project = await Project.create({
       name,
-      key,
+      key: normalizedKey,
       description,
       category: category || null,
       owner_id: req.user.sub,

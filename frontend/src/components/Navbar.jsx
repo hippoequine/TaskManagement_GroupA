@@ -17,6 +17,7 @@ import { Link } from 'react-router';
 import useAuth from '../auth/useAuth';
 import keycloak from '../keycloak';
 import { useProject } from '../context/ProjectContext';
+import CreateTicketForm from './IssueForm/createTicketForm.jsx';
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -27,10 +28,15 @@ export default function Navbar() {
   const [filtersAnchor, setFiltersAnchor] = useState(null);
   const [dashboardsAnchor, setDashboardsAnchor] = useState(null);
   const [userAnchor, setUserAnchor] = useState(null);
+  const [createIssue, setCreateIssue] = useState(false);
 
   const handleProjectSelect = (project) => {
     switchProject(project);
     setProjectsAnchor(null);
+  };
+
+  const handleCreateIssue = () => {
+    setCreateIssue(prev => !prev)
   };
 
   return (
@@ -246,13 +252,13 @@ export default function Navbar() {
           {keycloak.authenticated && (
             <>
               <Button
-                disabled
                 variant="contained"
                 startIcon={<Add />}
                 sx={{
                   display: { xs: 'none', sm: 'flex' },
                   textTransform: 'none',
                 }}
+                onClick={handleCreateIssue}
               >
                 Create
               </Button>
@@ -343,6 +349,7 @@ export default function Navbar() {
             )}
           </Menu>
         </Box>
+        {createIssue && <CreateTicketForm />}
       </Toolbar>
     </AppBar>
   );

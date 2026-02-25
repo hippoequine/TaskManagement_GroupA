@@ -10,8 +10,7 @@ import TitleField from './TitleField';
 import { Button, Box, Snackbar, Alert } from '@mui/material';
 import PropTypes from 'prop-types';
 
-
-function CreateTicketForm({onIssueCreation}) {
+function CreateTicketForm({ onIssueCreation }) {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [ticketData, setTicketData] = useState({

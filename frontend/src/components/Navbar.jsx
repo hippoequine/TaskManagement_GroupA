@@ -36,7 +36,7 @@ export default function Navbar() {
   };
 
   const handleCreateIssue = () => {
-    setCreateIssue(prev => !prev)
+    setCreateIssue((prev) => !prev);
   };
 
   return (
@@ -349,9 +349,7 @@ export default function Navbar() {
             )}
           </Menu>
         </Box>
-        {createIssue && <CreateTicketForm 
-          onIssueCreation={setCreateIssue}
-        />}
+        {createIssue && <CreateTicketForm onIssueCreation={setCreateIssue} />}
       </Toolbar>
     </AppBar>
   );

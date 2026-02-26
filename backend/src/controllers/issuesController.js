@@ -1,4 +1,4 @@
-import { Issue } from '../models/models.js';
+import { Issue } from '../models/model.js';
 import { Op } from 'sequelize';
 
 export const createIssue = async (req, res) => {

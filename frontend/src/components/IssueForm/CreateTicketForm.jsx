@@ -59,10 +59,12 @@ function CreateTicketForm({ onIssueCreation }) {
 
   const createTicket = async (payload) => {
     try {
-      const res = await axios.post('/api/issues', payload, {headers:{Authorization: `Bearer ${token}`}});
+      const res = await axios.post('/api/issues', payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return res.data;
     } catch (err) {
-      if (err.response){
+      if (err.response) {
         setErrorMessage(err.response.data?.error || 'Ticket creation failed');
         throw new Error(err.response.data?.error || 'Ticket creation failed');
       } else {

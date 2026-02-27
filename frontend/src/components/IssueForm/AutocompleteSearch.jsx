@@ -12,11 +12,11 @@ function AutocompleteSearch(endpoint, query) {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
-      axios.get(endpoint,{params:{search: query},
-      signal: controller.signal,})
-      .then((res) => {
-        setResults(res.data);
-      })
+      axios
+        .get(endpoint, { params: { search: query }, signal: controller.signal })
+        .then((res) => {
+          setResults(res.data);
+        })
         .catch((err) => {
           if (err.name !== 'CanceledError') console.error(err);
         });

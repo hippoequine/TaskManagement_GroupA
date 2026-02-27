@@ -9,6 +9,7 @@ import StoryPointButtonGroup from './StoryPointButtonGroup';
 import TitleField from './TitleField';
 import { Button, Box, Snackbar, Alert } from '@mui/material';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 function CreateTicketForm({ onIssueCreation }) {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -58,22 +59,16 @@ function CreateTicketForm({ onIssueCreation }) {
 
   const createTicket = async (payload) => {
     try {
-      const res = await fetch('/api/issues', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        setErrorMessage('Ticket creation failed');
-        throw new Error(data.error || 'Ticket creation failed');
-      }
-
-      return res.json();
+      const res = await axios.post('/api/issues', payload, {headers:{Authorization: `Bearer ${token}`}});
+      return res.data;
     } catch (err) {
-      setErrorMessage('Network error while creating ticket');
-      throw new Error(err.message || 'Network error while creating ticket');
+      if (err.response){
+        setErrorMessage(err.response.data?.error || 'Ticket creation failed');
+        throw new Error(err.response.data?.error || 'Ticket creation failed');
+      } else {
+        setErrorMessage('Network error while creating ticket');
+        throw new Error('Network error while creating ticket');
+      }
     }
   };
 

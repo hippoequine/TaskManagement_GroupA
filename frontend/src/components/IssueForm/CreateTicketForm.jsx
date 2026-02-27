@@ -9,7 +9,7 @@ import StoryPointButtonGroup from './StoryPointButtonGroup';
 import TitleField from './TitleField';
 import { Button, Box, Snackbar, Alert } from '@mui/material';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import api from '../../api/axios';
 
 function CreateTicketForm({ onIssueCreation }) {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -59,9 +59,7 @@ function CreateTicketForm({ onIssueCreation }) {
 
   const createTicket = async (payload) => {
     try {
-      const res = await axios.post('/api/issues', payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.post('/api/issues', payload);
       return res.data;
     } catch (err) {
       if (err.response) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api/axios';
 
 function AutocompleteSearch(endpoint, query) {
   const [results, setResults] = useState([]);
@@ -12,7 +12,7 @@ function AutocompleteSearch(endpoint, query) {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
-      axios
+      api
         .get(endpoint, { params: { search: query }, signal: controller.signal })
         .then((res) => {
           setResults(res.data);

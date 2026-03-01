@@ -16,7 +16,7 @@ function CreateIssueForm({ onIssueCreation }) {
 
   const [issueData, setIssueData] = useState({
     project: null,
-    issueType: 'Story',
+    type: 'Story',
     description: '',
     reporter: null,
     priority: 'Low',
@@ -39,7 +39,7 @@ function CreateIssueForm({ onIssueCreation }) {
 
     const payload = {
       project: issueData.project?.id ?? null,
-      issueType: issueData.issueType,
+      type: issueData.type,
       description: issueData.description,
       dueDate: issueData.dueDate?.toISOString() ?? null,
       reporterId: issueData.reporter?.id ?? null,
@@ -89,8 +89,8 @@ function CreateIssueForm({ onIssueCreation }) {
           onChange={handleChange('project')}
         />
         <IssueTypeToggle
-          selectedType={issueData.issueType}
-          onTypeChange={handleChange('issueType')}
+          selectedType={issueData.type}
+          onTypeChange={handleChange('type')}
         />
         <DescriptionField
           description={issueData.description}

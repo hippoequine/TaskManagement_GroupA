@@ -13,7 +13,7 @@ function AutocompleteSearch(endpoint, query) {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       api
-        .get(endpoint, { params: { search: query }, signal: controller.signal })
+        .get(endpoint, { params: { q: query }, signal: controller.signal })
         .then((res) => {
           setResults(res.data);
         })

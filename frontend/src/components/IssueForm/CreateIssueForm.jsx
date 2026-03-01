@@ -101,8 +101,8 @@ function CreateIssueForm({ onIssueCreation }) {
           onDueDateUpdate={handleChange('dueDate')}
         />
         <UserAutocomplete
-          value={issueData.reporter}
-          onChange={handleChange('reporter')}
+          userValue={issueData.reporter}
+          onUserValueChange={handleChange('reporter')}
         />
         <PriorityLabel
           priority={issueData.priority}

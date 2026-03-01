@@ -17,7 +17,7 @@ import { Link } from 'react-router';
 import useAuth from '../auth/useAuth';
 import keycloak from '../keycloak';
 import { useProject } from '../context/ProjectContext';
-import CreateTicketForm from './IssueForm/createTicketForm.jsx';
+import CreateIssueForm from './IssueForm/CreateIssueForm.jsx';
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -349,7 +349,7 @@ export default function Navbar() {
             )}
           </Menu>
         </Box>
-        {createIssue && <CreateTicketForm onIssueCreation={setCreateIssue} />}
+        {createIssue && <CreateIssueForm onIssueCreation={setCreateIssue} />}
       </Toolbar>
     </AppBar>
   );

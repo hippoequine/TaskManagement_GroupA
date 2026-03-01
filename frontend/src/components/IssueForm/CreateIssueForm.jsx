@@ -11,10 +11,10 @@ import { Button, Box, Snackbar, Alert } from '@mui/material';
 import PropTypes from 'prop-types';
 import api from '../../api/axios';
 
-function CreateTicketForm({ onIssueCreation }) {
+function CreateIssueForm({ onIssueCreation }) {
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const [ticketData, setTicketData] = useState({
+  const [issueData, setIssueData] = useState({
     project: null,
     issueType: 'Story',
     description: '',
@@ -26,38 +26,38 @@ function CreateTicketForm({ onIssueCreation }) {
   });
 
   const handleChange = (field) => (value) => {
-    setTicketData((prev) => ({
+    setIssueData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleCreateTicketSubmit = async (e) => {
+  const handleCreateIssueSubmit = async (e) => {
     e.preventDefault();
 
     onIssueCreation(false);
 
     const payload = {
-      project: ticketData.project?.id ?? null,
-      issueType: ticketData.issueType,
-      description: ticketData.description,
-      dueDate: ticketData.dueDate?.toISOString() ?? null,
-      reporterId: ticketData.reporter?.id ?? null,
-      priority: ticketData.priority,
-      title: ticketData.title,
-      storyPoints: ticketData.storyPoints,
+      project: issueData.project?.id ?? null,
+      issueType: issueData.issueType,
+      description: issueData.description,
+      dueDate: issueData.dueDate?.toISOString() ?? null,
+      reporterId: issueData.reporter?.id ?? null,
+      priority: issueData.priority,
+      title: issueData.title,
+      storyPoints: issueData.storyPoints,
     };
     //console.log(payload);
 
     try {
-      await createTicket(payload);
+      await createIssue(payload);
     } catch (err) {
       //console.error(err);
       setErrorMessage(err.message);
     }
   };
 
-  const createTicket = async (payload) => {
+  const createIssue = async (payload) => {
     try {
       const res = await api.post('/api/issues', payload);
       return res.data;
@@ -74,43 +74,43 @@ function CreateTicketForm({ onIssueCreation }) {
 
   return (
     <div>
-      <h4>Create New Ticket</h4>
+      <h4>Create New Issue</h4>
       <Box
         component="form"
-        onSubmit={handleCreateTicketSubmit}
+        onSubmit={handleCreateIssueSubmit}
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
       >
         <TitleField
-          title={ticketData.title}
+          title={issueData.title}
           onUpdateTitle={handleChange('title')}
         />
         <ProjectAutocomplete
-          value={ticketData.project}
+          value={issueData.project}
           onChange={handleChange('project')}
         />
         <IssueTypeToggle
-          selectedType={ticketData.issueType}
+          selectedType={issueData.issueType}
           onTypeChange={handleChange('issueType')}
         />
         <DescriptionField
-          description={ticketData.description}
+          description={issueData.description}
           onUpdateDescription={handleChange('description')}
         />
         <DueDatePicker
-          dueDate={ticketData.dueDate}
+          dueDate={issueData.dueDate}
           onDueDateUpdate={handleChange('dueDate')}
         />
         <UserAutocomplete
-          value={ticketData.reporter}
+          value={issueData.reporter}
           onChange={handleChange('reporter')}
         />
         <PriorityLabel
-          priority={ticketData.priority}
+          priority={issueData.priority}
           onUpdatePriority={handleChange('priority')}
         />
         Story Points
         <StoryPointButtonGroup
-          points={ticketData.storyPoints}
+          points={issueData.storyPoints}
           onUpdatePoints={handleChange('storyPoints')}
         />
         <Button variant="outlined" component="label">
@@ -123,16 +123,16 @@ function CreateTicketForm({ onIssueCreation }) {
         >
           <Alert severity="error">{errorMessage}</Alert>
         </Snackbar>
-        <Button type="submit" variant="contained" disabled={!ticketData.title}>
-          Create Ticket
+        <Button type="submit" variant="contained" disabled={!issueData.title}>
+          Create Issue
         </Button>
       </Box>
     </div>
   );
 }
 
-CreateTicketForm.propTypes = {
+CreateIssueForm.propTypes = {
   onIssueCreation: PropTypes.func.isRequired,
 };
 
-export default CreateTicketForm;
+export default CreateIssueForm;

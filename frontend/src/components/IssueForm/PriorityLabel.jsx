@@ -11,9 +11,9 @@ function PriorityLabel({ priority, onUpdatePriority }) {
         value={priority}
         onChange={(e) => onUpdatePriority(e.target.value)}
       >
-        <MenuItem value="Low">Low</MenuItem>
-        <MenuItem value="Medium">Medium</MenuItem>
-        <MenuItem value="High">High</MenuItem>
+        <MenuItem value="low">low</MenuItem>
+        <MenuItem value="medium">medium</MenuItem>
+        <MenuItem value="high">high</MenuItem>
       </Select>
     </FormControl>
   );

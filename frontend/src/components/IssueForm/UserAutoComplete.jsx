@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 function UserAutocomplete({ userValue, onUserValueChange }) {
   const [inputValue, setInputValue] = useState('');
 
-  const users = AutocompleteSearch('/api/users', inputValue);
+  const users = AutocompleteSearch('/users', inputValue);
 
   return (
     <Autocomplete

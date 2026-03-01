@@ -19,7 +19,7 @@ function CreateIssueForm({ onIssueCreation }) {
     type: 'story',
     description: '',
     reporter: null,
-    priority: 'Low',
+    priority: 'low',
     title: '',
     storyPoints: 1,
     dueDate: null,
@@ -43,7 +43,7 @@ function CreateIssueForm({ onIssueCreation }) {
       description: issueData.description,
       dueDate: issueData.dueDate?.toISOString() ?? null,
       reporterId: issueData.reporter?.id ?? null,
-      priority: issueData.priority,
+      priority: issueData.priority.toLowerCase(),
       title: issueData.title,
       storyPoints: issueData.storyPoints,
     };

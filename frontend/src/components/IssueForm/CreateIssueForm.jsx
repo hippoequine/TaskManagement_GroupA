@@ -59,7 +59,7 @@ function CreateIssueForm({ onIssueCreation }) {
 
   const createIssue = async (payload) => {
     try {
-      const res = await api.post('/api/issues', payload);
+      const res = await api.post('/issues', payload);
       return res.data;
     } catch (err) {
       if (err.response) {

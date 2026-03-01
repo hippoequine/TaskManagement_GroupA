@@ -16,7 +16,7 @@ function CreateIssueForm({ onIssueCreation }) {
 
   const [issueData, setIssueData] = useState({
     project: null,
-    type: 'Story',
+    type: 'story',
     description: '',
     reporter: null,
     priority: 'Low',

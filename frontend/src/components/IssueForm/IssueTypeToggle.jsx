@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 function IssueTypeToggle({ selectedType, onTypeChange }) {
   const issueTypes = [
-    { type: 'Story', color: 'lightblue' },
-    { type: 'Bug', color: 'coral' },
-    { type: 'Task', color: 'lightgreen' },
-    { type: 'Epic', color: 'violet' },
+    { type: 'story', color: 'lightblue' },
+    { type: 'bug', color: 'coral' },
+    { type: 'task', color: 'lightgreen' },
+    { type: 'epic', color: 'violet' },
   ];
 
   return (

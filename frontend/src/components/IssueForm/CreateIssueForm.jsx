@@ -126,6 +126,9 @@ function CreateIssueForm({ onIssueCreation }) {
         <Button type="submit" variant="contained" disabled={!issueData.title}>
           Create Issue
         </Button>
+        <Button
+        type="button"
+        onClick={() => onIssueCreation(false)}>Cancel</Button>
       </Box>
     </div>
   );

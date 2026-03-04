@@ -3,27 +3,20 @@
   "version": " 0.0.1",
   "private": true,
   "scripts": {
-    "prepare": "husky",
-    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
     "docker:up": "docker compose up --build",
+    "keycloak-save-config": "docker exec $(docker ps -f name=keycloak -q) /opt/keycloak/bin/kc.sh export --realm taskmanager --dir /opt/keycloak/data/import",
     "docker:down": "docker compose down -v",
     "docker:clean": "docker compose down --rmi all --volumes --remove-orphans",
+    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --write .",
+    "ci:all": "npm ci && npm ci --prefix frontend && npm ci --prefix backend",
     "test": "vitest",
-    "test:ui": "vitest --ui"
-  },
-  "lint-staged": {
-    "frontend/src/**/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "npm run lint --prefix frontend"
-    ],
-    "backend/src/**/*.{js,ts}": [
-      "npx prettier --write",
-      "npm run lint --prefix backend"
-    ]
+    "test:ui": "vitest --ui",
+    "lint": "npm run lint --prefix frontend && npm run lint --prefix backend"
   },
   "devDependencies": {
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
+    "jsdom": "^28.1.0",
     "prettier": "^3.7.4",
     "vitest": "^4.0.18"
   }

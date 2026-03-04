@@ -1,0 +1,605 @@
+openapi: 3.0.0
+info:
+  title: Task Management API
+  version: 0.0.1
+  description: Backend API documentation
+servers:
+  - url: http://localhost:5050/api
+    description: Local development
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    # ==========================================
+    # DATA MODELS (Returned by the API)
+    # ==========================================
+    Project:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+    Board:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        projectId: { type: string, format: uuid }
+
+    Issue:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        type:
+          type: string
+          enum: [bug, task, subtask, story, epic]
+        status:
+          type: string
+          enum: [backlog, in_progress, reviewed, done, archived]
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        storyPoints: { type: integer }
+        dueDate: { type: string, format: date-time }
+        reporterId: { type: string, format: uuid }
+        assigneeIds: { type: array, items: { type: string, format: uuid } }
+        isArchived: { type: boolean }
+        parentIssueId: { type: string, format: uuid }
+    Comment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        body: { type: string }
+        issueId: { type: string, format: uuid }
+        authorId: { type: string, format: uuid }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string, format: email }
+        role:
+          type: string
+          enum: [admin, developer, clinician]
+        timezone: { type: string }
+        lastSyncedAt: { type: string, format: date-time }
+    Attachment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        fileName: { type: string }
+        fileUrl:
+          {
+            type: string,
+            description: 'The URL where the file is hosted (e.g., AWS S3 or a local static route)',
+          }
+        mimeType:
+          { type: string, description: 'e.g., image/png, application/pdf' }
+        size: { type: integer, description: 'File size in bytes' }
+        issueId: { type: string, format: uuid }
+        uploadedBy: { type: string, format: uuid }
+        createdAt: { type: string, format: date-time }
+        hasInlinePreview: { type: boolean }
+    ErrorResponse:
+      type: object
+      properties:
+        error: { type: string }
+
+    # ==========================================
+    # INPUT MODELS
+    # ==========================================
+    ProjectInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string }
+    BoardInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string }
+    IssueInput:
+      type: object
+      required: [title, type, status, priority]
+      properties:
+        title: { type: string }
+        description: { type: string }
+        type:
+          type: string
+          enum: [bug, task, subtask, story, epic]
+        status:
+          type: string
+          enum: [backlog, in_progress, reviewed, done, archived]
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        storyPoints: { type: integer }
+        dueDate: { type: string, format: date-time }
+        parentIssueId: { type: string, format: uuid }
+        isArchived: { type: boolean }
+    CommentInput:
+      type: object
+      required: [body]
+      properties:
+        body: { type: string }
+
+paths:
+  # ==========================================
+  # USERS
+  # ==========================================
+  /me:
+    get:
+      summary: Get current authenticated user
+      tags: [Users]
+      responses:
+        '200':
+          description: Token user details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+
+  /users:
+    get:
+      summary: Get all users
+      tags: [Users]
+      responses:
+        '200':
+          description: All users
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/User' }
+
+  /users/{userId}:
+    get:
+      summary: Get a user by id
+      tags: [Users]
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==========================================
+  # PROJECTS
+  # ==========================================
+  /projects:
+    get:
+      summary: Get all projects
+      tags: [Projects]
+      responses:
+        '200':
+          description: All projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Project' }
+    post:
+      summary: Create a new project
+      tags: [Projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectInput' }
+      responses:
+        '201':
+          description: Created project
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+
+  /projects/{projectId}:
+    get:
+      summary: Get project by id
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Update a project
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectInput' }
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+    delete:
+      summary: Delete a project
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Project deleted successfully
+
+  /projects/{projectId}/boards:
+    get:
+      summary: Get all boards in a project
+      tags: [Boards]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: All boards belonging to project
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Board' }
+    post:
+      summary: Create a new board in a project
+      tags: [Boards]
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BoardInput' }
+      responses:
+        '201':
+          description: Created board
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Board' }
+
+  # ==========================================
+  # BOARDS
+  # ==========================================
+  /boards/{boardId}:
+    get:
+      summary: Get board by id
+      tags: [Boards]
+      parameters:
+        - in: path
+          name: boardId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Board details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Board' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Update a board
+      tags: [Boards]
+      parameters:
+        - in: path
+          name: boardId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BoardInput' }
+      responses:
+        '200':
+          description: Updated board
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Board' }
+    delete:
+      summary: Delete a board
+      tags: [Boards]
+      parameters:
+        - in: path
+          name: boardId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Board deleted successfully
+
+  /boards/{boardId}/issues:
+    get:
+      summary: Get all issues in a board
+      tags: [Issues]
+      parameters:
+        - in: path
+          name: boardId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: All issues for this board
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Issue' }
+    post:
+      summary: Create a new issue on a board
+      tags: [Issues]
+      parameters:
+        - in: path
+          name: boardId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/IssueInput' }
+      responses:
+        '201':
+          description: Created issue
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Issue' }
+
+  # ==========================================
+  # ISSUES
+  # ==========================================
+  /issues/{issueId}:
+    get:
+      summary: Get an issue by id
+      tags: [Issues]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Issue details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Issue' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Update an issue (e.g., drag and drop status change)
+      tags: [Issues]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/IssueInput' }
+      responses:
+        '200':
+          description: Updated issue
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Issue' }
+    delete:
+      summary: Delete an issue
+      tags: [Issues]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Issue deleted successfully
+
+  /issues/{issueId}/comments:
+    get:
+      summary: Get all comments for an issue
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: A list of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Comment' }
+    post:
+      summary: Add a comment to an issue
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CommentInput' }
+      responses:
+        '201':
+          description: Created comment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Comment' }
+  /issues/{issueId}/attachments:
+    get:
+      summary: Get all attachments for an issue
+      tags: [Attachments]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: A list of attachments
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Attachment' }
+    post:
+      summary: Upload a new attachment to an issue
+      tags: [Attachments]
+      parameters:
+        - in: path
+          name: issueId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload
+      responses:
+        '201':
+          description: Attachment uploaded successfully
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Attachment' }
+
+  # ==========================================
+  # ATTACHMENTS
+  # ==========================================
+  /attachments/{attachmentId}:
+    get:
+      summary: Get attachment metadata
+      tags: [Attachments]
+      parameters:
+        - in: path
+          name: attachmentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Attachment metadata (including the URL to download/view it)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Attachment' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete an attachment
+      tags: [Attachments]
+      parameters:
+        - in: path
+          name: attachmentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Attachment deleted successfully
+
+  # ==========================================
+  # COMMENTS
+  # ==========================================
+  /comments/{commentId}:
+    get:
+      summary: Get a specific comment
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Comment details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Comment' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Edit a comment
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CommentInput' }
+      responses:
+        '200':
+          description: Updated comment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Comment' }
+    delete:
+      summary: Delete a comment
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204':
+          description: Comment deleted successfully

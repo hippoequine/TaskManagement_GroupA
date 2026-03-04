@@ -358,8 +358,13 @@ export default function Navbar() {
           onClose={() => setCreateIssue(false)}
           maxWidth="sm"
           fullWidth
-        ><DialogTitle>Create Issue</DialogTitle>
-          <DialogContent>{createIssue && <CreateIssueForm onIssueCreation={setCreateIssue} />}</DialogContent>
+        >
+          <DialogTitle>Create Issue</DialogTitle>
+          <DialogContent>
+            {createIssue && (
+              <CreateIssueForm onIssueCreation={setCreateIssue} />
+            )}
+          </DialogContent>
         </Dialog>
       </Toolbar>
     </AppBar>

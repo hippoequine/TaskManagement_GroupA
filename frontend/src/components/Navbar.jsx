@@ -5,6 +5,10 @@ import {
   Badge,
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   IconButton,
   Menu,
@@ -349,7 +353,14 @@ export default function Navbar() {
             )}
           </Menu>
         </Box>
-        {createIssue && <CreateIssueForm onIssueCreation={setCreateIssue} />}
+        <Dialog
+          open={createIssue}
+          onClose={() => setCreateIssue(false)}
+          maxWidth="sm"
+          fullWidth
+        ><DialogTitle>Create Issue</DialogTitle>
+          <DialogContent>{createIssue && <CreateIssueForm onIssueCreation={setCreateIssue} />}</DialogContent>
+        </Dialog>
       </Toolbar>
     </AppBar>
   );

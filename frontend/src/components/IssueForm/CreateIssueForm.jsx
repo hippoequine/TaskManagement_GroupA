@@ -35,8 +35,6 @@ function CreateIssueForm({ onIssueCreation }) {
   const handleCreateIssueSubmit = async (e) => {
     e.preventDefault();
 
-    onIssueCreation(false);
-
     const payload = {
       project: issueData.project?.id ?? null,
       type: issueData.type,
@@ -51,6 +49,7 @@ function CreateIssueForm({ onIssueCreation }) {
 
     try {
       await createIssue(payload);
+      onIssueCreation(false);
     } catch (err) {
       //console.error(err);
       setErrorMessage(err.message);

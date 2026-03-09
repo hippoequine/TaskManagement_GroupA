@@ -28,7 +28,6 @@ import {
   StarBorder as StarBorderIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
-import { projectsApi } from '../api/projectsApi';
 import { useProject } from '../context/ProjectContext';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -84,7 +83,7 @@ export default function ProjectsPage() {
   const navigate = useNavigate();
 
   // Read from context — ProjectContext already fetches on mount, no duplicate call needed
-  const { projects, setProjects, loading, error } = useProject();
+  const { projects, loading, error } = useProject();
 
   // Filter state
   const [searchQuery, setSearchQuery] = useState('');

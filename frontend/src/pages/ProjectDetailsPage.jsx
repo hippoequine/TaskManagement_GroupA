@@ -22,7 +22,6 @@ export default function ProjectDetailsPage() {
   const { setProjects } = useProject();
   const navigate = useNavigate();
 
-  const [editing, setEditing] = useState(true);
   const [name, setName] = useState(project.name);
   const [key, setKey] = useState(project.key ?? '');
   const [description, setDescription] = useState(project.description ?? '');
@@ -56,9 +55,8 @@ export default function ProjectDetailsPage() {
       setProjects((prev) =>
         prev.map((p) => (p.id === project.id ? updated : p))
       );
-      setEditing(false);
       navigate(`/projects/${project.id}`);
-    } catch (err) {
+    } catch {
       setError('Failed to save changes.');
     } finally {
       setSaving(false);

@@ -55,12 +55,14 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      - ./data/uploads:/app/uploads
     environment:
       KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_REALM: taskmanager
       KEYCLOAK_CLIENT_ID: frontend
       FRONTEND_URL: http://localhost:3000
       DATABASE_URL: postgres://user:password@postgres:5432/backend_db
+      UPLOAD_DIR: /app/uploads/attachments
     depends_on:
       postgres:
         condition: service_healthy

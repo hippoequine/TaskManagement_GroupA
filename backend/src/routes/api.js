@@ -1,6 +1,8 @@
 import express from 'express';
 import { verifyToken } from '../middleware/auth.js';
 import { requireRole } from '../middleware/authorize.js';
+import issuesRouter from './issues.js';
+import attachmentsRouter from './attachments.js';
 import { syncUser } from '../middleware/syncUser.js';
 import userRoutes from './users.js';
 import projectRoutes from './projectRoutes.js';
@@ -125,6 +127,11 @@ router.get('/clinician-only', requireRole('clinician'), handler);
  */
 router.get('/developer-only', requireRole('developer'), handler);
 
+<<<<<<< HEAD
 router.use('/projects', projectRoutes);
+=======
+router.use('/issues', issuesRouter);
+router.use('/', attachmentsRouter);
+>>>>>>> origin/main
 
 export default router;

@@ -5,6 +5,9 @@ import {
   Badge,
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Divider,
   IconButton,
   Menu,
@@ -17,6 +20,7 @@ import { Link, useNavigate } from 'react-router';
 import useAuth from '../auth/useAuth';
 import keycloak from '../keycloak';
 import { useProject } from '../context/ProjectContext';
+import CreateIssueForm from './IssueForm/CreateIssueForm.jsx';
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -28,10 +32,15 @@ export default function Navbar() {
   const [filtersAnchor, setFiltersAnchor] = useState(null);
   const [dashboardsAnchor, setDashboardsAnchor] = useState(null);
   const [userAnchor, setUserAnchor] = useState(null);
+  const [createIssue, setCreateIssue] = useState(false);
 
   const handleProjectSelect = (project) => {
     switchProject(project);
     setProjectsAnchor(null);
+  };
+
+  const handleCreateIssue = () => {
+    setCreateIssue((prev) => !prev);
   };
 
   return (
@@ -252,13 +261,13 @@ export default function Navbar() {
           {keycloak.authenticated && (
             <>
               <Button
-                disabled
                 variant="contained"
                 startIcon={<Add />}
                 sx={{
                   display: { xs: 'none', sm: 'flex' },
                   textTransform: 'none',
                 }}
+                onClick={handleCreateIssue}
               >
                 Create
               </Button>
@@ -349,6 +358,19 @@ export default function Navbar() {
             )}
           </Menu>
         </Box>
+        <Dialog
+          open={createIssue}
+          onClose={() => setCreateIssue(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Create Issue</DialogTitle>
+          <DialogContent>
+            {createIssue && (
+              <CreateIssueForm onIssueCreation={setCreateIssue} />
+            )}
+          </DialogContent>
+        </Dialog>
       </Toolbar>
     </AppBar>
   );

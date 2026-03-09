@@ -1,4 +1,4 @@
-import { User } from '../models/models.js';
+import { User } from '../models/model.js';
 
 /**
  * A minimal user shape extracted from Keycloak token claims.

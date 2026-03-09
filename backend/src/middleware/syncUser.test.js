@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { syncUser } from './syncUser';
-import { User } from '../models/models';
+import { User } from '../models/model.js';
 
 // Mock Sequelize model layer
-vi.mock('../models/models.js', () => ({
+vi.mock('../models/model.js', () => ({
   User: {
     findByPk: vi.fn(),
     upsert: vi.fn(),

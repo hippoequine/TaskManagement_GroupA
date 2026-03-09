@@ -1,6 +1,6 @@
 import express from 'express';
 import { Op } from 'sequelize';
-import { User } from '../models/models.js';
+import { User } from '../models/model.js';
 
 const router = express.Router();
 
@@ -62,6 +62,26 @@ router.get('/search', async (req, res, next) => {
         ],
       },
       limit: 20,
+      order: [['lastName', 'ASC']],
+      attributes: ['id', 'firstName', 'lastName', 'email', 'role', 'timezone'],
+    });
+
+    const safe = users.map((u) => ({
+      id: u.id,
+      fullName: `${u.firstName} ${u.lastName}`.trim(),
+      email: u.email,
+      role: u.role,
+      timezone: u.timezone,
+    }));
+    res.json(safe);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await User.findAll({
       order: [['lastName', 'ASC']],
       attributes: ['id', 'firstName', 'lastName', 'email', 'role', 'timezone'],
     });

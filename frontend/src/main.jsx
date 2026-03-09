@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import RootLayout from './layouts/RootLayout.jsx';
 import Boards from './pages/Boards.jsx';
 import Projects from './pages/Projects.jsx';
-
 import { CircularProgress } from '@mui/material';
 import './api/axios.js';
 import App from './App.jsx';
@@ -19,6 +18,7 @@ import ProjectLayout from './layouts/ProjectLayout.jsx';
 import Board from './pages/Board.jsx';
 import ProjectOverview from './pages/ProjectOverview.jsx';
 import Project from './pages/Project.jsx';
+import { UsersProvider } from './context/UsersContext.jsx';
 
 setInterval(() => {
   if (keycloak.authenticated) {
@@ -38,9 +38,11 @@ const AppRoutes = () => {
       <Route
         path="/"
         element={
-          <ProjectProvider>
-            <RootLayout />
-          </ProjectProvider>
+          <UsersProvider>
+            <ProjectProvider>
+              <RootLayout />
+            </ProjectProvider>
+          </UsersProvider>
         }
       >
         <Route index element={<App />} />

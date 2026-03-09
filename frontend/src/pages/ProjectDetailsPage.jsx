@@ -1,18 +1,28 @@
 import { useState } from 'react';
 import {
-  Alert, Box, Breadcrumbs, Button, CircularProgress,
-  Divider, FormControl, MenuItem, Paper, Select, TextField, Typography,
+  Alert,
+  Box,
+  Breadcrumbs,
+  Button,
+  CircularProgress,
+  Divider,
+  FormControl,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
-import { Link, useNavigate, useOutletContext } from 'react-router';   
+import { Link, useNavigate, useOutletContext } from 'react-router';
 import { useProject } from '../context/ProjectContext';
 
 export default function ProjectDetailsPage() {
   const { project } = useOutletContext();
   const { setProjects } = useProject();
-  const navigate = useNavigate();                                       
+  const navigate = useNavigate();
 
-  const [editing, setEditing] = useState(true);                        
+  const [editing, setEditing] = useState(true);
   const [name, setName] = useState(project.name);
   const [key, setKey] = useState(project.key ?? '');
   const [description, setDescription] = useState(project.description ?? '');
@@ -20,13 +30,19 @@ export default function ProjectDetailsPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  const handleCancel = () => {                                          
+  const handleCancel = () => {
     navigate(`/projects/${project.id}`);
   };
 
   const handleSave = async () => {
-    if (!name.trim()) { setError('Project name is required.'); return; }
-    if (!key.trim())  { setError('Project key is required.');  return; }
+    if (!name.trim()) {
+      setError('Project name is required.');
+      return;
+    }
+    if (!key.trim()) {
+      setError('Project key is required.');
+      return;
+    }
     setSaving(true);
     setError('');
     try {
@@ -37,9 +53,11 @@ export default function ProjectDetailsPage() {
         description: description.trim(),
         category: category || null,
       };
-      setProjects((prev) => prev.map((p) => (p.id === project.id ? updated : p)));
+      setProjects((prev) =>
+        prev.map((p) => (p.id === project.id ? updated : p))
+      );
       setEditing(false);
-      navigate(`/projects/${project.id}`);                              
+      navigate(`/projects/${project.id}`);
     } catch (err) {
       setError('Failed to save changes.');
     } finally {
@@ -50,21 +68,40 @@ export default function ProjectDetailsPage() {
   return (
     <Box sx={{ p: 4 }}>
       <Breadcrumbs sx={{ mb: 2 }}>
-        <Link to="/projects" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link
+          to="/projects"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
           Projects
         </Link>
-        <Link to={`/projects/${project.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link
+          to={`/projects/${project.id}`}
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
           {project.name}
         </Link>
         <Typography color="text.primary">Details</Typography>
       </Breadcrumbs>
 
       <Paper sx={{ p: 4 }} elevation={0} variant="outlined">
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h5" fontWeight={500}>Project Details</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 3,
+          }}
+        >
+          <Typography variant="h5" fontWeight={500}>
+            Project Details
+          </Typography>
         </Box>
 
-        {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
 
         <Divider sx={{ mb: 3 }} />
 
@@ -73,13 +110,15 @@ export default function ProjectDetailsPage() {
             label="Project Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            fullWidth disabled={saving}
+            fullWidth
+            disabled={saving}
           />
           <TextField
             label="Project Key"
             value={key}
             onChange={(e) => setKey(e.target.value.toUpperCase())}
-            fullWidth disabled={saving}
+            fullWidth
+            disabled={saving}
             inputProps={{ maxLength: 10 }}
             helperText="Short uppercase identifier, e.g. PROJ or APP1"
           />
@@ -87,7 +126,8 @@ export default function ProjectDetailsPage() {
             <Select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              displayEmpty disabled={saving}
+              displayEmpty
+              disabled={saving}
             >
               <MenuItem value="">No category</MenuItem>
               <MenuItem value="New Development">New Development</MenuItem>
@@ -98,19 +138,34 @@ export default function ProjectDetailsPage() {
             label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            fullWidth multiline rows={5} disabled={saving}
+            fullWidth
+            multiline
+            rows={5}
+            disabled={saving}
           />
 
           {/* TODO: Attachments component */}
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 4 }}>
-          <Button startIcon={<CancelIcon />} onClick={handleCancel} disabled={saving}>
+        <Box
+          sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 4 }}
+        >
+          <Button
+            startIcon={<CancelIcon />}
+            onClick={handleCancel}
+            disabled={saving}
+          >
             Cancel
           </Button>
           <Button
             variant="contained"
-            startIcon={saving ? <CircularProgress size={16} color="inherit" /> : <SaveIcon />}
+            startIcon={
+              saving ? (
+                <CircularProgress size={16} color="inherit" />
+              ) : (
+                <SaveIcon />
+              )
+            }
             onClick={handleSave}
             disabled={saving}
             sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}

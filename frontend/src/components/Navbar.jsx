@@ -185,7 +185,12 @@ export default function Navbar() {
                 >
                   View all projects
                 </MenuItem>
-                <MenuItem onClick={() => { setProjectsAnchor(null); navigate('/projects/create'); }}>
+                <MenuItem
+                  onClick={() => {
+                    setProjectsAnchor(null);
+                    navigate('/projects/create');
+                  }}
+                >
                   <Add sx={{ mr: 1, fontSize: 20 }} />
                   Create project
                 </MenuItem>

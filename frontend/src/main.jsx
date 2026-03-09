@@ -52,11 +52,11 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="projects" element={<ProjectLayout />}>
             <Route index element={<Projects />} />
-            <Route path="create" element={<CreateProjectPage />} />   
+            <Route path="create" element={<CreateProjectPage />} />
 
             <Route path=":projectId" element={<Project />}>
               <Route index element={<ProjectOverview />} />
-              <Route path="details" element={<ProjectDetailsPage />} />  
+              <Route path="details" element={<ProjectDetailsPage />} />
 
               <Route path="board" element={<BoardLayout />}>
                 <Route index element={<Boards />} />

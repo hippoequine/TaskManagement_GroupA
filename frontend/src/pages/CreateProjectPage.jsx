@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import {
-  Alert, Box, Button, CircularProgress, FormControl,
-  MenuItem, Paper, Select, TextField, Typography,
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { projectsApi } from '../api/projectsApi';
@@ -19,8 +27,14 @@ export default function CreateProjectPage() {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-    if (!name.trim()) { setError('Project name is required.'); return; }
-    if (!key.trim())  { setError('Project key is required.');  return; }
+    if (!name.trim()) {
+      setError('Project name is required.');
+      return;
+    }
+    if (!key.trim()) {
+      setError('Project key is required.');
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
@@ -33,7 +47,10 @@ export default function CreateProjectPage() {
       setProjects((prev) => [res.data, ...prev]);
       navigate('/projects');
     } catch (err) {
-      setError(err?.response?.data?.error || 'Failed to create project. Please try again.');
+      setError(
+        err?.response?.data?.error ||
+          'Failed to create project. Please try again.'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -46,21 +63,33 @@ export default function CreateProjectPage() {
           Create Project
         </Typography>
 
-        <Paper elevation={0} sx={{ border: '1px solid #e0e0e0', borderRadius: 1, p: 4 }}>
-          {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+        <Paper
+          elevation={0}
+          sx={{ border: '1px solid #e0e0e0', borderRadius: 1, p: 4 }}
+        >
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <TextField
               label="Project Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required fullWidth autoFocus disabled={submitting}
+              required
+              fullWidth
+              autoFocus
+              disabled={submitting}
             />
             <TextField
               label="Project Key"
               value={key}
               onChange={(e) => setKey(e.target.value.toUpperCase())}
-              required fullWidth disabled={submitting}
+              required
+              fullWidth
+              disabled={submitting}
               inputProps={{ maxLength: 10 }}
               helperText="Short uppercase identifier, e.g. PROJ or APP1"
             />
@@ -68,7 +97,8 @@ export default function CreateProjectPage() {
               <Select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                displayEmpty disabled={submitting}
+                displayEmpty
+                disabled={submitting}
               >
                 <MenuItem value="">No category</MenuItem>
                 <MenuItem value="New Development">New Development</MenuItem>
@@ -79,13 +109,19 @@ export default function CreateProjectPage() {
               label="Description (optional)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              fullWidth multiline rows={5} disabled={submitting}
+              fullWidth
+              multiline
+              rows={5}
+              disabled={submitting}
             />
 
             {/* TODO: Attachments component */}
 
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-              <Button onClick={() => navigate('/projects')} disabled={submitting}>
+              <Button
+                onClick={() => navigate('/projects')}
+                disabled={submitting}
+              >
                 Cancel
               </Button>
               <Button
@@ -94,7 +130,11 @@ export default function CreateProjectPage() {
                 disabled={submitting}
                 sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
               >
-                {submitting ? <CircularProgress size={20} color="inherit" /> : 'Create Project'}
+                {submitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  'Create Project'
+                )}
               </Button>
             </Box>
           </Box>

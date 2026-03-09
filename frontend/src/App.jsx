@@ -90,8 +90,6 @@ function App() {
       )}
 
       {isAuthenticated && displayDashboard()}
-
-      <Attachment />
     </div>
   );
 }

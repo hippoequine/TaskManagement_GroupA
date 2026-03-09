@@ -53,7 +53,7 @@ export function ProjectProvider({ children }) {
 
   return (
     <ProjectContext.Provider
-      value={{ projects, currentProject, loading, error, switchProject }}
+      value={{ projects, setProjects, currentProject, loading, error, switchProject }}
     >
       {children}
     </ProjectContext.Provider>

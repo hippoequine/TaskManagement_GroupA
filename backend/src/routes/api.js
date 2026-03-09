@@ -127,11 +127,8 @@ router.get('/clinician-only', requireRole('clinician'), handler);
  */
 router.get('/developer-only', requireRole('developer'), handler);
 
-<<<<<<< HEAD
 router.use('/projects', projectRoutes);
-=======
 router.use('/issues', issuesRouter);
 router.use('/', attachmentsRouter);
->>>>>>> origin/main
 
 export default router;

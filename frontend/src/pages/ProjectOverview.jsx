@@ -6,7 +6,7 @@ import {
   Divider,
   Breadcrumbs,
 } from '@mui/material';
-import { Dashboard } from '@mui/icons-material';
+import { Dashboard, Settings } from '@mui/icons-material';
 import { Link, useOutletContext } from 'react-router';
 
 export default function ProjectOverview() {
@@ -41,15 +41,24 @@ export default function ProjectOverview() {
               Key: {project.key || 'N/A'}
             </Typography>
           </Box>
-
-          <Button
-            variant="contained"
-            startIcon={<Dashboard />}
-            component={Link}
-            to="board"
-          >
-            Go to Boards
-          </Button>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              startIcon={<Settings />}
+              component={Link}
+              to="details"
+            >
+              Edit Details
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<Dashboard />}
+              component={Link}
+              to="board"
+            >
+              Go to Boards
+            </Button>
+          </Box>
         </Box>
 
         <Divider sx={{ my: 3 }} />

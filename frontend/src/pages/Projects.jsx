@@ -6,10 +6,6 @@ import {
   Button,
   Chip,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
   IconButton,
   InputAdornment,
@@ -82,133 +78,6 @@ function saveStarred(ids) {
   localStorage.setItem(STARRED_KEY, JSON.stringify(ids));
 }
 
-// ─── Create Project Dialog ────────────────────────────────────────────────────
-
-function CreateProjectDialog({ open, onClose, onCreate }) {
-  const [name, setName] = useState('');
-  const [key, setKey] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      setError('Project name is required.');
-      return;
-    }
-    if (!key.trim()) {
-      setError('Project key is required.');
-      return;
-    }
-    setSubmitting(true);
-    setError('');
-    try {
-      await onCreate({
-        name: name.trim(),
-        key: key.trim(),
-        description: description.trim(),
-        category: category || null,
-      });
-      setName('');
-      setKey('');
-      setDescription('');
-      setCategory('');
-      onClose();
-    } catch (err) {
-      setError(
-        err?.response?.data?.error ||
-          'Failed to create project. Please try again.'
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleClose = () => {
-    if (submitting) return;
-    setName('');
-    setKey('');
-    setDescription('');
-    setCategory('');
-    setError('');
-    onClose();
-  };
-
-  return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ fontWeight: 500 }}>Create Project</DialogTitle>
-      <DialogContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          pt: '16px !important',
-        }}
-      >
-        {error && <Alert severity="error">{error}</Alert>}
-        <TextField
-          label="Project Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          fullWidth
-          autoFocus
-          disabled={submitting}
-        />
-        <TextField
-          label="Project Key"
-          value={key}
-          onChange={(e) => setKey(e.target.value.toUpperCase())}
-          required
-          fullWidth
-          disabled={submitting}
-          inputProps={{ maxLength: 10 }}
-          helperText="Short uppercase identifier, e.g. PROJ or APP1"
-        />
-        <FormControl fullWidth size="small">
-          <Select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            displayEmpty
-            disabled={submitting}
-          >
-            <MenuItem value="">No category</MenuItem>
-            <MenuItem value="New Development">New Development</MenuItem>
-            <MenuItem value="Maintenance">Maintenance</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          label="Description (optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          fullWidth
-          multiline
-          rows={3}
-          disabled={submitting}
-        />
-      </DialogContent>
-      <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={handleClose} disabled={submitting}>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={submitting}
-          sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
-        >
-          {submitting ? (
-            <CircularProgress size={20} color="inherit" />
-          ) : (
-            'Create'
-          )}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ProjectsPage() {
@@ -224,9 +93,6 @@ export default function ProjectsPage() {
   // Starred state (localStorage only — starring is a personal preference)
   const [starredIds, setStarredIds] = useState(loadStarred);
 
-  // Dialog state
-  const [createOpen, setCreateOpen] = useState(false);
-
   // ── Star toggle ──
   const handleToggleStar = (projectId) => {
     setStarredIds((prev) => {
@@ -236,13 +102,6 @@ export default function ProjectsPage() {
       saveStarred(updated);
       return updated;
     });
-  };
-
-  // ── Create project ──
-  const handleCreateProject = async (payload) => {
-    const res = await projectsApi.create(payload);
-    // Prepend to context so it appears immediately at the top of the list
-    setProjects((prev) => [res.data, ...prev]);
   };
 
   // ── Filtering ──
@@ -273,7 +132,7 @@ export default function ProjectsPage() {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => setCreateOpen(true)}
+            onClick={() => navigate('/projects/create')}
             sx={{
               bgcolor: '#333',
               color: 'white',
@@ -500,13 +359,6 @@ export default function ProjectsPage() {
           )}
         </Paper>
       </Box>
-
-      {/* Create Project Dialog */}
-      <CreateProjectDialog
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        onCreate={handleCreateProject}
-      />
     </Box>
   );
 }

@@ -33,4 +33,13 @@ export const projectsApi = {
    * const { data } = await projectsApi.create({ name: 'My App' });
    */
   create: (payload) => api.post('/projects', payload),
+
+  /**
+   * Updates an existing project by ID.
+   * NOTE: Backend PUT endpoint does not exist yet; callers should update local state only.
+   * @param {number} id
+   * @param {{ name?: string, key?: string, description?: string, category?: string }} payload
+   * @returns {Promise<{ data: Project }>}
+   */
+  update: (id, payload) => api.put(`/projects/${id}`, payload),
 };

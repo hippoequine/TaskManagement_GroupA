@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Input } from '@mui/material';
 
-export default function StoryPoints({ points }) {
+export default function StoryPoints({ points, onChange }) {
   return (
     <Box
       sx={{
@@ -15,12 +15,27 @@ export default function StoryPoints({ points }) {
         justifyContent: 'center',
       }}
     >
-      <Typography
-        variant="caption"
-        sx={{ fontWeight: 500, color: '#555', fontSize: '0.65rem' }}
-      >
-        {points}
-      </Typography>
+      <Input
+        variant="standard"
+        onChange={onChange}
+        defaultValue={points ?? '-'}
+        disableUnderline={true}
+        inputProps={{
+          sx: { textAlign: 'center', padding: 0, minWidth: '4ch' },
+        }}
+        sx={{
+          fontWeight: 500,
+          color: '#555',
+          fontSize: '0.65rem',
+          textAlign: 'center',
+          type: 'number',
+          maxWidth: '4ch',
+          // Focused border color
+          '&.Mui-focused': {
+            backgroundColor: '#e0e0e0', // optional: change background on focus
+          },
+        }}
+      ></Input>
     </Box>
   );
 }

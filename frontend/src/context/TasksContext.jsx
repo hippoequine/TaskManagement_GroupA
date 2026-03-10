@@ -22,11 +22,8 @@ export function TasksProvider({ children }) {
 
     setLoading(true);
     try {
-      const { data } = await tasksApi.getAll(
-        currentProject.id,
-        currentBoard.id
-      );
-      setTasks(data);
+      const { data } = await tasksApi.getAll(currentBoard.id);
+      setTasks(data.issues);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -40,13 +37,15 @@ export function TasksProvider({ children }) {
 
       setUpdatingIds((prev) => new Set([...prev, taskId]));
       try {
-        await tasksApi.update(
-          currentProject.id,
-          currentBoard.id,
-          taskId,
-          changes
-        );
-        await fetchTasks();
+        const { data } = await tasksApi.update(taskId, changes);
+
+        if (data && data.issue) {
+          setTasks((prev) =>
+            prev.map((t) => (t.id === taskId ? data.issue : t))
+          );
+        } else {
+          await fetchTasks();
+        }
       } catch (err) {
         setError(err.message);
       } finally {

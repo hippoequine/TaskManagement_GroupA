@@ -80,10 +80,6 @@ export default function Board() {
   const { project } = useOutletContext();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const columns = currentBoard?.columns || [
     { id: 'todo', title: 'To Do' },
     { id: 'in-progress', title: 'In Progress' },
@@ -174,7 +170,7 @@ export default function Board() {
 
         <Box sx={{ display: 'flex', gap: 2, overflowX: 'auto', pb: 2 }}>
           {columns.map((column) => (
-            <Column key={column.id} column={column} tasks={filteredTasks} />
+            <Column key={column.id} column={column} tasks={tasks} />
           ))}
         </Box>
       </Box>

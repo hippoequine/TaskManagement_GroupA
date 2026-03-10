@@ -7,6 +7,7 @@ import {
 } from '@mui/icons-material';
 import StoryPoints from './StoryPoints.jsx';
 import Assignee from './Assignee.jsx';
+import { useTasks } from '../../context/TasksContext.jsx';
 
 // Task type constants
 const TASK_TYPES = {
@@ -59,6 +60,36 @@ function getTaskTypeIcon(type) {
 }
 
 export default function TaskCard({ task }) {
+  const { updateTask } = useTasks();
+
+  let assigneeName = task.assignee;
+  if (
+    !assigneeName &&
+    Array.isArray(task.assignees) &&
+    task.assignees.length > 0
+  ) {
+    const a = task.assignees[0];
+    assigneeName =
+      a.fullName ?? `${a.firstName ?? ''} ${a.lastName ?? ''}`.trim();
+  }
+
+  const assigneeId =
+    Array.isArray(task.assignees) && task.assignees.length > 0
+      ? task.assignees[0].id
+      : null;
+
+  const handleStoryPoints = (e) => {
+    const points = parseInt(e.target.value, 10);
+    if (!isNaN(points) && points >= 0) {
+      updateTask(task.id, { storyPoints: points });
+    }
+  };
+
+  const handleAssign = (user) => {
+    const assigneeIds = user ? [user.id] : [];
+    updateTask(task.id, { assigneeIds });
+  };
+
   return (
     <Paper
       elevation={0}
@@ -128,18 +159,26 @@ export default function TaskCard({ task }) {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
           {getTaskTypeIcon(task.type)}
           <Typography variant="caption" sx={{ color: '#888' }}>
-            {task.id}
+            {task.title}
           </Typography>
         </Box>
 
         {/* Story Points, Nesting Icon, and Assignee */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <StoryPoints points={task.storyPoints} taskId={task.id} />
+          <StoryPoints
+            points={task.storyPoints}
+            onChange={handleStoryPoints}
+            taskId={task.id}
+          />
           {(task.type === TASK_TYPES.EPIC ||
             task.type === TASK_TYPES.STORY) && (
             <NestingIcon sx={{ fontSize: 16, color: '#ccc' }} />
           )}
-          <Assignee name={task.assignee} />
+          <Assignee
+            selectedId={assigneeId}
+            name={assigneeName}
+            onSelect={handleAssign}
+          />
         </Box>
       </Box>
     </Paper>

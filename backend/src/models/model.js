@@ -2,6 +2,8 @@ import User from './User.js';
 import Issue from './Issue.js';
 import IssueAssignee from './IssueAssignee.js';
 import Attachment from './Attachment.js';
+import Board from './Board.js';
+import IssueBoard from './IssueBoard.js';
 
 // =============== Associations ===============
 
@@ -43,6 +45,20 @@ export function applyAssociations() {
   // parent/subIssues (self reference)
   Issue.belongsTo(Issue, { as: 'parent', foreignKey: 'parentIssueId' });
   Issue.hasMany(Issue, { as: 'subIssues', foreignKey: 'parentIssueId' });
+
+  Issue.belongsToMany(Board, {
+    through: IssueBoard,
+    as: 'boards',
+    foreignKey: 'issueId',
+    otherKey: 'boardId',
+  });
+
+  Board.belongsToMany(Issue, {
+    through: IssueBoard,
+    as: 'issues',
+    foreignKey: 'boardId',
+    otherKey: 'issueId',
+  });
 }
 
-export { Issue, IssueAssignee, User, Attachment };
+export { Issue, IssueAssignee, User, Attachment, Board, IssueBoard };

@@ -92,7 +92,6 @@ components:
         mimeType:
           { type: string, description: 'e.g., image/png, application/pdf' }
         size: { type: integer, description: 'File size in bytes' }
-        issueId: { type: string, format: uuid }
         uploadedBy: { type: string, format: uuid }
         createdAtUTC: { type: string, format: date-time }
         type: { type: string, enum: [IMAGE, DOCUMENT, VIDEO, OTHER] }
@@ -476,13 +475,13 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Comment' }
-  /issues/{issueId}/attachments:
+  /projects/{projectId}/attachments:
     get:
-      summary: Get all attachments for an issue
+      summary: Get all attachments for a project
       tags: [Attachments]
       parameters:
         - in: path
-          name: issueId
+          name: projectId
           required: true
           schema: { type: string, format: uuid }
       responses:
@@ -497,11 +496,11 @@ paths:
                     type: array
                     items: { $ref: '#/components/schemas/Attachment' }
     post:
-      summary: Upload one or more attachments to an issue
+      summary: Upload one or more attachments to a project
       tags: [Attachments]
       parameters:
         - in: path
-          name: issueId
+          name: projectId
           required: true
           schema: { type: string, format: uuid }
       requestBody:

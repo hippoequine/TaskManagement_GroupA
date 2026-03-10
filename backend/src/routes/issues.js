@@ -6,6 +6,7 @@ import {
   updateIssue,
   deleteIssue,
 } from '../controllers/issuesController.js';
+import { requireWorkflowCompliance } from '../middleware/workflow.js';
 import {
   checkIssueView,
   checkIssueModify,
@@ -24,7 +25,7 @@ router.get('/', checkIssueView, getAllIssues);
 router.get('/:id', checkIssueView, getIssueByID);
 
 // patch
-router.patch('/:id', checkIssueModify, updateIssue);
+router.patch('/:id', checkIssueModify, requireWorkflowCompliance, updateIssue);
 
 // delete
 router.delete('/:id', checkIssueDelete, deleteIssue);

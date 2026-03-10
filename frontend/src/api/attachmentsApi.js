@@ -5,20 +5,20 @@ import api from './axios';
  * All methods return the backend payload's `data` field when available.
  */
 export const attachmentsApi = {
-  // List attachments for one issue.
-  listByIssue: async (issueId) => {
-    const res = await api.get(`/issues/${issueId}/attachments`);
+  // List attachments for one project.
+  listByProject: async (projectId) => {
+    const res = await api.get(`/projects/${projectId}/attachments`);
     return res.data?.data ?? [];
   },
 
-  // Upload one or more files to an issue (multipart field name: "file").
-  uploadToIssue: async (issueId, files) => {
+  // Upload one or more files to a project (multipart field name: "file").
+  uploadToProject: async (projectId, files) => {
     const formData = new FormData();
     for (const file of files) {
       formData.append('file', file);
     }
 
-    const res = await api.post(`/issues/${issueId}/attachments`, formData, {
+    const res = await api.post(`/projects/${projectId}/attachments`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return res.data?.data ?? [];

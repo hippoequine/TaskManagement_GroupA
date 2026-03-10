@@ -95,6 +95,7 @@ export const updateIssue = async (req, res) => {
       'description',
       'reporterId',
       'priority',
+      'status',
       'storyPoints',
       'dueDate',
     ];

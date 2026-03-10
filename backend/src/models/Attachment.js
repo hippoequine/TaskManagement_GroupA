@@ -11,14 +11,6 @@ Attachment.init(
       defaultValue: DataTypes.UUIDV4,
     },
 
-    issueId: {
-      type: DataTypes.UUID, // references Issue.id
-      allowNull: false,
-      references: { model: 'Issues', key: 'id' },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-
     uploadedBy: {
       type: DataTypes.UUID, // references User.id
       allowNull: false,

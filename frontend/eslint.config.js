@@ -20,4 +20,13 @@ export default defineConfig([
     extends: ['js/recommended'],
     languageOptions: { globals: globals.browser },
   },
+  {
+    files: ['**/*.test.js', 'src/tests/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+  },
 ]);

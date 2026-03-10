@@ -45,6 +45,9 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: 'Something went wrong' });
 });
 
+const uploadDir = process.env.UPLOAD_DIR || path.resolve('uploads');
+app.use('/uploads', express.static(uploadDir));
+
 async function startServer() {
   try {
     await initKeycloak();

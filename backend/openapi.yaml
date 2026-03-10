@@ -86,18 +86,16 @@ components:
       type: object
       properties:
         id: { type: string, format: uuid }
-        fileName: { type: string }
-        fileUrl:
-          {
-            type: string,
-            description: 'The URL where the file is hosted (e.g., AWS S3 or a local static route)',
-          }
+        filename: { type: string }
+        url:
+          { type: string, description: 'Relative file path under UPLOAD_DIR' }
         mimeType:
           { type: string, description: 'e.g., image/png, application/pdf' }
         size: { type: integer, description: 'File size in bytes' }
         issueId: { type: string, format: uuid }
         uploadedBy: { type: string, format: uuid }
-        createdAt: { type: string, format: date-time }
+        createdAtUTC: { type: string, format: date-time }
+        type: { type: string, enum: [IMAGE, DOCUMENT, VIDEO, OTHER] }
         hasInlinePreview: { type: boolean }
     ErrorResponse:
       type: object
@@ -493,10 +491,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items: { $ref: '#/components/schemas/Attachment' }
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Attachment' }
     post:
-      summary: Upload a new attachment to an issue
+      summary: Upload one or more attachments to an issue
       tags: [Attachments]
       parameters:
         - in: path
@@ -511,15 +512,22 @@ paths:
               type: object
               properties:
                 file:
-                  type: string
-                  format: binary
-                  description: The file to upload
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: One or more files (repeat "file" field)
       responses:
         '201':
-          description: Attachment uploaded successfully
+          description: Attachment(s) uploaded successfully
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Attachment' }
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Attachment' }
 
   # ==========================================
   # ATTACHMENTS
@@ -538,7 +546,10 @@ paths:
           description: Attachment metadata (including the URL to download/view it)
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Attachment' }
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/Attachment' }
         '404':
           $ref: '#/components/responses/NotFound'
     delete:
@@ -552,6 +563,25 @@ paths:
       responses:
         '204':
           description: Attachment deleted successfully
+  /attachments/{attachmentId}/download:
+    get:
+      summary: Download attachment content
+      tags: [Attachments]
+      parameters:
+        - in: path
+          name: attachmentId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Binary file stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   # ==========================================
   # COMMENTS

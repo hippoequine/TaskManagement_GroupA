@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
+import api from '../../api/axios';
 
 function AutocompleteSearch(endpoint, query) {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    if (!query) return;
+    if (!query) {
+      setResults([]);
+      return;
+    }
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
-      fetch(`${endpoint}?search=${encodeURIComponent(query)}`, {
-        signal: controller.signal,
-      })
-        .then((res) => res.json())
-        .then(setResults)
+      api
+        .get(endpoint, { params: { q: query }, signal: controller.signal })
+        .then((res) => {
+          setResults(res.data);
+        })
         .catch((err) => {
-          if (err.name !== 'AbortError') console.error(err);
+          if (err.name !== 'CanceledError') console.error(err);
         });
     }, 300);
 

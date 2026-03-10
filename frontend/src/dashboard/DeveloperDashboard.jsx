@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -10,10 +11,13 @@ import {
   TableRow,
   Paper,
   Typography,
+  Modal,
 } from '@mui/material';
 import StatCard from '../components/StatCard';
 import GetTodaysDate from '../components/GetTodaysDate';
 import NotificationPanel from '../components/NotificationPanel';
+import CreateIssueForm from '../components/IssueForm/CreateIssueForm'; // ADDED
+import ViewIssue from '../components/IssueForm/ViewIssue'; // ADDED
 
 /**
  * Displays a sample Workload Table information
@@ -67,13 +71,65 @@ const rows = [
 ];
 
 function DeveloperDashboard() {
+  // ADDED STATE
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [selectedIssue, setSelectedIssue] = useState(null);
+
+  // UPDATED notification messages (changed "Ticket" to "Issue")
   const inputNotifications = [
-    { id: 1, message: 'Ticket #1 Cat ipsum dolor sit amet', read: false },
-    { id: 2, message: 'Ticket #2 Cat ipsum dolor sit amet', read: false },
+    { id: 1, message: 'Issue #1 Cat ipsum dolor sit amet', read: false },
+    { id: 2, message: 'Issue #2 Cat ipsum dolor sit amet', read: false },
   ];
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+      {/* ADDED MODALS */}
+      <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 600,
+            maxHeight: '80vh',
+            overflow: 'auto',
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <CreateIssueForm
+            mode="create"
+            onIssueCreation={() => setOpenCreateModal(false)}
+          />
+        </Box>
+      </Modal>
+
+      <Modal open={!!selectedIssue} onClose={() => setSelectedIssue(null)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 600,
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          {selectedIssue && (
+            <ViewIssue
+              issue={selectedIssue}
+              onClose={() => setSelectedIssue(null)}
+            />
+          )}
+        </Box>
+      </Modal>
+
       <Box sx={{ py: 3 }}>
         {/* Header */}
         <Box
@@ -91,8 +147,13 @@ function DeveloperDashboard() {
             <GetTodaysDate />
           </Box>
           <Box>
-            <Button variant="contained" sx={{ mr: 1, mb: 1 }}>
-              Tickets
+            {/* UPDATED button text and added onClick */}
+            <Button
+              variant="contained"
+              sx={{ mr: 1, mb: 1 }}
+              onClick={() => setOpenCreateModal(true)}
+            >
+              Issues
             </Button>
             <Button variant="contained" sx={{ mb: 1 }}>
               Board
@@ -153,7 +214,9 @@ function DeveloperDashboard() {
             Team Workload
           </Typography>
           <TableContainer component={Paper}>
-            <Table aria-label="My ticket table">
+            <Table aria-label="My issue table">
+              {' '}
+              {/* label */}
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ fontWeight: 'bold' }}>Assignee</TableCell>
@@ -175,7 +238,26 @@ function DeveloperDashboard() {
                 {rows.map((row) => (
                   <TableRow
                     key={row.assignee}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    onClick={() => {
+                      // ADDED: Convert sample data to issue format and open view modal
+                      setSelectedIssue({
+                        id: row.assignee,
+                        title: row.work,
+                        description: row.work,
+                        issueType: 'Task',
+                        project: { id: 1, name: 'Sample Project' },
+                        reporter: { id: 1, name: row.assignee },
+                        priority: row.priority,
+                        storyPoints: 1,
+                        dueDate: row.datecreated,
+                        status: row.status,
+                      });
+                    }}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      cursor: 'pointer', // ADDED
+                      '&:hover': { bgcolor: 'action.hover' }, // ADDED
+                    }}
                   >
                     <TableCell component="th" scope="row">
                       {row.assignee}

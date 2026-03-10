@@ -6,12 +6,12 @@ import PropTypes from 'prop-types';
 function UserAutocomplete({ userValue, onUserValueChange }) {
   const [inputValue, setInputValue] = useState('');
 
-  const users = AutocompleteSearch('/api/users', inputValue);
+  const users = AutocompleteSearch('/users/search', inputValue);
 
   return (
     <Autocomplete
       options={users}
-      getOptionLabel={(option) => option?.name ?? ''}
+      getOptionLabel={(option) => option?.fullName ?? ''}
       value={userValue}
       onChange={(event, newValue) => {
         onUserValueChange(newValue);

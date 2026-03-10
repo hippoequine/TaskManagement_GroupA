@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import RootLayout from './layouts/RootLayout.jsx';
 import Boards from './pages/Boards.jsx';
 import Projects from './pages/Projects.jsx';
-
 import { CircularProgress } from '@mui/material';
 import './api/axios.js';
 import App from './App.jsx';

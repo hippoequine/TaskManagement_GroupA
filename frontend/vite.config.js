@@ -17,5 +17,8 @@ export default ({ mode }) => {
       },
     },
     plugins: [react()],
+    test: {
+      environment: 'jsdom',
+    },
   });
 };

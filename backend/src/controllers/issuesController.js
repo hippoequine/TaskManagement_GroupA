@@ -1,4 +1,4 @@
-import { Issue, Board, User } from '../models/model.js';
+import { Issue } from '../models/models.js';
 import { Op } from 'sequelize';
 
 export const createIssue = async (req, res) => {
@@ -11,8 +11,6 @@ export const createIssue = async (req, res) => {
       title,
       storyPoints,
       dueDate,
-      boardIds,
-      assigneeIds,
     } = req.body;
 
     const issue = await Issue.create({
@@ -24,18 +22,6 @@ export const createIssue = async (req, res) => {
       storyPoints,
       dueDate,
     });
-
-    if (Array.isArray(boardIds) && boardIds.length > 0 && issue.setBoards) {
-      await issue.setBoards(boardIds);
-    }
-
-    if (
-      Array.isArray(assigneeIds) &&
-      assigneeIds.length > 0 &&
-      issue.setAssignees
-    ) {
-      await issue.setAssignees(assigneeIds);
-    }
 
     res.status(201).json({
       success: true,
@@ -53,15 +39,7 @@ export const createIssue = async (req, res) => {
 export const getIssueByID = async (req, res) => {
   try {
     const { id } = req.params;
-    const issue = await Issue.findByPk(id, {
-      include: [
-        {
-          model: User,
-          as: 'assignees',
-          attributes: ['id', 'firstName', 'lastName', 'email'],
-        },
-      ],
-    });
+    const issue = await Issue.findByPk(id);
     if (!issue) {
       return res.status(404).json({
         success: false,
@@ -108,37 +86,9 @@ export const updateIssue = async (req, res) => {
 
     await issue.update(updates);
 
-    if (req.body.assigneeIds && Array.isArray(req.body.assigneeIds)) {
-      if (issue.setAssignees) {
-        await issue.setAssignees(req.body.assigneeIds);
-      }
-    }
-
-    if (req.body.boardIds && Array.isArray(req.body.boardIds)) {
-      if (issue.setBoards) {
-        await issue.setBoards(req.body.boardIds);
-      }
-    }
-
-    const updatedIssue = await Issue.findByPk(id, {
-      include: [
-        {
-          model: User,
-          as: 'assignees',
-          attributes: ['id', 'firstName', 'lastName', 'email'],
-        },
-        {
-          model: Board,
-          as: 'boards',
-          attributes: ['id', 'title'],
-          through: { attributes: [] },
-        },
-      ],
-    });
-
     res.status(200).json({
       success: true,
-      issue: updatedIssue,
+      issue,
     });
   } catch (error) {
     console.error('Error updating issue:', error);
@@ -178,7 +128,6 @@ export const deleteIssue = async (req, res) => {
 export const getAllIssues = async (req, res) => {
   try {
     const { search, type, reporterId, priority, status } = req.query;
-    const boardId = req.params.boardId || req.params.id || null;
 
     const where = {};
 
@@ -193,26 +142,7 @@ export const getAllIssues = async (req, res) => {
       ];
     }
 
-    const include = [];
-
-    if (boardId) {
-      include.push({
-        model: Board,
-        as: 'boards',
-        where: { id: boardId },
-        attributes: [],
-        through: { attributes: [] },
-        required: true,
-      });
-    }
-
-    include.push({
-      model: User,
-      as: 'assignees',
-      attributes: ['id', 'firstName', 'lastName', 'email'],
-    });
-
-    const issues = await Issue.findAll({ where, include });
+    const issues = await Issue.findAll({ where });
 
     res.status(200).json({
       success: true,

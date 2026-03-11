@@ -5,11 +5,8 @@ import issuesRouter from './issues.js';
 import attachmentsRouter from './attachments.js';
 import { syncUser } from '../middleware/syncUser.js';
 import userRoutes from './users.js';
-<<<<<<< HEAD
 import projectRoutes from './projectRoutes.js';
-=======
 import boardRoutes from './boards.js';
->>>>>>> origin/main
 
 const router = express.Router();
 

@@ -3,6 +3,7 @@
  * All routes assume the user is authenticated and available on req.user.
  */
 import Project from '../models/Project.js';
+import Board from '../models/Board.js';
 
 // POST /api/projects
 export const createProject = async (req, res, next) => {
@@ -100,6 +101,21 @@ export const getProjectById = async (req, res, next) => {
     }
 
     res.json(project);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET /api/projects/:id/boards
+export const getProjectBoards = async (req, res, next) => {
+  try {
+    const project = await Project.findOne({
+      where: { id: req.params.id, owner_id: req.user.sub },
+    });
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+
+    const boards = await Board.findAll({ where: { projectId: req.params.id } });
+    res.json(boards);
   } catch (err) {
     next(err);
   }

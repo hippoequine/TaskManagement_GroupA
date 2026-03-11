@@ -7,6 +7,7 @@ import {
   createProject,
   getProjects,
   getProjectById,
+  getProjectBoards
 } from '../controllers/projectController.js';
 
 const router = express.Router();
@@ -16,5 +17,7 @@ router.post('/', createProject);
 router.get('/', getProjects);
 
 router.get('/:id', getProjectById);
+
+router.get('/:id/boards', getProjectBoards);
 
 export default router;

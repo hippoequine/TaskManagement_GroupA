@@ -21,6 +21,8 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "@mui/x-date-pickers": "^8.27.2",
+    "dayjs": "^1.11.19",
     "multer": "^2.1.0",
     "uuid": "^13.0.0",
     "yaml": "^2.8.2"

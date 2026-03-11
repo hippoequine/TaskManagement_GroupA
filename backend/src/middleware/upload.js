@@ -10,8 +10,8 @@ function ensureDir(dir) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const { issueId } = req.params;
-    const dir = path.join(uploadDir, 'issues', issueId);
+    const { projectId } = req.params;
+    const dir = path.join(uploadDir, 'project', projectId || 'unscoped');
     ensureDir(dir);
     cb(null, dir);
   },

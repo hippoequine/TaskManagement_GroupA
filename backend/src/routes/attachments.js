@@ -1,8 +1,8 @@
 import express from 'express';
 import { uploadMany } from '../middleware/upload.js';
 import {
-  listIssueAttachments,
-  uploadIssueAttachment,
+  listProjectAttachments,
+  uploadProjectAttachment,
   getAttachmentMetadata,
   downloadAttachment,
   deleteAttachment,
@@ -10,8 +10,12 @@ import {
 
 const router = express.Router();
 
-router.get('/issues/:issueId/attachments', listIssueAttachments);
-router.post('/issues/:issueId/attachments', uploadMany, uploadIssueAttachment);
+router.get('/projects/:projectId/attachments', listProjectAttachments);
+router.post(
+  '/projects/:projectId/attachments',
+  uploadMany,
+  uploadProjectAttachment
+);
 router.get('/attachments/:attachmentId', getAttachmentMetadata);
 router.get('/attachments/:attachmentId/download', downloadAttachment);
 router.delete('/attachments/:attachmentId', deleteAttachment);

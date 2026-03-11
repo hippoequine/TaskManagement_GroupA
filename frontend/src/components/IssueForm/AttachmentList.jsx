@@ -14,8 +14,12 @@ function AttachmentList({ ticketId }) {
   const [attachments, setAttachments] = useState([]);
 
   useEffect(() => {
-    // Mock data for now
-    setAttachments([]);
+    async function fetchAttachments() {
+      const res = await fetch(`/api/issues/${ticketId}/attachments`);
+      const data = await res.json();
+      setAttachments(data.data);
+    }
+    fetchAttachments();
   }, [ticketId]);
 
   return (
@@ -39,7 +43,11 @@ function AttachmentList({ ticketId }) {
                 primary={file.filename}
                 secondary={`${(file.size / 1024).toFixed(0)} KB`}
               />
-              <IconButton>
+              <IconButton
+                onClick={() =>
+                  window.open(`/api/attachments/${file.id}/download`, '_blank')
+                }
+              >
                 <Download />
               </IconButton>
             </ListItem>

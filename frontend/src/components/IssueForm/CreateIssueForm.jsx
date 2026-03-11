@@ -20,6 +20,7 @@ function CreateIssueForm({
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [attachments, setAttachments] = useState([]);
 
   // State keys match backend expectations (from main branch)
   const [issueData, setIssueData] = useState({
@@ -56,6 +57,18 @@ function CreateIssueForm({
     }));
   };
 
+  async function uploadAttachments(issueId) {
+    if (attachments.length === 0) return;
+
+    const formData = new FormData();
+
+    attachments.forEach((file) => {
+      formData.append('file', file);
+    });
+
+    await api.post(`/issues/${issueId}/attachments`, formData);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -77,9 +90,14 @@ function CreateIssueForm({
     try {
       if (mode === 'edit' && issueId) {
         await api.put(`/issues/${issueId}`, payload);
+        await uploadAttachments(issueId);
         setSuccessMessage('Issue updated successfully!');
       } else {
-        await api.post('/issues', payload);
+        const response = await api.post('/issues', payload);
+        const newIssueId = response.data.issue.id;
+
+        await uploadAttachments(newIssueId);
+
         setSuccessMessage('Issue created successfully!');
 
         // Reset form after successful creation
@@ -94,6 +112,7 @@ function CreateIssueForm({
             storyPoints: 1,
             dueDate: null,
           });
+          setAttachments([]);
         }
       }
 
@@ -170,10 +189,26 @@ function CreateIssueForm({
           />
         </Box>
 
-        <Button variant="outlined" component="label">
-          Add Attachment
-          <input type="file" hidden multiple />
-        </Button>
+        <Box>
+          <Button variant="outlined" component="label">
+            Add Attachment
+            <input
+              type="file"
+              hidden
+              multiple
+              onChange={(e) => {
+                const files = Array.from(e.target.files);
+                setAttachments((prev) => [...prev, ...files]);
+                e.target.value = null;
+              }}
+            />
+          </Button>
+          {attachments.map((file, i) => (
+            <Box key={i} sx={{ fontSize: 14 }}>
+              {file.name}
+            </Box>
+          ))}
+        </Box>
 
         <Snackbar
           open={Boolean(errorMessage) || Boolean(successMessage)}

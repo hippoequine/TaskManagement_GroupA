@@ -10,6 +10,7 @@ import TitleField from './TitleField';
 import { Button, Box, Snackbar, Alert } from '@mui/material';
 import PropTypes from 'prop-types';
 import api from '../../api/axios';
+import AttachmentList from './AttachmentList';
 
 function CreateIssueForm({
   mode = 'create', // 'create' or 'edit'
@@ -208,6 +209,7 @@ function CreateIssueForm({
               {file.name}
             </Box>
           ))}
+          {mode === 'edit' && issueId && <AttachmentList ticketId={issueId} />}
         </Box>
 
         <Snackbar

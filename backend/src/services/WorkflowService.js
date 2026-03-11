@@ -18,4 +18,8 @@ const validateTransition = (currentStatus, newStatus) => {
   return allowedTransitions[currentStatus]?.includes(newStatus);
 };
 
-export { getAllowedStatuses, getAllowedTransitions, validateTransition };
+export default {
+  getAllowedStatuses,
+  getAllowedTransitions,
+  validateTransition,
+};

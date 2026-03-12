@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router';
 import { projectsApi } from '../api/projectsApi';
 import { useProject } from '../context/ProjectContext';
+import Attachment from '../components/Attachment';
 
 export default function CreateProjectPage() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function CreateProjectPage() {
   const [category, setCategory] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [createdProjectId, setCreatedProjectId] = useState(null);
 
   const handleSubmit = async () => {
     if (!name.trim()) {
@@ -45,7 +47,7 @@ export default function CreateProjectPage() {
         category: category || null,
       });
       setProjects((prev) => [res.data, ...prev]);
-      navigate('/projects');
+      setCreatedProjectId(res.data.id);
     } catch (err) {
       setError(
         err?.response?.data?.error ||
@@ -115,7 +117,7 @@ export default function CreateProjectPage() {
               disabled={submitting}
             />
 
-            {/* TODO: Attachments component */}
+            <Attachment projectId={createdProjectId} />
 
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
               <Button
@@ -124,18 +126,28 @@ export default function CreateProjectPage() {
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                disabled={submitting}
-                sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
-              >
-                {submitting ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : (
-                  'Create Project'
-                )}
-              </Button>
+              {createdProjectId ? (
+                <Button
+                  variant="contained"
+                  onClick={() => navigate('/projects')}
+                  sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
+                >
+                  Done
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
+                >
+                  {submitting ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    'Create Project'
+                  )}
+                </Button>
+              )}
             </Box>
           </Box>
         </Paper>

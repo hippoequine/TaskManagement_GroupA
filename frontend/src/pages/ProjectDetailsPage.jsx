@@ -16,6 +16,7 @@ import {
 import { Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Link, useNavigate, useOutletContext } from 'react-router';
 import { useProject } from '../context/ProjectContext';
+import Attachment from '../components/Attachment';
 
 export default function ProjectDetailsPage() {
   const { project } = useOutletContext();
@@ -142,7 +143,7 @@ export default function ProjectDetailsPage() {
             disabled={saving}
           />
 
-          {/* TODO: Attachments component */}
+          <Attachment projectId={project.id} />
         </Box>
 
         <Box

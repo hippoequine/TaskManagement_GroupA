@@ -7,7 +7,7 @@ import {
   createProject,
   getProjects,
   getProjectById,
-  getProjectBoards
+  getProjectBoards,
 } from '../controllers/projectController.js';
 
 const router = express.Router();

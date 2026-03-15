@@ -114,8 +114,8 @@ export default function ProjectsPage() {
   });
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-      <Box sx={{ maxWidth: 1100, mx: 'auto', mt: 4, px: 3 }}>
+    <Box>
+      <Box sx={{ maxWidth: 1100, mx: 'auto', pt: 4, px: 3 }}>
         {/* Page Title and Create Button */}
         <Box
           sx={{
@@ -125,7 +125,7 @@ export default function ProjectsPage() {
             mb: 3,
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: 400, color: '#333' }}>
+          <Typography variant="h4" sx={{ fontWeight: 400, color: '#e0e0e0' }}>
             Projects
           </Typography>
           <Button
@@ -337,10 +337,14 @@ export default function ProjectsPage() {
                                 fontSize: '0.65rem',
                               }}
                             >
-                              {getInitials(project.owner_id ?? '')}
+                              {getInitials(
+                                `${project.owner?.firstName ?? ''} ${project.owner?.lastName ?? ''}`
+                              )}
                             </Avatar>
                             <Typography variant="body2" color="text.primary">
-                              {project.owner_id}
+                              {project.owner
+                                ? `${project.owner.firstName} ${project.owner.lastName}`
+                                : '—'}
                             </Typography>
                           </Box>
                         </TableCell>

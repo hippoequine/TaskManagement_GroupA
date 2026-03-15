@@ -37,7 +37,7 @@ const Project = sequelize.define(
     },
 
     owner_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       allowNull: false,
     },
   },

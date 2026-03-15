@@ -4,6 +4,7 @@
  */
 import Project from '../models/Project.js';
 import Board from '../models/Board.js';
+import User from '../models/User.js';
 
 // POST /api/projects
 export const createProject = async (req, res, next) => {
@@ -73,6 +74,13 @@ export const getProjects = async (req, res, next) => {
       limit,
       offset,
       order: [['created_at', 'DESC']],
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+      ],
     });
 
     res.json({

@@ -46,15 +46,14 @@ export default function ProjectDetailsPage() {
     setSaving(true);
     setError('');
     try {
-      const updated = {
-        ...project,
+      const res = await projectsApi.update(project.id, {
         name: name.trim(),
         key: key.trim(),
         description: description.trim(),
         category: category || null,
-      };
+      });
       setProjects((prev) =>
-        prev.map((p) => (p.id === project.id ? updated : p))
+        prev.map((p) => (p.id === project.id ? res.data : p))
       );
       navigate(`/projects/${project.id}`);
     } catch {

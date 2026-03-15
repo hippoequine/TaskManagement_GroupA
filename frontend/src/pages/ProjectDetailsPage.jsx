@@ -17,6 +17,7 @@ import { Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Link, useNavigate, useOutletContext } from 'react-router';
 import { useProject } from '../context/ProjectContext';
 import Attachment from '../components/Attachment';
+import { projectsApi } from '../api/projectsApi';
 
 export default function ProjectDetailsPage() {
   const { project } = useOutletContext();

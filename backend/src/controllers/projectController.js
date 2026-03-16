@@ -51,7 +51,12 @@ export const createProject = async (req, res, next) => {
       owner_id: req.user.sub,
     });
 
-    res.status(201).json(project);
+    const created = await Project.findOne({
+      where: { id: project.id },
+      include: [{ model: User, as: 'owner', attributes: ['id', 'firstName', 'lastName', 'email'] }],
+    });
+    
+    res.status(201).json(created);
   } catch (err) {
     next(err);
   }
@@ -102,6 +107,13 @@ export const getProjectById = async (req, res, next) => {
         id: req.params.id,
         owner_id: req.user.sub,
       },
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+      ],
     });
 
     if (!project) {
@@ -124,6 +136,44 @@ export const getProjectBoards = async (req, res, next) => {
 
     const boards = await Board.findAll({ where: { projectId: req.params.id } });
     res.json(boards);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// PUT /api/projects/:id
+export const updateProject = async (req, res, next) => {
+  try {
+    const project = await Project.findOne({
+      where: { id: req.params.id, owner_id: req.user.sub },
+    });
+
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    const { name, key, description, category } = req.body;
+
+    if (key) {
+      const normalizedKey = key.trim().toUpperCase();
+      if (!/^[A-Z0-9]{1,10}$/.test(normalizedKey)) {
+        return res.status(400).json({
+          error: 'Project key must be 1–10 alphanumeric characters (e.g. PROJ, APP1).',
+        });
+      }
+      const existing = await Project.findOne({ where: { key: normalizedKey } });
+      if (existing && existing.id !== project.id) {
+        return res.status(409).json({ error: `Project key '${normalizedKey}' is already in use.` });
+      }
+      req.body.key = normalizedKey;
+    }
+
+    await project.update({ name, key: req.body.key, description, category });
+    await project.reload({
+      include: [{ model: User, as: 'owner', attributes: ['id', 'firstName', 'lastName', 'email'] }],
+    });
+
+    res.json(project);
   } catch (err) {
     next(err);
   }

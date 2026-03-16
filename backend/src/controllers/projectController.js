@@ -53,9 +53,15 @@ export const createProject = async (req, res, next) => {
 
     const created = await Project.findOne({
       where: { id: project.id },
-      include: [{ model: User, as: 'owner', attributes: ['id', 'firstName', 'lastName', 'email'] }],
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+      ],
     });
-    
+
     res.status(201).json(created);
   } catch (err) {
     next(err);
@@ -158,19 +164,28 @@ export const updateProject = async (req, res, next) => {
       const normalizedKey = key.trim().toUpperCase();
       if (!/^[A-Z0-9]{1,10}$/.test(normalizedKey)) {
         return res.status(400).json({
-          error: 'Project key must be 1–10 alphanumeric characters (e.g. PROJ, APP1).',
+          error:
+            'Project key must be 1–10 alphanumeric characters (e.g. PROJ, APP1).',
         });
       }
       const existing = await Project.findOne({ where: { key: normalizedKey } });
       if (existing && existing.id !== project.id) {
-        return res.status(409).json({ error: `Project key '${normalizedKey}' is already in use.` });
+        return res
+          .status(409)
+          .json({ error: `Project key '${normalizedKey}' is already in use.` });
       }
       req.body.key = normalizedKey;
     }
 
     await project.update({ name, key: req.body.key, description, category });
     await project.reload({
-      include: [{ model: User, as: 'owner', attributes: ['id', 'firstName', 'lastName', 'email'] }],
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+      ],
     });
 
     res.json(project);

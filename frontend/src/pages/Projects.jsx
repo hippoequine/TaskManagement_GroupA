@@ -88,6 +88,7 @@ export default function ProjectsPage() {
   // Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   // Starred state (localStorage only — starring is a personal preference)
   const [starredIds, setStarredIds] = useState(loadStarred);
@@ -110,7 +111,8 @@ export default function ProjectsPage() {
       .includes(searchQuery.toLowerCase());
     const matchesCategory =
       !categoryFilter || project.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesStatus = !statusFilter || project.status === statusFilter;
+    return matchesSearch && matchesCategory && matchesStatus;
   });
 
   return (
@@ -206,6 +208,21 @@ export default function ProjectsPage() {
                   <MenuItem value="Maintenance">Maintenance</MenuItem>
                 </Select>
               </FormControl>
+              <Typography variant="body2" color="text.secondary">
+                Status:
+              </Typography>
+              <FormControl size="small" sx={{ minWidth: 130 }}>
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  displayEmpty
+                  sx={{ bgcolor: 'white' }}
+                >
+                  <MenuItem value="">All</MenuItem>
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="completed">Completed</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
           </Box>
 
@@ -228,22 +245,27 @@ export default function ProjectsPage() {
                 <TableHead>
                   <TableRow sx={{ bgcolor: '#fafafa' }}>
                     <TableCell sx={{ width: 50 }} />
-                    {['Name', 'Key', 'Category', 'Owner', 'Created'].map(
-                      (col) => (
-                        <TableCell
-                          key={col}
-                          sx={{
-                            fontWeight: 500,
-                            color: '#666',
-                            textTransform: 'uppercase',
-                            fontSize: '0.75rem',
-                            letterSpacing: 0.5,
-                          }}
-                        >
-                          {col}
-                        </TableCell>
-                      )
-                    )}
+                    {[
+                      'Name',
+                      'Key',
+                      'Category',
+                      'Status',
+                      'Owner',
+                      'Created',
+                    ].map((col) => (
+                      <TableCell
+                        key={col}
+                        sx={{
+                          fontWeight: 500,
+                          color: '#666',
+                          textTransform: 'uppercase',
+                          fontSize: '0.75rem',
+                          letterSpacing: 0.5,
+                        }}
+                      >
+                        {col}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -317,6 +339,31 @@ export default function ProjectsPage() {
                               —
                             </Typography>
                           )}
+                        </TableCell>
+
+                        {/* Status */}
+                        <TableCell>
+                          <Chip
+                            label={
+                              project.status === 'completed'
+                                ? 'Completed'
+                                : 'Active'
+                            }
+                            size="small"
+                            sx={{
+                              bgcolor:
+                                project.status === 'completed'
+                                  ? '#e8f5e9'
+                                  : '#e3f2fd',
+                              color:
+                                project.status === 'completed'
+                                  ? '#2e7d32'
+                                  : '#1565c0',
+                              fontWeight: 500,
+                              fontSize: '0.75rem',
+                              height: 24,
+                            }}
+                          />
                         </TableCell>
 
                         {/* Owner */}

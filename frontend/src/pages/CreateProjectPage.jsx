@@ -27,6 +27,7 @@ export default function CreateProjectPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [createdProjectId, setCreatedProjectId] = useState(null);
+  const [status, setStatus] = useState('active');
 
   const handleSubmit = async () => {
     if (!name.trim()) {
@@ -45,6 +46,7 @@ export default function CreateProjectPage() {
         key: key.trim(),
         description: description.trim(),
         category: category || null,
+        status,
       });
       setProjects((prev) => [res.data, ...prev]);
       setCreatedProjectId(res.data.id);
@@ -108,6 +110,17 @@ export default function CreateProjectPage() {
                 <MenuItem value="">No category</MenuItem>
                 <MenuItem value="New Development">New Development</MenuItem>
                 <MenuItem value="Maintenance">Maintenance</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <Select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                displayEmpty
+                disabled={submitting || !!createdProjectId}
+              >
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="completed">Completed</MenuItem>
               </Select>
             </FormControl>
             <TextField

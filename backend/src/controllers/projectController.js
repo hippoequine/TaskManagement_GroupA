@@ -13,7 +13,7 @@ export const createProject = async (req, res, next) => {
       return res.status(401).json({ error: 'Authentication required.' });
     }
 
-    const { name, key, description, category } = req.body;
+    const { name, key, description, category, status } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: 'Project name is required.' });
@@ -48,6 +48,7 @@ export const createProject = async (req, res, next) => {
       key: normalizedKey,
       description,
       category: category || null,
+      status: status || 'active',
       owner_id: req.user.sub,
     });
 
@@ -78,6 +79,9 @@ export const getProjects = async (req, res, next) => {
     const where = { owner_id: req.user.sub };
     if (req.query.category) {
       where.category = req.query.category;
+    }
+    if (req.query.status) {
+      where.status = req.query.status;
     }
 
     const { count, rows } = await Project.findAndCountAll({
@@ -158,7 +162,7 @@ export const updateProject = async (req, res, next) => {
       return res.status(404).json({ error: 'Project not found' });
     }
 
-    const { name, key, description, category } = req.body;
+    const { name, key, description, category, status } = req.body;
 
     if (key) {
       const normalizedKey = key.trim().toUpperCase();
@@ -177,7 +181,13 @@ export const updateProject = async (req, res, next) => {
       req.body.key = normalizedKey;
     }
 
-    await project.update({ name, key: req.body.key, description, category });
+    await project.update({
+      name,
+      key: req.body.key,
+      description,
+      category,
+      status,
+    });
     await project.reload({
       include: [
         {

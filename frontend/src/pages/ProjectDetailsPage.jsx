@@ -30,6 +30,7 @@ export default function ProjectDetailsPage() {
   const [category, setCategory] = useState(project.category ?? '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [status, setStatus] = useState(project.status ?? 'active');
 
   const handleCancel = () => {
     navigate(`/projects/${project.id}`);
@@ -52,6 +53,7 @@ export default function ProjectDetailsPage() {
         key: key.trim(),
         description: description.trim(),
         category: category || null,
+        status,
       });
       setProjects((prev) =>
         prev.map((p) => (p.id === project.id ? res.data : p))
@@ -131,6 +133,17 @@ export default function ProjectDetailsPage() {
               <MenuItem value="">No category</MenuItem>
               <MenuItem value="New Development">New Development</MenuItem>
               <MenuItem value="Maintenance">Maintenance</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              displayEmpty
+              disabled={saving}
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="completed">Completed</MenuItem>
             </Select>
           </FormControl>
           <TextField

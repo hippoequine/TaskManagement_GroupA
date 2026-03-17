@@ -36,6 +36,12 @@ const Project = sequelize.define(
       allowNull: true,
     },
 
+    status: {
+      type: DataTypes.ENUM('active', 'completed'),
+      allowNull: false,
+      defaultValue: 'active',
+    },
+
     owner_id: {
       type: DataTypes.UUID,
       allowNull: false,

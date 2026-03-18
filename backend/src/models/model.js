@@ -78,4 +78,5 @@ export {
   AttachmentProject,
   Board,
   IssueBoard,
+  Project,
 };

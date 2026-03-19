@@ -63,6 +63,12 @@ function CreateIssueForm({
     setErrorMessage(null);
     setSuccessMessage(null);
 
+    if (!currentProject?.id || !currentBoard?.id) {
+      setErrorMessage('Project or board not available.');
+      setIsLoading(false);
+      return;
+    }
+
     // Build payload using backend-expected field names
     const payload = {
       projectId: currentProject.id,
@@ -97,11 +103,8 @@ function CreateIssueForm({
         }
       }
 
-      // Notify parent of success and close after a short delay
       if (onIssueCreation) {
-        setTimeout(() => {
-          onIssueCreation(false); // close modal
-        }, 2000);
+        onIssueCreation();
       }
     } catch (err) {
       console.error('Submit error:', err);
@@ -178,7 +181,7 @@ function CreateIssueForm({
             <Button
               type="button"
               variant="outlined"
-              onClick={() => onIssueCreation(false)}
+              onClick={() => onIssueCreation()}
               disabled={isLoading}
             >
               Cancel

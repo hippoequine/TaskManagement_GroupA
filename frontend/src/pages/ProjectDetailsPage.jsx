@@ -66,7 +66,7 @@ export default function ProjectDetailsPage() {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Box sx={{ maxWidth: 1400, mx: 'auto' }} elevation={0} variant="outlined">
+      <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
         <Box
           sx={{
             display: 'flex',

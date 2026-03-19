@@ -31,7 +31,7 @@ describe('issuesController', () => {
         title: 'Test Issue',
         description: 'Something broke',
         reporterId: 1,
-        boardIds: 1,
+        boardId: 1,
         assigneeIds: [2],
       },
     };
@@ -163,7 +163,6 @@ describe('issuesController', () => {
     const fakeIssue = {
       update: vi.fn(),
       setAssignees: vi.fn(),
-      setBoards: vi.fn(),
     };
 
     Issue.findByPk

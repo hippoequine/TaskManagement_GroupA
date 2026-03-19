@@ -74,9 +74,9 @@ async function run() {
       });
 
       if (i % 3 === 0) {
-        await issue.setBoards([board1]);
+        await issue.update({ boardId: board1.id || board1 });
       } else {
-        await issue.setBoards([board2]);
+        await issue.update({ boardId: board2.id || board2 });
       }
     }
 

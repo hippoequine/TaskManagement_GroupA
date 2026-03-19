@@ -58,6 +58,7 @@ components:
         storyPoints: { type: integer }
         dueDate: { type: string, format: date-time }
         reporterId: { type: string, format: uuid }
+        boardId: { type: string, format: uuid }
         assigneeIds: { type: array, items: { type: string, format: uuid } }
         isArchived: { type: boolean }
         parentIssueId: { type: string, format: uuid }
@@ -131,6 +132,7 @@ components:
           enum: [low, medium, high, critical]
         storyPoints: { type: integer }
         dueDate: { type: string, format: date-time }
+        boardId: { type: string, format: uuid }
         parentIssueId: { type: string, format: uuid }
         isArchived: { type: boolean }
     CommentInput:

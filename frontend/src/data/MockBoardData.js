@@ -7,7 +7,7 @@ export const TASK_TYPES = {
 
 // Status columns
 export const STATUSES = {
-  TODO: 'todo',
+  BACKLOG: 'backlog',
   IN_PROGRESS: 'in_progress',
   IN_REVIEW: 'in_review',
   DONE: 'done',
@@ -15,7 +15,7 @@ export const STATUSES = {
 
 // Column configuration
 export const columns = [
-  { id: STATUSES.TODO, title: 'To Do' },
+  { id: STATUSES.BACKLOG, title: 'Backlog' },
   { id: STATUSES.IN_PROGRESS, title: 'In Progress' },
   { id: STATUSES.IN_REVIEW, title: 'In Review' },
   { id: STATUSES.DONE, title: 'Done' },
@@ -37,7 +37,7 @@ export const tasks = [
       'Developing tactile response patterns for interaction controllers and sensory modules.',
     type: TASK_TYPES.EPIC,
     storyPoints: 8,
-    status: STATUSES.TODO,
+    status: STATUSES.BACKLOG,
     assignee: 'Dev 1',
   },
   {
@@ -47,7 +47,7 @@ export const tasks = [
       'Implementing eye-tracking interaction models for menu traversal and object selection.',
     type: TASK_TYPES.STORY,
     storyPoints: 5,
-    status: STATUSES.TODO,
+    status: STATUSES.BACKLOG,
     assignee: 'Dev 2',
   },
   {
@@ -57,7 +57,7 @@ export const tasks = [
       'Fine-tuning render distances and peripheral visibility settings for optimal performance.',
     type: TASK_TYPES.SUBTASK,
     storyPoints: 3,
-    status: STATUSES.TODO,
+    status: STATUSES.BACKLOG,
     assignee: 'Dev 3',
   },
   {
@@ -67,7 +67,7 @@ export const tasks = [
       'Validating safety perimeter rendering and collision detection for room-scale experiences.',
     type: TASK_TYPES.STORY,
     storyPoints: 5,
-    status: STATUSES.TODO,
+    status: STATUSES.BACKLOG,
     assignee: 'Dev 1',
   },
 

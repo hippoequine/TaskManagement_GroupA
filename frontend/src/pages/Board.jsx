@@ -92,7 +92,8 @@ export default function Board() {
 
   const columns = currentBoard?.columns || [
     { id: 'backlog', title: 'Backlog' },
-    { id: 'in-progress', title: 'In Progress' },
+    { id: 'in_progress', title: 'In Progress' },
+    { id: 'reviewed', title: 'In Review' },
     { id: 'done', title: 'Done' },
   ];
 

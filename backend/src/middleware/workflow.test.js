@@ -119,7 +119,6 @@ describe('requireWorkflowCompliance middleware', () => {
 
     const next = vi.fn();
 
-    // Middleware should short-circuit before fetching the issue
     await requireWorkflowCompliance(req, res, next);
 
     expect(next).toHaveBeenCalled();

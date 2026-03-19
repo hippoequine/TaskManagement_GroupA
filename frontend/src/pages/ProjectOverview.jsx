@@ -1,14 +1,5 @@
-import {
-  Box,
-  Paper,
-  Typography,
-  Button,
-  Divider,
-  Breadcrumbs,
-  Avatar,
-  Chip,
-} from '@mui/material';
 import { Dashboard, Settings } from '@mui/icons-material';
+import { Avatar, Box, Button, Chip, Divider, Typography } from '@mui/material';
 import { Link, useOutletContext } from 'react-router';
 
 export default function ProjectOverview() {

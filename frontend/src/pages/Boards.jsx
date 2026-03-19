@@ -113,7 +113,7 @@ export default function BoardsPage() {
             mb: 3,
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: 400, color: '#b0b0b0' }}>
+          <Typography variant="h4" sx={{ fontWeight: 400 }}>
             Boards
           </Typography>
           <Button

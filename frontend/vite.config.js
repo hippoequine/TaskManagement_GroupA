@@ -1,8 +1,7 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default ({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+export default () => {
   // https://vite.dev/config/
   return defineConfig({
     server: {

@@ -155,7 +155,7 @@ function CreateIssueForm({
           onUpdatePriority={handleChange('priority')}
         />
 
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <span>Story Points</span>
           <StoryPointButtonGroup
             points={issueData.storyPoints}

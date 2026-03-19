@@ -65,7 +65,7 @@ async function run() {
           title,
           description: faker.lorem.sentences(2),
           type: faker.helpers.arrayElement(sampleTypes),
-          status: 'todo',
+          status: 'backlog',
           priority: faker.helpers.arrayElement(['low', 'medium', 'high']),
           reporterId: reporter.id,
           storyPoints: faker.number.int({ min: 1, max: 8 }),

@@ -61,7 +61,7 @@ export function BoardProvider({ children }) {
 
   return (
     <BoardContext.Provider
-      value={{ boards, currentBoard, loading, error, switchBoard }}
+      value={{ boards, currentBoard, fetchBoards, loading, error, switchBoard }}
     >
       {children}
     </BoardContext.Provider>

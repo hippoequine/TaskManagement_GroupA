@@ -9,14 +9,14 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import boardsApi from '../api/boardsApi';
+import { boardsApi } from '../api/boardsApi';
 import { useBoard } from '../context/BoardContext';
-import { useProjects } from '../context/ProjectContext';
+import { useProject } from '../context/ProjectContext';
 
-export default function CreateProjectPage() {
+export default function CreateBoard() {
   const navigate = useNavigate();
   const { fetchBoards } = useBoard();
-  const { fetchProjects } = useProjects();
+  const { fetchProjects, currentProject } = useProject();
 
   const [title, setTitle] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -32,13 +32,16 @@ export default function CreateProjectPage() {
     setError('');
     try {
       const res = await boardsApi.create({
+        projectId: currentProject.id,
         title: title.trim(),
       });
       const board = res.data;
+      console.log(board);
       fetchBoards();
       fetchProjects();
       setCreatedBoardId(board.id);
     } catch (err) {
+      console.log(err);
       setError(
         err?.response?.data?.error ||
           'Failed to create board. Please try again.'
@@ -81,7 +84,9 @@ export default function CreateProjectPage() {
 
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
               <Button
-                onClick={() => navigate('/projects')}
+                onClick={() =>
+                  navigate(`/projects/${currentProject.id}/boards`)
+                }
                 disabled={submitting}
               >
                 Cancel
@@ -89,7 +94,11 @@ export default function CreateProjectPage() {
               {createdBoardId ? (
                 <Button
                   variant="contained"
-                  onClick={() => navigate('/projects')}
+                  onClick={() =>
+                    navigate(
+                      `/projects/${currentProject.id}/board/${createdBoardId}`
+                    )
+                  }
                   sx={{ bgcolor: '#333', '&:hover': { bgcolor: '#444' } }}
                 >
                   Done

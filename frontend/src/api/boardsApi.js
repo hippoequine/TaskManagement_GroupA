@@ -14,4 +14,6 @@ export const boardsApi = {
    * const boards = await boardsApi.getAll(1);
    */
   getAll: (projectId) => api.get(`/projects/${projectId}/boards`),
+
+  create: (payload) => api.post('/boards', payload),
 };

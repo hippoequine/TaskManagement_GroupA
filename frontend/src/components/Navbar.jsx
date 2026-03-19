@@ -47,7 +47,7 @@ export default function Navbar() {
     <AppBar
       position="static"
       color="default"
-      elevation={1}
+      elevation={0}
       sx={{ bgcolor: 'white' }}
     >
       <Toolbar sx={{ gap: 2, minHeight: 56, alignItems: 'center' }}>
@@ -308,7 +308,7 @@ export default function Navbar() {
             }}
           >
             {keycloak.authenticated ? (
-              <>
+              <Box>
                 <Box
                   sx={{
                     margin: '1rem',
@@ -350,7 +350,7 @@ export default function Navbar() {
                 >
                   Log out
                 </MenuItem>
-              </>
+              </Box>
             ) : (
               <MenuItem
                 onClick={() => {

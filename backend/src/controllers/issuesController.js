@@ -11,7 +11,7 @@ export const createIssue = async (req, res) => {
       title,
       storyPoints,
       dueDate,
-      boardIds,
+      boardId,
       assigneeIds,
     } = req.body;
 
@@ -23,11 +23,8 @@ export const createIssue = async (req, res) => {
       title,
       storyPoints,
       dueDate,
+      boardId: boardId,
     });
-
-    if (Array.isArray(boardIds) && boardIds.length > 0 && issue.setBoards) {
-      await issue.setBoards(boardIds);
-    }
 
     if (
       Array.isArray(assigneeIds) &&
@@ -90,6 +87,8 @@ export const updateIssue = async (req, res) => {
       });
     }
 
+    console.log(req.body);
+
     const allowedFields = [
       'type',
       'description',
@@ -98,6 +97,7 @@ export const updateIssue = async (req, res) => {
       'status',
       'storyPoints',
       'dueDate',
+      'boardId',
     ];
 
     const updates = {};
@@ -115,24 +115,12 @@ export const updateIssue = async (req, res) => {
       }
     }
 
-    if (req.body.boardIds && Array.isArray(req.body.boardIds)) {
-      if (issue.setBoards) {
-        await issue.setBoards(req.body.boardIds);
-      }
-    }
-
     const updatedIssue = await Issue.findByPk(id, {
       include: [
         {
           model: User,
           as: 'assignees',
           attributes: ['id', 'firstName', 'lastName', 'email'],
-        },
-        {
-          model: Board,
-          as: 'boards',
-          attributes: ['id', 'title'],
-          through: { attributes: [] },
         },
       ],
     });
@@ -180,6 +168,7 @@ export const getAllIssues = async (req, res) => {
   try {
     const { search, type, reporterId, priority, status } = req.query;
     const boardId = req.params.boardId || req.params.id || null;
+    console.log(boardId);
 
     const where = {};
 
@@ -199,7 +188,7 @@ export const getAllIssues = async (req, res) => {
     if (boardId) {
       include.push({
         model: Board,
-        as: 'boards',
+        as: 'board',
         where: { id: boardId },
         attributes: [],
         through: { attributes: [] },

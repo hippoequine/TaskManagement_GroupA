@@ -68,23 +68,7 @@ export default function ProjectDetailsPage() {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Breadcrumbs sx={{ mb: 2 }}>
-        <Link
-          to="/projects"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          Projects
-        </Link>
-        <Link
-          to={`/projects/${project.id}`}
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          {project.name}
-        </Link>
-        <Typography color="text.primary">Details</Typography>
-      </Breadcrumbs>
-
-      <Paper sx={{ p: 4 }} elevation={0} variant="outlined">
+      <Box sx={{ maxWidth: 1400, mx: 'auto' }} elevation={0} variant="outlined">
         <Box
           sx={{
             display: 'flex',
@@ -185,7 +169,7 @@ export default function ProjectDetailsPage() {
             Save Changes
           </Button>
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 }

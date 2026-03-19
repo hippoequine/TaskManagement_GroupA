@@ -22,7 +22,14 @@ function AdminDashboard() {
   };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        height: '100%',
+        maxWidth: 1400,
+        mx: 'auto',
+      }}
+    >
       <Box sx={{ py: 3 }}>
         {/* Header */}
         <Box

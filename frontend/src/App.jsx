@@ -1,14 +1,14 @@
 import './App.css';
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
-import { Button, CircularProgress, Typography, Box } from '@mui/material';
+
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import useAuth from './auth/useAuth.js';
 import AdminDashboard from './dashboard/AdminDashboard.jsx';
 import ClinicianDashboard from './dashboard/ClinicianDashboard.jsx';
 import DeveloperDashboard from './dashboard/DeveloperDashboard.jsx';
+import Unauthorized from './pages/Unauthorized.jsx';
 
 function App() {
-  const { user, isAuthenticated, login, logout, isLoading, roles } = useAuth();
+  const { isAuthenticated, logout, isLoading, roles } = useAuth();
 
   //Shows a spinner while AuthProvider is fetching the user profile
   if (isLoading) {
@@ -58,37 +58,8 @@ function App() {
   };
 
   return (
-    <div>
-      {isAuthenticated ? (
-        <Box>
-          <Typography variant="body1">
-            Welcome, <strong>{user?.name || 'User'}</strong>!
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Roles: {roles.length > 0 ? roles.join(', ') : 'No roles assigned'}
-          </Typography>
-
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={logout}
-            sx={{ mt: 2 }}
-          >
-            Logout
-          </Button>
-        </Box>
-      ) : (
-        <Box>
-          <Typography variant="body1" gutterBottom>
-            Please log in to continue.
-          </Typography>
-          <Button variant="contained" color="primary" onClick={login}>
-            Login
-          </Button>
-        </Box>
-      )}
-
-      {isAuthenticated && displayDashboard()}
+    <div style={{ height: '100vh' }}>
+      {isAuthenticated ? displayDashboard() : <Unauthorized />}
     </div>
   );
 }

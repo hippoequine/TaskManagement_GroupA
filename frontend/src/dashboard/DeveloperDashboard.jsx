@@ -82,7 +82,14 @@ function DeveloperDashboard() {
   ];
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        height: '100%',
+        maxWidth: 1400,
+        mx: 'auto',
+      }}
+    >
       {/* ADDED MODALS */}
       <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
         <Box

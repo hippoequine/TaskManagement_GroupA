@@ -23,7 +23,6 @@ export function TasksProvider({ children }) {
     setLoading(true);
     try {
       const { data } = await tasksApi.getAll(currentBoard.id);
-      console.log(data);
       setTasks(data.issues);
     } catch (err) {
       setError(err.message);

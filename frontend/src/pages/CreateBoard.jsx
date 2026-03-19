@@ -36,12 +36,10 @@ export default function CreateBoard() {
         title: title.trim(),
       });
       const board = res.data;
-      console.log(board);
       fetchBoards();
       fetchProjects();
       setCreatedBoardId(board.id);
     } catch (err) {
-      console.log(err);
       setError(
         err?.response?.data?.error ||
           'Failed to create board. Please try again.'

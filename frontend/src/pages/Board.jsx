@@ -89,7 +89,6 @@ export default function Board() {
     setOpenCreateIssue(false);
     fetchTasks();
   };
-  console.log(tasks);
 
   const columns = currentBoard?.columns || [
     { id: 'backlog', title: 'Backlog' },

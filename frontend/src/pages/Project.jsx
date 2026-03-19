@@ -1,16 +1,9 @@
 import { Alert, Box } from '@mui/material';
-import { Outlet, useParams } from 'react-router';
+import { Outlet } from 'react-router';
 import { useProject } from '../context/ProjectContext';
-import { useMemo } from 'react';
 
 export default function Project() {
-  const { projectId } = useParams();
-  const { projects, loading } = useProject();
-
-  const project = useMemo(
-    () => projects.find((p) => String(p.id) === String(projectId)),
-    [projects, projectId]
-  );
+  const { currentProject: project, loading } = useProject();
 
   if (loading && !project) {
     return (

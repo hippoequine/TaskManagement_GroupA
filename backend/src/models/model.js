@@ -5,6 +5,7 @@ import Attachment from './Attachment.js';
 import Board from './Board.js';
 import IssueBoard from './IssueBoard.js';
 import AttachmentProject from './AttachmentProject.js';
+import Project from './Project.js';
 
 // =============== Associations ===============
 
@@ -63,6 +64,10 @@ export function applyAssociations() {
     foreignKey: 'boardId',
     otherKey: 'issueId',
   });
+
+  // Project owner
+  Project.belongsTo(User, { as: 'owner', foreignKey: 'owner_id' });
+  User.hasMany(Project, { as: 'ownedProjects', foreignKey: 'owner_id' });
 }
 
 export {
@@ -73,4 +78,5 @@ export {
   AttachmentProject,
   Board,
   IssueBoard,
+  Project,
 };

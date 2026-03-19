@@ -19,6 +19,8 @@ import Board from './pages/Board.jsx';
 import ProjectOverview from './pages/ProjectOverview.jsx';
 import Project from './pages/Project.jsx';
 import { UsersProvider } from './context/UsersContext.jsx';
+import CreateProjectPage from './pages/CreateProjectPage.jsx';
+import ProjectDetailsPage from './pages/ProjectDetailsPage.jsx';
 
 setInterval(() => {
   if (keycloak.authenticated) {
@@ -50,9 +52,11 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="projects" element={<ProjectLayout />}>
             <Route index element={<Projects />} />
+            <Route path="create" element={<CreateProjectPage />} />
 
             <Route path=":projectId" element={<Project />}>
               <Route index element={<ProjectOverview />} />
+              <Route path="details" element={<ProjectDetailsPage />} />
 
               <Route path="board" element={<BoardLayout />}>
                 <Route index element={<Boards />} />

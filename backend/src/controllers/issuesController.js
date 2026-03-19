@@ -1,5 +1,5 @@
-import { Issue, Board, User } from '../models/model.js';
 import { Op } from 'sequelize';
+import { Issue, User } from '../models/model.js';
 
 export const createIssue = async (req, res) => {
   try {
@@ -87,8 +87,6 @@ export const updateIssue = async (req, res) => {
       });
     }
 
-    console.log(req.body);
-
     const allowedFields = [
       'type',
       'description',
@@ -168,10 +166,10 @@ export const getAllIssues = async (req, res) => {
   try {
     const { search, type, reporterId, priority, status } = req.query;
     const boardId = req.params.boardId || req.params.id || null;
-    console.log(boardId);
 
     const where = {};
 
+    if (boardId) where.boardId = boardId;
     if (type) where.type = type;
     if (reporterId) where.reporterId = reporterId;
     if (priority) where.priority = priority;
@@ -184,17 +182,6 @@ export const getAllIssues = async (req, res) => {
     }
 
     const include = [];
-
-    if (boardId) {
-      include.push({
-        model: Board,
-        as: 'board',
-        where: { id: boardId },
-        attributes: [],
-        through: { attributes: [] },
-        required: true,
-      });
-    }
 
     include.push({
       model: User,

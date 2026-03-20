@@ -41,7 +41,7 @@ function AdminDashboard() {
         mx: 'auto',
       }}
     >
-      <Box sx={{ py: 3 }}>
+      <Box sx={{ py: 3, margin: '2em' }}>
         {/* Header */}
         <Box
           sx={{

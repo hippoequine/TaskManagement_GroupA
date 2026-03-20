@@ -10,7 +10,15 @@ import PropTypes from 'prop-types';
  */
 function StatCard({ value, title, subtitle }) {
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 2,
+        width: '100%',
+      }}
+    >
       <CardContent>
         <Typography variant="h5" fontWeight="bold">
           {value}
@@ -19,7 +27,7 @@ function StatCard({ value, title, subtitle }) {
         <Typography>{title}</Typography>
 
         {/* Optional parameter */}
-        {subtitle && <Typography>{subtitle}</Typography>}
+        {subtitle && <Typography variant="body2">{subtitle}</Typography>}
       </CardContent>
     </Card>
   );

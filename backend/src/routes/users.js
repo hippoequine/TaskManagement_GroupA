@@ -83,7 +83,15 @@ router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
       order: [['lastName', 'ASC']],
-      attributes: ['id', 'firstName', 'lastName', 'email', 'role', 'timezone'],
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'email',
+        'role',
+        'timezone',
+        'createdAt',
+      ],
     });
 
     const safe = users.map((u) => ({
@@ -92,6 +100,7 @@ router.get('/', async (req, res, next) => {
       email: u.email,
       role: u.role,
       timezone: u.timezone,
+      createdAt: u.createdAt,
     }));
     res.json(safe);
   } catch (err) {

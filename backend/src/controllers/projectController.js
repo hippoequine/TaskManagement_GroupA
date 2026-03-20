@@ -76,7 +76,7 @@ export const getProjects = async (req, res, next) => {
     const limit = Math.max(1, parseInt(req.query.limit) || 10);
     const offset = (page - 1) * limit;
 
-    const where = { owner_id: req.user.sub };
+    const where = {};
     if (req.query.category) {
       where.category = req.query.category;
     }

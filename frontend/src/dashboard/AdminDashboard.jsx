@@ -1,8 +1,19 @@
 import { Box, Button, Grid, Tab, Tabs, Typography } from '@mui/material';
 import { useState } from 'react';
-import StatCard from '../components/StatCard';
 import CustomTabPanel from '../components/CustomTabPanel';
 import GetTodaysDate from '../components/GetTodaysDate';
+import UserTable from '../components/UserTable';
+import UsersStatCard from '../components/UsersStatCard';
+import ProjectTable from '../components/ProjectTable';
+import TaskTable from '../components/TaskTable';
+import { TasksProvider } from '../context/TasksContext';
+import { BoardProvider } from '../context/BoardContext';
+import OverviewPanel from '../components/OverviewPanel';
+import { ProjectProvider } from '../context/ProjectContext';
+import ProjectsStatCard from '../components/ProjectsStatCard';
+import TasksStatCard from '../components/TasksStatCard';
+import ProjectsCompletionRateStatCard from '../components/ProjectsCompletionRateStatCard';
+
 /**
  * Function to implement accessible tabs following WAI-ARIA Authoring Practices.
  * @param {number} index the index of the tab
@@ -39,30 +50,35 @@ function AdminDashboard() {
             </Typography>
             <GetTodaysDate />
           </Box>
-          <Button variant="contained">+ Add User</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              window.location.href = 'http://localhost:8080';
+            }}
+          >
+            KEYCLOAK
+          </Button>
         </Box>
 
         {/* Stat cards */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard
-              value="50"
-              title="Total Users"
-              subtitle="10 Clinician, 40 Developers"
-            />
+            <UsersStatCard />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard
-              value="200"
-              title="Total Tickets"
-              subtitle="150 Active, 50 Completed"
-            />
+            <ProjectsStatCard />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="90%" title="Rate" subtitle="Last 30 days" />
+            <ProjectProvider>
+              <BoardProvider>
+                <TasksProvider>
+                  <TasksStatCard />
+                </TasksProvider>
+              </BoardProvider>
+            </ProjectProvider>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="90%" title="Rate" subtitle="Last 30 days" />
+            <ProjectsCompletionRateStatCard />
           </Grid>
         </Grid>
 
@@ -81,21 +97,33 @@ function AdminDashboard() {
             aria-label="basic tabs for the dashboard"
           >
             <Tab label="Overview" {...a11yProps(0)} />
-            <Tab label="User Management" {...a11yProps(1)} />
-            <Tab label="System Management" {...a11yProps(2)} />
-            <Tab label="All Tickets" {...a11yProps(3)} />
+            <Tab label="Users" {...a11yProps(1)} />
+            <Tab label="Projects" {...a11yProps(2)} />
+            <Tab label="Tasks" {...a11yProps(3)} />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
-            Overview information will go here
+            <ProjectProvider>
+              <BoardProvider>
+                <TasksProvider>
+                  <OverviewPanel />
+                </TasksProvider>
+              </BoardProvider>
+            </ProjectProvider>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            User Management information will go here
+            <UserTable />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            System Management information will go here
+            <ProjectProvider>
+              <ProjectTable />
+            </ProjectProvider>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
-            All Tickets information will go here
+            <BoardProvider>
+              <TasksProvider>
+                <TaskTable />
+              </TasksProvider>
+            </BoardProvider>
           </CustomTabPanel>
         </Box>
       </Box>

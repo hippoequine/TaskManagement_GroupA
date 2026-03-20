@@ -4,9 +4,6 @@ import { useProject } from '../context/ProjectContext';
 function ProjectsCompletionRateStatCard() {
   const { projects, loading } = useProject();
 
-  const totalProjectsActive = projects.filter(
-    (p) => p.status === 'active'
-  ).length;
   const totalProjectsCompleted = projects.filter(
     (p) => p.status === 'completed'
   ).length;

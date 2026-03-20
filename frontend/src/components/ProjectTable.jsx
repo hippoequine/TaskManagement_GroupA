@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   CircularProgress,
   Paper,
   Table,
@@ -12,6 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import { useProject } from '../context/ProjectContext';
+import { act } from 'react';
+
+const statusColors = {
+  active: 'primary',
+  completed: 'success',
+};
 
 function ProjectTable() {
   const { projects, loading, error } = useProject();
@@ -63,7 +70,13 @@ function ProjectTable() {
                   ? `${p.owner.firstName} ${p.owner.lastName}`
                   : 'Unassigned'}
               </TableCell>
-              <TableCell>{p.status}</TableCell>
+              <TableCell>
+                <Chip
+                  color={statusColors[p.status] || 'default'}
+                  label={p.status}
+                  size="small"
+                />
+              </TableCell>
               <TableCell>
                 {new Date(p.created_at).toLocaleDateString()}
               </TableCell>

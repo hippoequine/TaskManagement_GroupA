@@ -1,79 +1,217 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
 import { useTasks } from '../context/TasksContext';
-import ProjectTable from './ProjectTable';
-import TaskTable from './TaskTable';
-import UserTable from './UserTable';
+import TasksPieChart from './TasksPieChart';
+
+const statusColors = {
+  backlog: 'default',
+  in_progress: 'primary',
+  reviewed: 'warning',
+  done: 'success',
+  active: 'primary',
+  completed: 'success',
+  high: 'error',
+  medium: 'warning',
+  low: 'success',
+};
 
 function OverviewPanel() {
   const { users, loading: usersLoading } = useUsers();
   const { projects, loading: projectsLoading } = useProject();
   const { tasks, loading: tasksLoading } = useTasks();
-  console.log('user sample:', users[0]);
 
-  // Get the 5 latest tasks
+  // Get the 3 latest tasks
   const recentTasks = [...tasks]
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-    .slice(0, 5);
+    .slice(0, 3);
 
-  // Get the 5 latest users created
+  // Get the 3 latest users created
   const recentUsers = [...users]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 5);
+    .slice(0, 3);
 
-  // Get the 5 latest projects created
+  // Get the 3 latest projects created
   const recentProjects = [...projects]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 5);
+    .slice(0, 3);
 
   return (
     <Box>
-      {/* NEW USERS */}
-      <Grid container spacing={2} mb={2}>
+      <Grid container spacing={2} gap={8}>
+        {/* TASK STATUS CHART */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={1}>
-              New Users
-            </Typography>
-            {usersLoading ? (
-              <Typography>Loading...</Typography>
-            ) : (
-              <UserTable users={recentUsers} />
-            )}
-          </Paper>
+          <Typography variant="h6" fontWeight="bold" mb={1}>
+            TASK STATUS
+          </Typography>
+          <TasksPieChart />
         </Grid>
-      </Grid>
 
-      {/* NEW PROJECTS */}
-      <Grid container spacing={2} mb={2}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={1}>
-              New Projects
-            </Typography>
+        <Grid item xs={12} md={6}>
+          {/* NEW PROJECTS */}
+          <Typography variant="h6" fontWeight="bold" mb={1}>
+            NEWEST PROJECTS
+          </Typography>
+          <Box sx={{ p: 2, width: '100%' }}>
             {projectsLoading ? (
               <Typography>Loading...</Typography>
             ) : (
-              <ProjectTable projects={recentProjects} />
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Owner</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>
+                      Date Created
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {recentProjects.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">
+                        No projects found!
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    recentProjects.map((p) => (
+                      <TableRow key={p.id}>
+                        <TableCell>{p.name}</TableCell>
+                        <TableCell>
+                          {p.owner
+                            ? `${p.owner.firstName} ${p.owner.lastName}`
+                            : 'Unassigned'}
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label={p.status}
+                            color={statusColors[p.status] ?? 'default'}
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {p.created_at
+                            ? new Date(p.created_at).toLocaleDateString()
+                            : 'N/A'}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
             )}
-          </Paper>
+          </Box>
         </Grid>
-      </Grid>
 
-      {/* NEW TASKS */}
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={1}>
-              New Tasks
-            </Typography>
+        <Grid item xs={12} md={6}>
+          {/* NEW USERS */}
+          <Typography variant="h6" fontWeight="bold" mb={1}>
+            NEWEST USERS
+          </Typography>
+          <Box sx={{ p: 2, width: '100%' }}>
+            {usersLoading ? (
+              <Typography>Loading...</Typography>
+            ) : (
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Role</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>
+                      Date Joined
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {recentUsers.map((u) => (
+                    <TableRow key={u.id}>
+                      <TableCell>{u.fullName}</TableCell>
+                      <TableCell>
+                        <Chip label={u.role} size="small" />
+                      </TableCell>
+                      <TableCell>
+                        {u.createdAt
+                          ? new Date(u.createdAt).toLocaleDateString()
+                          : 'N/A'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          {/* NEW TASKS */}
+          <Typography variant="h6" fontWeight="bold" mb={1}>
+            NEWEST TASKS
+          </Typography>
+          <Box sx={{ p: 2, width: '100%' }}>
             {tasksLoading ? (
               <Typography>Loading...</Typography>
             ) : (
-              <TaskTable tasks={recentTasks} />
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Assignee</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Priority</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>
+                      Date Created
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {recentTasks.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">
+                        No tasks found!
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    recentTasks.map((t) => (
+                      <TableRow key={t.id}>
+                        <TableCell>{t.title}</TableCell>
+                        <TableCell>
+                          {t.assignees?.length
+                            ? `${t.assignees[0].firstName} ${t.assignees[0].lastName}`
+                            : 'Unassigned'}
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label={t.status}
+                            color={statusColors[t.status] ?? 'default'}
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Chip label={t.priority} size="small" />
+                        </TableCell>
+                        <TableCell>
+                          {t.updatedAt
+                            ? new Date(t.updatedAt).toLocaleDateString()
+                            : 'N/A'}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
             )}
-          </Paper>
+          </Box>
         </Grid>
       </Grid>
     </Box>

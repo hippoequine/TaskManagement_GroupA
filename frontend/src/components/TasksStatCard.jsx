@@ -11,8 +11,6 @@ function TasksStatCard() {
   const totalInReview = tasks.filter((t) => t.status === 'reviewed').length;
   const totalDone = tasks.filter((t) => t.status === 'done').length;
   const totalTasks = tasks.length;
-  const taskCompletionRate =
-    totalTasks > 0 ? ((totalDone / totalTasks) * 100).toFixed(0) : 0;
 
   return (
     <Card
@@ -26,9 +24,9 @@ function TasksStatCard() {
     >
       <CardContent>
         <Typography variant="h5" fontWeight="bold">
-          {loading ? 'Loading...' : taskCompletionRate} %
+          {loading ? 'Loading...' : totalTasks}
         </Typography>
-        <Typography>Task Completion Rate</Typography>
+        <Typography>Total Tasks</Typography>
         <Typography variant="body2">
           {totalBacklog} Backlog, {totalInProgress} In Progress, {totalInReview}{' '}
           In Review, {totalDone} Completed

@@ -16,6 +16,7 @@
     "lint": "npm run lint --prefix frontend && npm run lint --prefix backend"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
     "jsdom": "^28.1.0",
     "prettier": "^3.7.4",
     "vitest": "^4.0.18"

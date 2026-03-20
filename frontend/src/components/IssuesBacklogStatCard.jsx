@@ -15,20 +15,19 @@ function IssuesBacklogStatCard() {
         flexWrap: 'wrap',
         gap: 2,
         width: '100%',
-      }}>
-        <CardContent>
-          <Typography variant="h5" fontWeight="bold">
-            {loading ? 'Loading...' : totalIssuesBacklog}
-          </Typography>
-          <Typography>
-            Backlog Issues
-          </Typography>
-          <Typography variant="body2">
-            {loading ? 'Loading...' : `of ${totalIssues} issues`}
-          </Typography>
-        </CardContent>
-      </Card>
-  )
+      }}
+    >
+      <CardContent>
+        <Typography variant="h5" fontWeight="bold">
+          {loading ? 'Loading...' : totalIssuesBacklog}
+        </Typography>
+        <Typography>Backlog Issues</Typography>
+        <Typography variant="body2">
+          {loading ? 'Loading...' : `of ${totalIssues} issues`}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default IssuesBacklogStatCard;

@@ -6,31 +6,24 @@ function IssuesPieChart() {
   const { tasks, loading } = useTasks();
 
   const totalBacklog = tasks.filter((t) => t.status === 'backlog').length;
-  const totalInProgress = tasks.filter((t) => t.status === 'in_progress').length;
+  const totalInProgress = tasks.filter(
+    (t) => t.status === 'in_progress'
+  ).length;
   const totalInReview = tasks.filter((t) => t.status === 'reviewed').length;
   const totalCompleted = tasks.filter((t) => t.status === 'done').length;
 
   const pieData =
     tasks.length === 0
-      ? [{  id: 0,
-            label: 'No Issues', 
-            value: 1, 
-            color: '#ccc' }]
+      ? [{ id: 0, label: 'No Issues', value: 1, color: '#ccc' }]
       : [
-          { id: 0, 
-            label: 'Backlog', 
-            value: totalBacklog, 
-            color: '#9C27B0' },
+          { id: 0, label: 'Backlog', value: totalBacklog, color: '#9C27B0' },
           {
             id: 1,
             label: 'In Progress',
             value: totalInProgress,
             color: '#E91E63',
           },
-          { id: 2, 
-            label: 'In Review', 
-            value: totalInReview, 
-            color: '#ffc658' },
+          { id: 2, label: 'In Review', value: totalInReview, color: '#ffc658' },
           {
             id: 3,
             label: 'Completed',

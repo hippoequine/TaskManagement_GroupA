@@ -62,7 +62,9 @@ function ProjectTable() {
             <TableRow key={p.id}>
               <TableCell>{p.name}</TableCell>
               <TableCell>{p.key}</TableCell>
-              <TableCell>{p.description}</TableCell>
+              <TableCell>
+                <Typography variant="caption">{p.description}</Typography>
+              </TableCell>
               <TableCell>{p.category}</TableCell>
               <TableCell>
                 {p.owner

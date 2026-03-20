@@ -141,7 +141,7 @@ function DeveloperDashboard() {
               boxSizing: 'border-box',
             }}
           >
-            <Typography variant="h5" fontWeight="bold" mb={2}>
+            <Typography variant="h6" fontWeight="bold" mb={2}>
               Recent Activity
             </Typography>
           </Box>
@@ -156,7 +156,7 @@ function DeveloperDashboard() {
             boxShadow: 1,
           }}
         >
-          <Typography variant="h5" fontWeight="bold" mb={2}>
+          <Typography variant="h6" fontWeight="bold" mb={2}>
             Team Workload
           </Typography>
           <BoardProvider>

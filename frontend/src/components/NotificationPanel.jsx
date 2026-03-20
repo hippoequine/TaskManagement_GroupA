@@ -42,7 +42,7 @@ function NotificationPanel({ inputNotifications }) {
         mb: 2,
       }}
     >
-      <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
+      <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
         Notifications
       </Typography>
       <Stack spacing={1}>
@@ -58,7 +58,7 @@ function NotificationPanel({ inputNotifications }) {
                   onChange={() => toggleRead(notif.id)}
                 />
               }
-              label={<Typography>{notif.message}</Typography>}
+              label={<Typography variant="body2">{notif.message}</Typography>}
             />
           </Paper>
         ))}

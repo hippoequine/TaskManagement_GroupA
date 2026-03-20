@@ -48,11 +48,12 @@ function IssuesPieChart() {
               data: pieData,
               innerRadius: 40,
               outerRadius: 80,
-              paddingAngle: tasks.length === 0 ? 0 : 1,
+              paddingAngle: tasks.length === 0 ? 0 : 2,
               cornerRadius: 2,
             },
           ]}
           height={200}
+          width={280}
         />
       ) : (
         <Typography>Loading...</Typography>

@@ -100,7 +100,7 @@ function DeveloperDashboard() {
             }}
           >
             <Typography variant="h6" fontWeight="bold" mb={2}>
-              Task Status
+              Issues Status
             </Typography>
             <BoardProvider>
               <TasksProvider>

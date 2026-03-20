@@ -64,9 +64,6 @@ function App() {
           <Typography variant="body1">
             Welcome, <strong>{user?.name || 'User'}</strong>!
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Roles: {roles.length > 0 ? roles.join(', ') : 'No roles assigned'}
-          </Typography>
         </Box>
       ) : (
         <Box>

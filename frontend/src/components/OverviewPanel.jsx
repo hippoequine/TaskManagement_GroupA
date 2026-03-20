@@ -1,31 +1,10 @@
-import {
-  Box,
-  Chip,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
 import { useTasks } from '../context/TasksContext';
 import ProjectTable from './ProjectTable';
 import TaskTable from './TaskTable';
 import UserTable from './UserTable';
-
-const statusColors = {
-  backlog: 'default',
-  in_progress: 'primary',
-  reviewed: 'warning',
-  done: 'success',
-  active: 'primary',
-  completed: 'success',
-};
 
 function OverviewPanel() {
   const { users, loading: usersLoading } = useUsers();

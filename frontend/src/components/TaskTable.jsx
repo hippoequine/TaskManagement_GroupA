@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Box,
+  Chip,
   CircularProgress,
   Paper,
   Table,
@@ -12,6 +13,13 @@ import {
   Typography,
 } from '@mui/material';
 import { useTasks } from '../context/TasksContext';
+
+const statusColors = {
+  backlog: 'default',
+  in_progress: 'primary',
+  reviewed: 'secondary',
+  done: 'success',
+};
 
 function TaskTable() {
   const { tasks, loading, error } = useTasks();
@@ -53,7 +61,13 @@ function TaskTable() {
             <TableRow key={t.id}>
               <TableCell>{t.id}</TableCell>
               <TableCell>{t.title}</TableCell>
-              <TableCell>{t.status}</TableCell>
+              <TableCell>
+                <Chip
+                  label={t.status}
+                  color={statusColors[t.status] ?? 'default'}
+                  size="small"
+                />
+              </TableCell>
               <TableCell>{t.assignee?.fullName || 'Unassigned'}</TableCell>
               <TableCell>{t.dueDate || 'N/A'}</TableCell>
             </TableRow>

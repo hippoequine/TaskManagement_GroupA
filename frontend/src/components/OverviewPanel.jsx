@@ -52,7 +52,7 @@ function OverviewPanel() {
         {/* TASK STATUS CHART */}
         <Grid item xs={12} md={6}>
           <Typography variant="h6" fontWeight="bold" mb={1}>
-            TASK STATUS
+            Task Status
           </Typography>
           <TasksPieChart />
         </Grid>
@@ -60,7 +60,7 @@ function OverviewPanel() {
         <Grid item xs={12} md={6}>
           {/* NEW PROJECTS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
-            NEWEST PROJECTS
+            Newest Projects
           </Typography>
           <Box sx={{ p: 2, width: '100%' }}>
             {projectsLoading ? (
@@ -117,7 +117,7 @@ function OverviewPanel() {
         <Grid item xs={12} md={6}>
           {/* NEW USERS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
-            NEWEST USERS
+            Newest Users
           </Typography>
           <Box sx={{ p: 2, width: '100%' }}>
             {usersLoading ? (
@@ -156,7 +156,7 @@ function OverviewPanel() {
         <Grid item xs={12} md={6}>
           {/* NEW TASKS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
-            NEWEST TASKS
+            Newest Tasks
           </Typography>
           <Box sx={{ p: 2, width: '100%' }}>
             {tasksLoading ? (

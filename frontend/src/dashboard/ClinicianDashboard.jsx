@@ -76,7 +76,7 @@ function ClinicianDashboard() {
             boxShadow: 1,
           }}
         >
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h5" fontWeight="bold" mb={2}>
             My Projects
           </Typography>
           <ProjectTable />

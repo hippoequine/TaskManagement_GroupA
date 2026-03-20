@@ -17,7 +17,6 @@ import useAuth from '../auth/useAuth';
 import { useProject } from '../context/ProjectContext';
 import keycloak from '../keycloak';
 
-
 export default function Navbar() {
   const { user } = useAuth();
   const { projects, currentProject, switchProject } = useProject();

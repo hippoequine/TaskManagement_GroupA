@@ -4,8 +4,12 @@ import { useProject } from '../context/ProjectContext';
 function ProjectsStatCard() {
   const { projects, loading } = useProject();
 
-  const totalActiveProjects = projects.filter((p) => p.status === 'active').length;
-  const totalCompletedProjects = projects.filter((p) => p.status === 'completed').length;
+  const totalActiveProjects = projects.filter(
+    (p) => p.status === 'active'
+  ).length;
+  const totalCompletedProjects = projects.filter(
+    (p) => p.status === 'completed'
+  ).length;
   const totalProjects = projects.length;
 
   return (
@@ -23,7 +27,9 @@ function ProjectsStatCard() {
           {loading ? 'loading...' : totalProjects}
         </Typography>
         <Typography>Total Projects</Typography>
-        <Typography variant="body2">{totalActiveProjects} active, {totalCompletedProjects} completed</Typography>
+        <Typography variant="body2">
+          {totalActiveProjects} active, {totalCompletedProjects} completed
+        </Typography>
       </CardContent>
     </Card>
   );

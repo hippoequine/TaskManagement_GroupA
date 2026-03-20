@@ -61,7 +61,11 @@ function ProjectTable() {
         </TableHead>
         <TableBody>
           {projects.map((p) => (
-            <TableRow key={p.id} onClick={() => navigate(`/projects/${p.id}`)} sx={{ '&:hover': { backgroundColor: 'action.hover' } }}>
+            <TableRow
+              key={p.id}
+              onClick={() => navigate(`/projects/${p.id}`)}
+              sx={{ '&:hover': { backgroundColor: 'action.hover' } }}
+            >
               <TableCell>{p.name}</TableCell>
               <TableCell>{p.key}</TableCell>
               <TableCell>

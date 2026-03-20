@@ -13,7 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useProject } from '../context/ProjectContext';
-import { act } from 'react';
 
 const statusColors = {
   active: 'primary',

@@ -1,4 +1,4 @@
-import { Box, Paper, Typography, Grid } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useTasks } from '../context/TasksContext';
 import { PieChart } from '@mui/x-charts';
 

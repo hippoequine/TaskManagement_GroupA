@@ -1,14 +1,5 @@
-import {
-  Box,
-  Paper,
-  Typography,
-  Button,
-  Divider,
-  Breadcrumbs,
-  Avatar,
-  Chip,
-} from '@mui/material';
 import { Dashboard, Settings } from '@mui/icons-material';
+import { Avatar, Box, Button, Chip, Divider, Typography } from '@mui/material';
 import { Link, useOutletContext } from 'react-router';
 
 export default function ProjectOverview() {
@@ -16,29 +7,17 @@ export default function ProjectOverview() {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Breadcrumbs sx={{ mb: 2 }}>
-        <Link
-          to="/projects"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          Projects
-        </Link>
-        <Typography color="text.primary">{project.name}</Typography>
-      </Breadcrumbs>
-
-      <Paper sx={{ p: 3, elevation: 2 }}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             mb: 2,
           }}
         >
           <Box>
-            <Typography variant="h4" fontWeight="bold">
-              {project.name}
-            </Typography>
+            <Typography variant="h4">{project.name}</Typography>
             <Typography variant="subtitle1" color="text.secondary">
               Key: {project.key || 'N/A'}
             </Typography>
@@ -104,7 +83,7 @@ export default function ProjectOverview() {
         >
           {project.description || 'No description provided for this project.'}
         </Typography>
-      </Paper>
+      </Box>
     </Box>
   );
 }

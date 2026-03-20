@@ -20,7 +20,7 @@ const statusColors = {
   done: 'success',
 };
 
-function TaskTable() {
+function IssueTable() {
   const { tasks, loading, error } = useTasks();
 
   if (loading) {
@@ -39,10 +39,6 @@ function TaskTable() {
     );
   }
 
-  if (tasks.length === 0) {
-    return <Typography>No tasks found! </Typography>;
-  }
-
   return (
     <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
       <Table>
@@ -56,25 +52,33 @@ function TaskTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {tasks.map((t) => (
-            <TableRow key={t.id}>
-              <TableCell>{t.id}</TableCell>
-              <TableCell>{t.title}</TableCell>
-              <TableCell>
-                <Chip
-                  label={t.status}
-                  color={statusColors[t.status] ?? 'default'}
-                  size="small"
-                />
+          {tasks.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} align="center">
+                No issues found.
               </TableCell>
-              <TableCell>{t.assignee?.fullName || 'Unassigned'}</TableCell>
-              <TableCell>{t.dueDate || 'N/A'}</TableCell>
             </TableRow>
-          ))}
+          ) : (
+            tasks.map((t) => (
+              <TableRow key={t.id}>
+                <TableCell>{t.id}</TableCell>
+                <TableCell>{t.title}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={t.status}
+                    color={statusColors[t.status] ?? 'default'}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>{t.assignee?.fullName || 'Unassigned'}</TableCell>
+                <TableCell>{t.dueDate || 'N/A'}</TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </TableContainer>
   );
 }
 
-export default TaskTable;
+export default IssueTable;

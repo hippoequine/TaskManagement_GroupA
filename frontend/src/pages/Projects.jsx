@@ -117,7 +117,7 @@ export default function ProjectsPage() {
 
   return (
     <Box>
-      <Box sx={{ maxWidth: 1100, mx: 'auto', pt: 4, px: 3 }}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto', px: 3, py: 3 }}>
         {/* Page Title and Create Button */}
         <Box
           sx={{
@@ -127,7 +127,7 @@ export default function ProjectsPage() {
             mb: 3,
           }}
         >
-          <Typography variant="h4" sx={{ fontWeight: 400, color: '#e0e0e0' }}>
+          <Typography variant="h4" sx={{ fontWeight: 400 }}>
             Projects
           </Typography>
           <Button

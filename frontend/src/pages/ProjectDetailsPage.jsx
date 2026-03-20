@@ -1,23 +1,21 @@
-import { useState } from 'react';
+import { Cancel as CancelIcon, Save as SaveIcon } from '@mui/icons-material';
 import {
   Alert,
   Box,
-  Breadcrumbs,
   Button,
   CircularProgress,
   Divider,
   FormControl,
   MenuItem,
-  Paper,
   Select,
   TextField,
   Typography,
 } from '@mui/material';
-import { Save as SaveIcon, Cancel as CancelIcon } from '@mui/icons-material';
-import { Link, useNavigate, useOutletContext } from 'react-router';
-import { useProject } from '../context/ProjectContext';
-import Attachment from '../components/Attachment';
+import { useState } from 'react';
+import { useNavigate, useOutletContext } from 'react-router';
 import { projectsApi } from '../api/projectsApi';
+import Attachment from '../components/Attachment';
+import { useProject } from '../context/ProjectContext';
 
 export default function ProjectDetailsPage() {
   const { project } = useOutletContext();
@@ -68,23 +66,7 @@ export default function ProjectDetailsPage() {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Breadcrumbs sx={{ mb: 2 }}>
-        <Link
-          to="/projects"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          Projects
-        </Link>
-        <Link
-          to={`/projects/${project.id}`}
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          {project.name}
-        </Link>
-        <Typography color="text.primary">Details</Typography>
-      </Breadcrumbs>
-
-      <Paper sx={{ p: 4 }} elevation={0} variant="outlined">
+      <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
         <Box
           sx={{
             display: 'flex',
@@ -185,7 +167,7 @@ export default function ProjectDetailsPage() {
             Save Changes
           </Button>
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 }

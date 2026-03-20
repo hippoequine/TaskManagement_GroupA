@@ -8,6 +8,8 @@ function ProjectsActiveStatCard() {
     (p) => p.status === 'active'
   ).length;
 
+  const totalProjects = projects.length;
+
   return (
     <Card
       sx={{
@@ -23,7 +25,9 @@ function ProjectsActiveStatCard() {
           {loading ? 'loading...' : totalProjectsActive}
         </Typography>
         <Typography>Active Projects</Typography>
-        <Typography variant="body2">All system records</Typography>
+        <Typography variant="body2">
+          {loading ? 'loading...' : `of ${totalProjects} projects`}
+        </Typography>
       </CardContent>
     </Card>
   );

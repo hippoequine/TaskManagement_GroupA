@@ -7,6 +7,7 @@ function ProjectsCompletedStatCard() {
   const totalProjectsCompleted = projects.filter(
     (p) => p.status === 'completed'
   ).length;
+  const totalProjects = projects.length;
 
   return (
     <Card
@@ -23,7 +24,9 @@ function ProjectsCompletedStatCard() {
           {loading ? 'loading...' : totalProjectsCompleted}
         </Typography>
         <Typography>Completed Projects</Typography>
-        <Typography variant="body2">All system records</Typography>
+        <Typography variant="body2">
+          {loading ? 'loading...' : `of ${totalProjects} projects`}
+        </Typography>
       </CardContent>
     </Card>
   );

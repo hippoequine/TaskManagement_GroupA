@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react';
-import IssueTypeToggle from './issueTypeToggle';
-import UserAutocomplete from './userAutoComplete';
-import ProjectAutocomplete from './ProjectAutocomplete';
+import { Alert, Box, Button, Snackbar } from '@mui/material';
+import dayjs from 'dayjs';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import api from '../../api/axios';
+import useAuth from '../../auth/useAuth';
+import { useBoard } from '../../context/BoardContext';
+import { useProject } from '../../context/ProjectContext';
 import DescriptionField from './DescriptionField';
 import DueDatePicker from './DueDatePicker';
+import IssueTypeToggle from './issueTypeToggle';
 import PriorityLabel from './PriorityLabel';
 import StoryPointButtonGroup from './StoryPointButtonGroup';
 import TitleField from './TitleField';
-import { Button, Box, Snackbar, Alert } from '@mui/material';
-import PropTypes from 'prop-types';
-import api from '../../api/axios';
-import dayjs from 'dayjs';
 
 function CreateIssueForm({
   mode = 'create', // 'create' or 'edit'
@@ -18,16 +19,17 @@ function CreateIssueForm({
   initialData = null,
   onIssueCreation, // callback to close modal / refresh
 }) {
+  const { currentProject } = useProject();
+  const { currentBoard } = useBoard();
+  const { user } = useAuth();
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // State keys match backend expectations (from main branch)
   const [issueData, setIssueData] = useState({
-    project: null,
     type: 'story', // note: 'type', not 'issueType'
     description: '',
-    reporter: null,
     priority: 'low', // lowercase
     title: '',
     storyPoints: 1,
@@ -38,10 +40,8 @@ function CreateIssueForm({
   useEffect(() => {
     if (initialData) {
       setIssueData({
-        project: initialData.project || null,
         type: initialData.issueType || initialData.type || 'story',
         description: initialData.description || '',
-        reporter: initialData.reporter || null,
         priority: (initialData.priority || 'low').toLowerCase(),
         title: initialData.title || '',
         storyPoints: initialData.storyPoints || 1,
@@ -63,13 +63,20 @@ function CreateIssueForm({
     setErrorMessage(null);
     setSuccessMessage(null);
 
+    if (!currentProject?.id || !currentBoard?.id) {
+      setErrorMessage('Project or board not available.');
+      setIsLoading(false);
+      return;
+    }
+
     // Build payload using backend-expected field names
     const payload = {
-      project: issueData.project?.id ?? null,
+      projectId: currentProject.id,
+      boardId: currentBoard.id,
       type: issueData.type,
       description: issueData.description,
       dueDate: issueData.dueDate?.toISOString() ?? null,
-      reporterId: issueData.reporter?.id ?? null,
+      reporterId: user.sub,
       priority: issueData.priority.toLowerCase(),
       title: issueData.title,
       storyPoints: issueData.storyPoints,
@@ -86,10 +93,8 @@ function CreateIssueForm({
         // Reset form after successful creation
         if (mode === 'create') {
           setIssueData({
-            project: null,
             type: 'story',
             description: '',
-            reporter: null,
             priority: 'low',
             title: '',
             storyPoints: 1,
@@ -98,11 +103,8 @@ function CreateIssueForm({
         }
       }
 
-      // Notify parent of success and close after a short delay
       if (onIssueCreation) {
-        setTimeout(() => {
-          onIssueCreation(false); // close modal
-        }, 2000);
+        onIssueCreation();
       }
     } catch (err) {
       console.error('Submit error:', err);
@@ -133,11 +135,6 @@ function CreateIssueForm({
           onUpdateTitle={handleChange('title')}
         />
 
-        <ProjectAutocomplete
-          value={issueData.project}
-          onChange={handleChange('project')}
-        />
-
         <IssueTypeToggle
           selectedType={issueData.type}
           onTypeChange={handleChange('type')}
@@ -153,17 +150,12 @@ function CreateIssueForm({
           onDueDateUpdate={handleChange('dueDate')}
         />
 
-        <UserAutocomplete
-          userValue={issueData.reporter}
-          onUserValueChange={handleChange('reporter')}
-        />
-
         <PriorityLabel
           priority={issueData.priority}
           onUpdatePriority={handleChange('priority')}
         />
 
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <span>Story Points</span>
           <StoryPointButtonGroup
             points={issueData.storyPoints}
@@ -189,7 +181,7 @@ function CreateIssueForm({
             <Button
               type="button"
               variant="outlined"
-              onClick={() => onIssueCreation(false)}
+              onClick={() => onIssueCreation()}
               disabled={isLoading}
             >
               Cancel

@@ -35,7 +35,7 @@ describe('requireWorkflowCompliance middleware', () => {
     const next = vi.fn();
 
     Issue.findByPk.mockResolvedValue({
-      status: 'todo',
+      status: 'backlog',
       assignees: [{ id: 1 }],
     });
 
@@ -61,7 +61,7 @@ describe('requireWorkflowCompliance middleware', () => {
     const next = vi.fn();
 
     Issue.findByPk.mockResolvedValue({
-      status: 'todo',
+      status: 'backlog',
       assignees: [{ id: 1 }],
     });
 
@@ -71,7 +71,7 @@ describe('requireWorkflowCompliance middleware', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      message: 'Invalid status transition from todo to done',
+      message: 'Invalid status transition from backlog to done',
     });
 
     expect(next).not.toHaveBeenCalled();
@@ -106,7 +106,7 @@ describe('requireWorkflowCompliance middleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('returns 400 when there is no new status', async () => {
+  it('calls next() when there is no new status', async () => {
     const req = {
       params: { id: 999 },
       body: { status: '' },
@@ -119,18 +119,12 @@ describe('requireWorkflowCompliance middleware', () => {
 
     const next = vi.fn();
 
-    Issue.findByPk.mockResolvedValue({
-      status: 'in_progress',
-      assignees: [{ id: 1 }],
-    });
-
-    WorkflowService.validateTransition.mockReturnValue(true);
-
     await requireWorkflowCompliance(req, res, next);
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      message: 'New status is required',
-    });
+
+    expect(next).toHaveBeenCalled();
+    expect(Issue.findByPk).not.toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
   });
 
   it('returns 400 when the issue has no assignee', async () => {

@@ -6,6 +6,9 @@ import {
 import {
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   IconButton,
   InputAdornment,
   TextField,
@@ -16,6 +19,7 @@ import { Link, useOutletContext } from 'react-router';
 import TaskCard from '../components/task-card/TaskCard.jsx';
 import { useBoard } from '../context/BoardContext.jsx';
 import { useTasks } from '../context/TasksContext.jsx';
+import CreateIssueForm from '../components/IssueForm/CreateIssueForm.jsx';
 
 // Column Component
 function Column({ column, tasks }) {
@@ -76,13 +80,20 @@ function Column({ column, tasks }) {
 
 export default function Board() {
   const { currentBoard } = useBoard();
-  const { tasks } = useTasks();
+  const { tasks, fetchTasks } = useTasks();
+  const [openCreateIssue, setOpenCreateIssue] = useState(false);
   const { project } = useOutletContext();
   const [searchQuery, setSearchQuery] = useState('');
 
+  const handleIssueCreation = () => {
+    setOpenCreateIssue(false);
+    fetchTasks();
+  };
+
   const columns = currentBoard?.columns || [
-    { id: 'todo', title: 'To Do' },
-    { id: 'in-progress', title: 'In Progress' },
+    { id: 'backlog', title: 'Backlog' },
+    { id: 'in_progress', title: 'In Progress' },
+    { id: 'reviewed', title: 'In Review' },
     { id: 'done', title: 'Done' },
   ];
 
@@ -108,7 +119,7 @@ export default function Board() {
   }
 
   return (
-    <Box sx={{ height: '100%', bgcolor: '#fafafa' }}>
+    <Box sx={{ height: '100%' }}>
       <Box sx={{ maxWidth: 1400, mx: 'auto', px: 3, py: 3 }}>
         <Box
           sx={{
@@ -120,10 +131,13 @@ export default function Board() {
         >
           <Box>
             <Typography
-              variant="h4"
+              variant="h5"
               sx={{ fontWeight: 400, color: '#333', mb: 0.5 }}
             >
-              {project?.name} / {currentBoard?.name}
+              <Link to={`/projects/${project.id}`} style={{ color: '#a3a3a3' }}>
+                {project?.name}
+              </Link>{' '}
+              / {currentBoard?.title}
             </Typography>
             <Typography variant="body2" sx={{ color: '#888' }}>
               {new Date().toLocaleDateString('en-US', {
@@ -162,8 +176,9 @@ export default function Board() {
               variant="contained"
               startIcon={<AddIcon />}
               sx={{ bgcolor: '#333' }}
+              onClick={() => setOpenCreateIssue(true)}
             >
-              Create Task
+              Create Issue
             </Button>
           </Box>
         </Box>
@@ -174,6 +189,17 @@ export default function Board() {
           ))}
         </Box>
       </Box>
+      <Dialog
+        open={openCreateIssue}
+        onClose={() => setOpenCreateIssue(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Create Task</DialogTitle>
+        <DialogContent dividers>
+          <CreateIssueForm onIssueCreation={handleIssueCreation} />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

@@ -1,8 +1,7 @@
-import { Add, KeyboardArrowDown, Notifications } from '@mui/icons-material';
+import { Add, KeyboardArrowDown } from '@mui/icons-material';
 import {
   AppBar,
   Avatar,
-  Badge,
   Box,
   Button,
   Divider,
@@ -15,8 +14,9 @@ import {
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import useAuth from '../auth/useAuth';
-import keycloak from '../keycloak';
 import { useProject } from '../context/ProjectContext';
+import keycloak from '../keycloak';
+
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -38,7 +38,7 @@ export default function Navbar() {
     <AppBar
       position="static"
       color="default"
-      elevation={1}
+      elevation={0}
       sx={{ bgcolor: 'white' }}
     >
       <Toolbar sx={{ gap: 2, minHeight: 56, alignItems: 'center' }}>
@@ -254,16 +254,6 @@ export default function Navbar() {
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {keycloak.authenticated && (
-            <>
-              <IconButton disabled>
-                <Badge badgeContent=" " color="primary" variant="dot">
-                  <Notifications />
-                </Badge>
-              </IconButton>
-            </>
-          )}
-
           <IconButton onClick={(e) => setUserAnchor(e.currentTarget)}>
             <Avatar
               sx={{
@@ -287,7 +277,7 @@ export default function Navbar() {
             }}
           >
             {keycloak.authenticated ? (
-              <>
+              <Box>
                 <Box
                   sx={{
                     margin: '1rem',
@@ -329,7 +319,7 @@ export default function Navbar() {
                 >
                   Log out
                 </MenuItem>
-              </>
+              </Box>
             ) : (
               <MenuItem
                 onClick={() => {

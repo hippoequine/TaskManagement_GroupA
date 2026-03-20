@@ -56,6 +56,7 @@ export function ProjectProvider({ children }) {
       value={{
         projects,
         setProjects,
+        fetchProjects,
         currentProject,
         loading,
         error,

@@ -5,13 +5,13 @@ import GetTodaysDate from '../components/GetTodaysDate';
 import UserTable from '../components/UserTable';
 import UsersStatCard from '../components/UsersStatCard';
 import ProjectTable from '../components/ProjectTable';
-import TaskTable from '../components/TaskTable';
+import IssueTable from '../components/IssueTable';
 import { TasksProvider } from '../context/TasksContext';
 import { BoardProvider } from '../context/BoardContext';
 import OverviewPanel from '../components/OverviewPanel';
 import { ProjectProvider } from '../context/ProjectContext';
 import ProjectsStatCard from '../components/ProjectsStatCard';
-import TasksStatCard from '../components/TasksStatCard';
+import IssuesStatCard from '../components/IssuesStatCard';
 import ProjectsCompletionRateStatCard from '../components/ProjectsCompletionRateStatCard';
 
 /**
@@ -60,10 +60,11 @@ function AdminDashboard() {
           <Button
             variant="contained"
             onClick={() => {
-              window.location.href = 'http://localhost:8080';
+              window.location.href =
+                'http://localhost:8080/admin/taskmanager/console/';
             }}
           >
-            KEYCLOAK
+            ADD USERS
           </Button>
         </Box>
 
@@ -79,7 +80,7 @@ function AdminDashboard() {
             <ProjectProvider>
               <BoardProvider>
                 <TasksProvider>
-                  <TasksStatCard />
+                  <IssuesStatCard />
                 </TasksProvider>
               </BoardProvider>
             </ProjectProvider>
@@ -106,7 +107,7 @@ function AdminDashboard() {
             <Tab label="Overview" {...a11yProps(0)} />
             <Tab label="Users" {...a11yProps(1)} />
             <Tab label="Projects" {...a11yProps(2)} />
-            <Tab label="Tasks" {...a11yProps(3)} />
+            <Tab label="Issues" {...a11yProps(3)} />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
             <ProjectProvider>
@@ -128,7 +129,7 @@ function AdminDashboard() {
           <CustomTabPanel value={value} index={3}>
             <BoardProvider>
               <TasksProvider>
-                <TaskTable />
+                <IssueTable />
               </TasksProvider>
             </BoardProvider>
           </CustomTabPanel>

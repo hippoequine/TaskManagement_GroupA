@@ -31,7 +31,7 @@ describe('issuesController', () => {
         title: 'Test Issue',
         description: 'Something broke',
         reporterId: 1,
-        boardIds: [1],
+        boardId: 1,
         assigneeIds: [2],
       },
     };
@@ -43,7 +43,6 @@ describe('issuesController', () => {
 
     const fakeIssue = {
       id: 1,
-      setBoards: vi.fn(),
       setAssignees: vi.fn(),
     };
 
@@ -52,18 +51,17 @@ describe('issuesController', () => {
     await createIssue(req, res);
 
     expect(Issue.create).toHaveBeenCalled();
-    expect(fakeIssue.setBoards).toHaveBeenCalledWith([1]);
     expect(fakeIssue.setAssignees).toHaveBeenCalledWith([2]);
     expect(res.status).toHaveBeenCalledWith(201);
   });
 
-  it('createIssue creates issue without boards', async () => {
+  it('createIssue creates issue when no assignees provided (does not call setAssignees)', async () => {
     const req = {
       body: {
         title: 'Test issue',
         reporterId: 1,
-        boardIds: [],
-        assigneeIds: [2],
+        boardId: 1,
+        assigneeIds: [],
       },
     };
 
@@ -74,14 +72,14 @@ describe('issuesController', () => {
 
     const fakeIssue = {
       id: 1,
-      setBoards: vi.fn(),
+      setAssignees: vi.fn(),
     };
 
-    Issue.create.mockResolvedValue({});
+    Issue.create.mockResolvedValue(fakeIssue);
 
     await createIssue(req, res);
 
-    expect(fakeIssue.setBoards).not.toHaveBeenCalled();
+    expect(fakeIssue.setAssignees).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(201);
   });
 
@@ -165,7 +163,6 @@ describe('issuesController', () => {
     const fakeIssue = {
       update: vi.fn(),
       setAssignees: vi.fn(),
-      setBoards: vi.fn(),
     };
 
     Issue.findByPk
@@ -324,8 +321,9 @@ describe('issuesController', () => {
 
     expect(Issue.findAll).toHaveBeenCalledWith(
       expect.objectContaining({
+        where: expect.objectContaining({ boardId: 5 }),
         include: expect.arrayContaining([
-          expect.objectContaining({ where: { id: 5 } }),
+          expect.objectContaining({ as: 'assignees' }),
         ]),
       })
     );

@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useProject } from '../context/ProjectContext';
+import { useNavigate } from 'react-router';
 
 const statusColors = {
   active: 'primary',
@@ -21,6 +22,7 @@ const statusColors = {
 
 function ProjectTable() {
   const { projects, loading, error } = useProject();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -59,7 +61,7 @@ function ProjectTable() {
         </TableHead>
         <TableBody>
           {projects.map((p) => (
-            <TableRow key={p.id}>
+            <TableRow key={p.id} onClick={() => navigate(`/projects/${p.id}`)} sx={{ '&:hover': { backgroundColor: 'action.hover' } }}>
               <TableCell>{p.name}</TableCell>
               <TableCell>{p.key}</TableCell>
               <TableCell>

@@ -12,7 +12,7 @@ import {
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
 import { useTasks } from '../context/TasksContext';
-import TasksPieChart from './TasksPieChart';
+import IssuesPieChart from './IssuesPieChart';
 
 const statusColors = {
   backlog: 'default',
@@ -31,8 +31,8 @@ function OverviewPanel() {
   const { projects, loading: projectsLoading } = useProject();
   const { tasks, loading: tasksLoading } = useTasks();
 
-  // Get the 3 latest tasks
-  const recentTasks = [...tasks]
+  // Get the 3 latest issues
+  const recentIssues = [...tasks]
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     .slice(0, 3);
 
@@ -49,18 +49,18 @@ function OverviewPanel() {
   return (
     <Box>
       <Grid container spacing={2} gap={8}>
-        {/* TASK STATUS CHART */}
+        {/* ISSUES STATUS CHART */}
         <Grid item xs={12} md={6}>
           <Typography variant="h6" fontWeight="bold" mb={1}>
-            Task Status
+            Issue Status
           </Typography>
-          <TasksPieChart />
+          <IssuesPieChart />
         </Grid>
 
         <Grid item xs={12} md={6}>
-          {/* NEW TASKS */}
+          {/* NEW ISSUES */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
-            Newest Tasks
+            Newest Issues
           </Typography>
           <Box sx={{ p: 2, width: '100%' }}>
             {tasksLoading ? (
@@ -79,14 +79,14 @@ function OverviewPanel() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {recentTasks.length === 0 ? (
+                  {recentIssues.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={4} align="center">
-                        No tasks found!
+                        No issues found!
                       </TableCell>
                     </TableRow>
                   ) : (
-                    recentTasks.map((t) => (
+                    recentIssues.map((t) => (
                       <TableRow key={t.id}>
                         <TableCell>{t.title}</TableCell>
                         <TableCell>

@@ -1,6 +1,7 @@
 import express from 'express';
 import Board from '../models/Board.js';
-import { getAllIssues } from '../controllers/issuesController.js';
+import { Issue, User } from '../models/model.js';
+import { Op } from 'sequelize';
 
 const router = express.Router();
 
@@ -24,7 +25,41 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Filter this by boardId in the issuesController
-router.get('/:boardId/issues', getAllIssues);
+router.get('/:boardId/issues', async (req, res, next) => {
+  try {
+    const { boardId } = req.params;
+    const { search, type, reporterId, priority, status } = req.query;
+    const where = {};
+
+    if (type) where.type = type;
+    if (reporterId) where.reporterId = reporterId;
+    if (priority) where.priority = priority;
+    if (status) where.status = status;
+    if (search) {
+      where[Op.or] = [
+        { description: { [Op.iLike]: `%${search}%` } },
+        { title: { [Op.iLike]: `%${search}%` } },
+      ];
+    }
+
+    where.boardId = boardId;
+
+    const issues = await Issue.findAll({
+      where,
+      include: [
+        {
+          model: User,
+          as: 'assignees',
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+      ],
+    });
+
+    res.status(200).json({ success: true, issues });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.post('/', async (req, res, next) => {
   try {

@@ -1,5 +1,4 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
-import NotificationPanel from '../components/NotificationPanel';
 import GetTodaysDate from '../components/GetTodaysDate';
 import ProjectsStatCard from '../components/ProjectsStatCard';
 import ProjectTable from '../components/ProjectTable';
@@ -10,10 +9,6 @@ import ProjectsCompletionRateStatCard from '../components/ProjectsCompletionRate
 
 function ClinicianDashboard() {
   const navigate = useNavigate();
-  const inputNotifications = [
-    { id: 1, message: 'Project #1 Cat ipsum dolor sit amet', read: false },
-    { id: 2, message: 'Project #2 Cat ipsum dolor sit amet', read: false },
-  ];
 
   return (
     <Box
@@ -63,9 +58,6 @@ function ClinicianDashboard() {
             <ProjectsCompletionRateStatCard />
           </Grid>
         </Grid>
-
-        {/* Notification Panel */}
-        <NotificationPanel inputNotifications={inputNotifications} />
 
         {/* Main Panel */}
         <Box

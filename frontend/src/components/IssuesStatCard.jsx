@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography } from '@mui/material';
 import { useTasks } from '../context/TasksContext';
 
-function TasksStatCard() {
+function IssuesStatCard() {
   const { tasks, loading } = useTasks();
 
   const totalBacklog = tasks.filter((t) => t.status === 'backlog').length;
@@ -26,7 +26,7 @@ function TasksStatCard() {
         <Typography variant="h5" fontWeight="bold">
           {loading ? 'Loading...' : totalTasks}
         </Typography>
-        <Typography>Total Tasks</Typography>
+        <Typography>Total Issues</Typography>
         <Typography variant="body2">
           {totalBacklog} Backlog, {totalInProgress} In Progress, {totalInReview}{' '}
           In Review, {totalDone} Completed
@@ -36,4 +36,4 @@ function TasksStatCard() {
   );
 }
 
-export default TasksStatCard;
+export default IssuesStatCard;

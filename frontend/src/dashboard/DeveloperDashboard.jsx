@@ -1,24 +1,19 @@
-import { useState } from 'react';
-import { Box, Button, Grid, Typography, Modal } from '@mui/material';
-import StatCard from '../components/StatCard';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import GetTodaysDate from '../components/GetTodaysDate';
-import NotificationPanel from '../components/NotificationPanel';
-import CreateIssueForm from '../components/IssueForm/CreateIssueForm'; // ADDED
-import ViewIssue from '../components/IssueForm/ViewIssue'; // ADDED
+import { useNavigate } from 'react-router';
 import { BoardProvider } from '../context/BoardContext';
 import { TasksProvider } from '../context/TasksContext';
-import TaskTable from '../components/TaskTable';
+import IssueTable from '../components/IssueTable';
+import IssuesPieChart from '../components/IssuesPieChart';
+import IssuesCompletedStatCard from '../components/IssuesCompletedStatCard';
+import IssuesInReviewStatCard from '../components/IssuesInReviewStatCard';
+import IssuesInProgressStatCard from '../components/IssuesInProgressStatCard';
+import IssuesBacklogStatCard from '../components/IssuesBacklogStatCard';
+import ProjectsCompletedStatCard from '../components/ProjectsCompletedStatCard';
+import ProjectsPieChart from '../components/ProjectsPieChart';
 
 function DeveloperDashboard() {
-  // ADDED STATE
-  const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [selectedIssue, setSelectedIssue] = useState(null);
-
-  // UPDATED notification messages (changed "Ticket" to "Issue")
-  const inputNotifications = [
-    { id: 1, message: 'Issue #1 Cat ipsum dolor sit amet', read: false },
-    { id: 2, message: 'Issue #2 Cat ipsum dolor sit amet', read: false },
-  ];
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -29,53 +24,6 @@ function DeveloperDashboard() {
         mx: 'auto',
       }}
     >
-      {/* ADDED MODALS */}
-      <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 600,
-            maxHeight: '80vh',
-            overflow: 'auto',
-            bgcolor: 'background.paper',
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <CreateIssueForm
-            mode="create"
-            onIssueCreation={() => setOpenCreateModal(false)}
-          />
-        </Box>
-      </Modal>
-
-      <Modal open={!!selectedIssue} onClose={() => setSelectedIssue(null)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 600,
-            bgcolor: 'background.paper',
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          {selectedIssue && (
-            <ViewIssue
-              issue={selectedIssue}
-              onClose={() => setSelectedIssue(null)}
-            />
-          )}
-        </Box>
-      </Modal>
-
       <Box sx={{ py: 3, margin: '2em' }}>
         {/* Header */}
         <Box
@@ -93,15 +41,11 @@ function DeveloperDashboard() {
             <GetTodaysDate />
           </Box>
           <Box>
-            {/* UPDATED button text and added onClick */}
             <Button
               variant="contained"
-              sx={{ mr: 1, mb: 1 }}
-              onClick={() => setOpenCreateModal(true)}
+              sx={{ mb: 1 }}
+              onClick={() => navigate('/board')}
             >
-              Issues
-            </Button>
-            <Button variant="contained" sx={{ mb: 1 }}>
               Board
             </Button>
           </Box>
@@ -110,40 +54,81 @@ function DeveloperDashboard() {
         {/* Stat cards */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="5" title="To-Do" />
+            <ProjectsCompletedStatCard />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="2" title="In Review" />
+            <BoardProvider>
+              <TasksProvider>
+                <IssuesBacklogStatCard />
+              </TasksProvider>
+            </BoardProvider>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="1" title="In Progress" />
+            <BoardProvider>
+              <TasksProvider>
+                <IssuesInProgressStatCard />
+              </TasksProvider>
+            </BoardProvider>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="1" title="Completed" />
+            <BoardProvider>
+              <TasksProvider>
+                <IssuesInReviewStatCard />
+              </TasksProvider>
+            </BoardProvider>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <BoardProvider>
+              <TasksProvider>
+                <IssuesCompletedStatCard />
+              </TasksProvider>
+            </BoardProvider>
           </Grid>
         </Grid>
 
-        <Grid container spacing={2}>
-          {/* Notification Panel */}
-          <Box sx={{ width: '49.3%' }}>
-            <NotificationPanel inputNotifications={inputNotifications} />
-          </Box>
-
-          {/* Recent Activity */}
+        <Grid container spacing={2} justifyContent={'space-between'}>
+          {/* Task Status */}
           <Box
             sx={{
               bgcolor: 'background.default',
               borderRadius: 2,
               boxShadow: 1,
               mb: 2,
-              width: '49.3%',
+              width: '49%',
               p: 2,
               boxSizing: 'border-box',
             }}
           >
             <Typography variant="h6" fontWeight="bold" mb={2}>
-              Recent Activity
+              Task Status
             </Typography>
+            <BoardProvider>
+              <TasksProvider>
+                <IssuesPieChart />
+              </TasksProvider>
+            </BoardProvider>
+          </Box>
+
+          {/* Project Status */}
+          <Box
+            sx={{
+              bgcolor: 'background.default',
+              borderRadius: 2,
+              boxShadow: 1,
+              mb: 2,
+              width: '49%',
+              p: 2,
+              boxSizing: 'border-box',
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" mb={2}>
+              Project Status
+            </Typography>
+            <BoardProvider>
+              <TasksProvider>
+                <ProjectsPieChart />
+              </TasksProvider>
+            </BoardProvider>
           </Box>
         </Grid>
 
@@ -161,7 +146,7 @@ function DeveloperDashboard() {
           </Typography>
           <BoardProvider>
             <TasksProvider>
-              <TaskTable />
+              <IssueTable />
             </TasksProvider>
           </BoardProvider>
         </Box>

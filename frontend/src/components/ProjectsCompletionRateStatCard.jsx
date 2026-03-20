@@ -9,8 +9,8 @@ function ProjectsCompletionRateStatCard() {
   ).length;
   const completionRate =
     projects.length > 0
-      ? ((totalProjectsCompleted / projects.length) * 100).toFixed(2)
-      : '0.00';
+      ? ((totalProjectsCompleted / projects.length) * 100).toFixed(0)
+      : '0';
 
   return (
     <Card

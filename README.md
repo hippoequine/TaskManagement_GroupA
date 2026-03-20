@@ -86,6 +86,7 @@ npm run docker:up
 ```
 
 **Note:** You might need to rebuild Docker if you add or remove dependencies, environment variables, items in Dockerfile, and items in the docker-compose.yml
+
 ```
 docker-compose up --build
 ```

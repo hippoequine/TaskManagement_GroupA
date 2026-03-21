@@ -28,11 +28,10 @@ export const tasksApi = {
   update: (taskId, changes) => api.patch(`/issues/${taskId}`, changes),
 
   /**
-   * Retrieves all issues associated with a specific project.
-   * @param {string|number} projectId - The unique identifier of the project.
+   * Retrieves all issues.
    * @returns {Promise<Object>} A promise resolving to an array of issue objects.
    * @example
-   * const issues = await tasksApi.getAllIssues(5);
+   * const issues = await tasksApi.getAllIssues();
    */
-  getAllIssues: (projectId) => api.get(`/issues`),
+  getAllIssues: () => api.get(`/issues`),
 };

@@ -1,10 +1,8 @@
 import { createContext, useCallback, useEffect, useState } from 'react';
 import { tasksApi } from '../api/tasksApi';
-import { projectsApi } from '../api/projectsApi';
 import { useProject } from './ProjectContext';
 import { useBoard } from './BoardContext';
 import { useContext } from 'react';
-import { all } from 'axios';
 
 const TasksContext = createContext(null);
 

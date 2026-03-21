@@ -1,11 +1,13 @@
 import { Card, CardContent, Typography } from '@mui/material';
-import { useTasks } from '../context/TasksContext';
+import { useAllIssues } from '../context/TasksContext';
 
 function IssuesBacklogStatCard() {
-  const { tasks, loading } = useTasks();
+  const { issues, loading } = useAllIssues();
 
-  const totalIssuesBacklog = tasks.filter((t) => t.status === 'backlog').length;
-  const totalIssues = tasks.length;
+  const totalIssuesBacklog = issues.filter(
+    (t) => t.status === 'backlog'
+  ).length;
+  const totalIssues = issues.length;
 
   return (
     <Card

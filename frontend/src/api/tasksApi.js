@@ -26,4 +26,13 @@ export const tasksApi = {
    * await tasksApi.update( 101, { status: 'In Progress' });
    */
   update: (taskId, changes) => api.patch(`/issues/${taskId}`, changes),
+
+  /**
+   * Retrieves all issues associated with a specific project.
+   * @param {string|number} projectId - The unique identifier of the project.
+   * @returns {Promise<Object>} A promise resolving to an array of issue objects.
+   * @example
+   * const issues = await tasksApi.getAllIssues(5);
+   */
+  getAllIssues: (projectId) => api.get(`/issues`),
 };

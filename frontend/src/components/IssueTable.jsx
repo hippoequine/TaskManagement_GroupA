@@ -11,7 +11,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useTasks } from '../context/TasksContext';
+import { useAllIssues } from '../context/TasksContext';
 
 const statusColors = {
   backlog: 'default',
@@ -21,7 +21,7 @@ const statusColors = {
 };
 
 function IssueTable() {
-  const { tasks, loading, error } = useTasks();
+  const { issues, loading, error } = useAllIssues();
 
   if (loading) {
     return (
@@ -52,14 +52,14 @@ function IssueTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {tasks.length === 0 ? (
+          {issues.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} align="center">
                 No issues found.
               </TableCell>
             </TableRow>
           ) : (
-            tasks.map((t) => (
+            issues.map((t) => (
               <TableRow key={t.id}>
                 <TableCell>{t.id}</TableCell>
                 <TableCell>{t.title}</TableCell>

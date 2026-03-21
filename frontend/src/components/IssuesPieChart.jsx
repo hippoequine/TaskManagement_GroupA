@@ -1,19 +1,19 @@
 import { Box, Typography } from '@mui/material';
-import { useTasks } from '../context/TasksContext';
+import { useAllIssues } from '../context/TasksContext';
 import { PieChart } from '@mui/x-charts';
 
 function IssuesPieChart() {
-  const { tasks, loading } = useTasks();
+  const { issues, loading } = useAllIssues();
 
-  const totalBacklog = tasks.filter((t) => t.status === 'backlog').length;
-  const totalInProgress = tasks.filter(
+  const totalBacklog = issues.filter((t) => t.status === 'backlog').length;
+  const totalInProgress = issues.filter(
     (t) => t.status === 'in_progress'
   ).length;
-  const totalInReview = tasks.filter((t) => t.status === 'reviewed').length;
-  const totalCompleted = tasks.filter((t) => t.status === 'done').length;
+  const totalInReview = issues.filter((t) => t.status === 'reviewed').length;
+  const totalCompleted = issues.filter((t) => t.status === 'done').length;
 
   const pieData =
-    tasks.length === 0
+    issues.length === 0
       ? [{ id: 0, label: 'No Issues', value: 1, color: '#ccc' }]
       : [
           { id: 0, label: 'Backlog', value: totalBacklog, color: '#9C27B0' },
@@ -48,7 +48,7 @@ function IssuesPieChart() {
               data: pieData,
               innerRadius: 40,
               outerRadius: 80,
-              paddingAngle: tasks.length === 0 ? 0 : 2,
+              paddingAngle: issues.length === 0 ? 0 : 2,
               cornerRadius: 2,
             },
           ]}

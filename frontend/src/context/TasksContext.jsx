@@ -1,8 +1,10 @@
 import { createContext, useCallback, useEffect, useState } from 'react';
 import { tasksApi } from '../api/tasksApi';
+import { projectsApi } from '../api/projectsApi';
 import { useProject } from './ProjectContext';
 import { useBoard } from './BoardContext';
 import { useContext } from 'react';
+import { all } from 'axios';
 
 const TasksContext = createContext(null);
 
@@ -71,3 +73,27 @@ export function TasksProvider({ children }) {
 }
 
 export const useTasks = () => useContext(TasksContext);
+
+export function useAllIssues() {
+  const [issues, setIssues] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      setLoading(true);
+      try {
+        const { data } = await tasksApi.getAllIssues();
+
+        setIssues(data.issues);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchIssues();
+  }, []);
+
+  return { issues, loading, error };
+}

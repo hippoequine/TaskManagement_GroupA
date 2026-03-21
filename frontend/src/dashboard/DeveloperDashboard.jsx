@@ -144,11 +144,7 @@ function DeveloperDashboard() {
           <Typography variant="h6" fontWeight="bold" mb={2}>
             Team Workload
           </Typography>
-          <BoardProvider>
-            <TasksProvider>
-              <IssueTable />
-            </TasksProvider>
-          </BoardProvider>
+          <IssueTable />
         </Box>
       </Box>
     </Box>

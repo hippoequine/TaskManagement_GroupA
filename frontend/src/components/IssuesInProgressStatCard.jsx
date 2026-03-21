@@ -1,13 +1,13 @@
 import { Card, CardContent, Typography } from '@mui/material';
-import { useTasks } from '../context/TasksContext';
+import { useAllIssues } from '../context/TasksContext';
 
 function IssuesInProgressStatCard() {
-  const { tasks, loading } = useTasks();
+  const { issues, loading } = useAllIssues();
 
-  const totalIssuesInProgress = tasks.filter(
+  const totalIssuesInProgress = issues.filter(
     (t) => t.status === 'in_progress'
   ).length;
-  const totalIssues = tasks.length;
+  const totalIssues = issues.length;
 
   return (
     <Card

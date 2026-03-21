@@ -44,9 +44,9 @@ function DeveloperDashboard() {
             <Button
               variant="contained"
               sx={{ mb: 1 }}
-              onClick={() => navigate('/board')}
+              onClick={() => navigate(`/projects`)}
             >
-              Board
+              View Projects
             </Button>
           </Box>
         </Box>

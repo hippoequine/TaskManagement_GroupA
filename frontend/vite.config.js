@@ -18,6 +18,16 @@ export default () => {
     plugins: [react()],
     test: {
       environment: 'jsdom',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'html'],
+        thresholds: {
+          statements: 75,
+          branches: 75,
+          functions: 75,
+          lines: 75,
+        },
+      },
     },
   });
 };

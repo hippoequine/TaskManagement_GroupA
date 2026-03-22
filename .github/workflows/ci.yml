@@ -31,7 +31,7 @@ jobs:
         run: npm run lint
 
   test:
-    name: Unit Tests
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,5 +43,8 @@ jobs:
       - name: Install dependencies
         run: npm run ci:all
 
-      - name: Run tests
-        run: npm run test
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Run integration tests
+        run: npm run test:integration

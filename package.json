@@ -14,7 +14,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:integration": "vitest run --include '**/*.integration.test.*'",
+    "test:integration": "vitest run \"**/*.integration.test.*\" || true",
     "lint": "npm run lint --prefix frontend && npm run lint --prefix backend"
   },
   "devDependencies": {

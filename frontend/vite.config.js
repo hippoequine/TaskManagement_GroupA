@@ -18,6 +18,8 @@ export default () => {
     plugins: [react()],
     test: {
       environment: 'jsdom',
+      include: ['**/*.test.{js,jsx}'],
+      exclude: ['**/*.integration.test.{js,jsx}'],
       coverage: {
         provider: 'v8',
         reporter: ['text', 'html'],

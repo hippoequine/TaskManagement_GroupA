@@ -31,7 +31,7 @@ jobs:
         run: npm run lint
 
   test:
-    name: Tests
+    name: Unit & Integration Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -13,6 +13,7 @@
     "ci:all": "npm ci && npm ci --prefix frontend && npm ci --prefix backend",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "lint": "npm run lint --prefix frontend && npm run lint --prefix backend"
   },
   "devDependencies": {

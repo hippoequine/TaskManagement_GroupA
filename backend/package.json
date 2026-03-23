@@ -19,6 +19,7 @@
     "eslint": "^9.39.2",
     "globals": "^17.0.0",
     "nodemon": "^3.1.11",
+    "supertest": "^7.2.2",
     "vitest": "^4.0.18"
   },
   "dependencies": {
@@ -32,7 +33,7 @@
     "passport": "^0.7.0",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7",
+    "sequelize": "^6.37.8",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "yaml": "^2.8.2"

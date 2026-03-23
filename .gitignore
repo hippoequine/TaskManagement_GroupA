@@ -41,3 +41,10 @@ dist-ssr
 *.sln
 *.sw?
 data/uploads/attachments
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+frontend/.env
+backend/.env

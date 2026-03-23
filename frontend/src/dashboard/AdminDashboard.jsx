@@ -13,6 +13,7 @@ import { ProjectProvider } from '../context/ProjectContext';
 import ProjectsStatCard from '../components/ProjectsStatCard';
 import IssuesStatCard from '../components/IssuesStatCard';
 import ProjectsCompletionRateStatCard from '../components/ProjectsCompletionRateStatCard';
+import { ADMIN_CONSOLE_USERS_URL } from '../constants';
 
 /**
  * Function to implement accessible tabs following WAI-ARIA Authoring Practices.
@@ -60,8 +61,7 @@ function AdminDashboard() {
           <Button
             variant="contained"
             onClick={() => {
-              window.location.href =
-                'http://localhost:8080/admin/taskmanager/console/';
+              window.location.href = ADMIN_CONSOLE_USERS_URL;
             }}
           >
             ADD USERS

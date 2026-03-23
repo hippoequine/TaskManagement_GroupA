@@ -16,20 +16,21 @@ function IssuesStatCard() {
     <Card
       sx={{
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         flexWrap: 'wrap',
         gap: 2,
         width: '100%',
+        height: '100%',
       }}
     >
-      <CardContent>
+      <CardContent sx={{ width: '100%' }}>
         <Typography variant="h5" fontWeight="bold">
           {loading ? 'Loading...' : totalTasks}
         </Typography>
         <Typography>Total Issues</Typography>
         <Typography variant="body2">
           {totalBacklog} Backlog, {totalInProgress} In Progress, {totalInReview}{' '}
-          In Review, {totalDone} Completed
+          Reviewed, {totalDone} Done
         </Typography>
       </CardContent>
     </Card>

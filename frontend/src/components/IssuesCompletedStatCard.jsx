@@ -15,13 +15,14 @@ function IssuesCompletedStatCard() {
         flexWrap: 'wrap',
         gap: 2,
         width: '100%',
+        height: '100%',
       }}
     >
       <CardContent>
         <Typography variant="h5" fontWeight="bold">
           {loading ? 'Loading...' : totalIssuesCompleted}
         </Typography>
-        <Typography>Completed Issues</Typography>
+        <Typography>Done Issues</Typography>
         <Typography variant="body2">
           {loading ? 'Loading...' : `of ${totalIssues} issues`}
         </Typography>

@@ -50,14 +50,14 @@ function OverviewPanel() {
     <Box>
       <Grid container spacing={2} gap={8}>
         {/* ISSUES STATUS CHART */}
-        <Grid item xs={12} md={6}>
+        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Issue Status
           </Typography>
           <IssuesPieChart />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
           {/* NEW ISSUES */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Newest Issues
@@ -118,7 +118,7 @@ function OverviewPanel() {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
           {/* NEW USERS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Newest Users
@@ -157,7 +157,7 @@ function OverviewPanel() {
           </Box>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
           {/* NEW PROJECTS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Newest Projects

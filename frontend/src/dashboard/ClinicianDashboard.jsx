@@ -44,17 +44,17 @@ function ClinicianDashboard() {
         </Box>
 
         {/* Stat cards */}
-        <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={6} md={3}>
+        <Grid container spacing={2} sx={{ mb: 2 }} alignItems="stretch">
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <ProjectsStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <ProjectsActiveStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <ProjectsCompletedStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <ProjectsCompletionRateStatCard />
           </Grid>
         </Grid>

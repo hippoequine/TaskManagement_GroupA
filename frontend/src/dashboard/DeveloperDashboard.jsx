@@ -52,32 +52,32 @@ function DeveloperDashboard() {
         </Box>
 
         {/* Stat cards */}
-        <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={6} md={3}>
+        <Grid container spacing={2} sx={{ mb: 2 }} alignItems="stretch">
+          <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <ProjectsCompletedStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
               <TasksProvider>
                 <IssuesBacklogStatCard />
               </TasksProvider>
             </BoardProvider>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
               <TasksProvider>
                 <IssuesInProgressStatCard />
               </TasksProvider>
             </BoardProvider>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
               <TasksProvider>
                 <IssuesInReviewStatCard />
               </TasksProvider>
             </BoardProvider>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
               <TasksProvider>
                 <IssuesCompletedStatCard />

@@ -53,7 +53,6 @@ function IssuesPieChart() {
             },
           ]}
           height={200}
-          width={280}
         />
       ) : (
         <Typography>Loading...</Typography>

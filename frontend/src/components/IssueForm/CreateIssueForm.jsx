@@ -8,7 +8,7 @@ import { useBoard } from '../../context/BoardContext';
 import { useProject } from '../../context/ProjectContext';
 import DescriptionField from './DescriptionField';
 import DueDatePicker from './DueDatePicker';
-import IssueTypeToggle from './issueTypeToggle';
+import IssueTypeToggle from './IssueTypeToggle';
 import PriorityLabel from './PriorityLabel';
 import StoryPointButtonGroup from './StoryPointButtonGroup';
 import TitleField from './TitleField';
@@ -20,7 +20,7 @@ function CreateIssueForm({
   onIssueCreation, // callback to close modal / refresh
 }) {
   const { currentProject } = useProject();
-  const { currentBoard } = useBoard();
+  const { currentBoard } = useBoard() ?? {};
   const { user } = useAuth();
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);

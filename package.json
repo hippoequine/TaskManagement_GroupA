@@ -11,11 +11,12 @@
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write .",
     "ci:all": "npm ci && npm ci --prefix frontend && npm ci --prefix backend",
-    "test": "vitest",
+    "test": "vitest run --config backend/vitest.config.js && vitest run --config frontend/vitest.config.js",
     "test:ui": "vitest --ui",
     "lint": "npm run lint --prefix frontend && npm run lint --prefix backend"
   },
   "devDependencies": {
+    "@testing-library/user-event": "^14.6.1",
     "@vitest/coverage-v8": "^4.0.18",
     "jsdom": "^28.1.0",
     "prettier": "^3.7.4",

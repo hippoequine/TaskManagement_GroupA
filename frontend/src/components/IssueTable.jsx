@@ -11,7 +11,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useAllIssues } from '../context/TasksContext';
+import { useAllIssues } from '../context/IssuesContext';
 
 const statusColors = {
   backlog: 'default',

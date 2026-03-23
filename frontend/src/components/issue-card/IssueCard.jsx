@@ -1,57 +1,48 @@
 import { Box, Typography, Paper, IconButton, Tooltip } from '@mui/material';
 import {
-  EditOutlined as EditIcon,
   Circle as CircleIcon,
-  Pentagon as PentagonIcon,
   AccountTreeOutlined as NestingIcon,
+  VisibilityOutlined as ViewIcon,
 } from '@mui/icons-material';
 import StoryPoints from './StoryPoints.jsx';
 import Assignee from './Assignee.jsx';
-import { useTasks } from '../../context/TasksContext.jsx';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useIssues } from '../../context/IssuesContext.jsx';
 
-// Task type constants
-const TASK_TYPES = {
+// Issue type constants
+const ISSUE_TYPES = {
   EPIC: 'epic',
   STORY: 'story',
-  SUBTASK: 'subtask',
+  TASK: 'task',
+  BUG: 'bug',
 };
 
-// Custom rhombus icon for subtasks
-function RhombusIcon({ sx }) {
-  return (
-    <Box
-      sx={{
-        width: 8,
-        height: 8,
-        bgcolor: '#F5A623',
-        transform: 'rotate(45deg)',
-        ...sx,
-      }}
-    />
-  );
-}
-
-// Get icon and color based on task type
-function getTaskTypeIcon(type) {
+// Get icon and color based on issue type
+function getIssueTypeIcon(type) {
   switch (type) {
-    case TASK_TYPES.EPIC:
+    case ISSUE_TYPES.EPIC:
       return (
         <Tooltip title="Epic" arrow>
-          <CircleIcon sx={{ fontSize: 14, color: '#E91E8C' }} />
+          <CircleIcon sx={{ fontSize: 14, color: 'violet' }} />
         </Tooltip>
       );
-    case TASK_TYPES.STORY:
+    case ISSUE_TYPES.STORY:
       return (
         <Tooltip title="Story" arrow>
-          <PentagonIcon sx={{ fontSize: 14, color: '#00B8D9' }} />
+          <CircleIcon sx={{ fontSize: 14, color: 'lightblue' }} />
         </Tooltip>
       );
-    case TASK_TYPES.SUBTASK:
+    case ISSUE_TYPES.TASK:
       return (
-        <Tooltip title="Sub-task" arrow>
-          <Box component="span" sx={{ display: 'inline-flex' }}>
-            <RhombusIcon />
-          </Box>
+        <Tooltip title="Task" arrow>
+          <CircleIcon sx={{ fontSize: 14, color: 'lightgreen' }} />
+        </Tooltip>
+      );
+    case ISSUE_TYPES.BUG:
+      return (
+        <Tooltip title="Bug" arrow>
+          <CircleIcon sx={{ fontSize: 14, color: 'coral' }} />
         </Tooltip>
       );
     default:
@@ -59,39 +50,70 @@ function getTaskTypeIcon(type) {
   }
 }
 
-export default function TaskCard({ task }) {
-  const { updateTask } = useTasks();
+export default function IssueCard({ issue, isDragging = false, onViewClick }) {
+  const { updateIssue } = useIssues();
 
-  let assigneeName = task.assignee;
+  let assigneeName = issue.assignee;
   if (
     !assigneeName &&
-    Array.isArray(task.assignees) &&
-    task.assignees.length > 0
+    Array.isArray(issue.assignees) &&
+    issue.assignees.length > 0
   ) {
-    const a = task.assignees[0];
+    const a = issue.assignees[0];
     assigneeName =
       a.fullName ?? `${a.firstName ?? ''} ${a.lastName ?? ''}`.trim();
   }
 
   const assigneeId =
-    Array.isArray(task.assignees) && task.assignees.length > 0
-      ? task.assignees[0].id
+    Array.isArray(issue.assignees) && issue.assignees.length > 0
+      ? issue.assignees[0].id
       : null;
 
   const handleStoryPoints = (e) => {
     const points = parseInt(e.target.value, 10);
     if (!isNaN(points) && points >= 0) {
-      updateTask(task.id, { storyPoints: points });
+      updateIssue(issue.id, { storyPoints: points });
     }
   };
 
   const handleAssign = (user) => {
     const assigneeIds = user ? [user.id] : [];
-    updateTask(task.id, { assigneeIds });
+    updateIssue(issue.id, { assigneeIds });
+  };
+
+  // Handle view click
+  const handleViewClick = (e) => {
+    e.stopPropagation();
+    if (onViewClick) {
+      onViewClick(issue);
+    }
+  };
+
+  // Sets up sortable w/ issue id for reordering support
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging: isSortableDragging,
+  } = useSortable({
+    id: issue.id,
+  });
+
+  // Applies transform and transition styles during drag
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isSortableDragging ? 0.5 : 1,
   };
 
   return (
     <Paper
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
       elevation={0}
       sx={{
         p: 2,
@@ -99,13 +121,18 @@ export default function TaskCard({ task }) {
         bgcolor: 'white',
         border: '1px solid #e0e0e0',
         borderRadius: 1,
-        cursor: 'pointer',
+        cursor: 'grab',
+        opacity: isDragging ? 0.9 : 1,
+        boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.15)' : 'none',
         '&:hover': {
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         },
+        '&:active': {
+          cursor: 'grabbing',
+        },
       }}
     >
-      {/* Title and Edit Icon */}
+      {/* Title and View Icon */}
       <Box
         sx={{
           display: 'flex',
@@ -118,10 +145,15 @@ export default function TaskCard({ task }) {
           variant="body1"
           sx={{ fontWeight: 500, color: '#333', pr: 1 }}
         >
-          {task.title}
+          {issue.title}
         </Typography>
-        <IconButton size="small" sx={{ color: '#ccc', p: 0.25 }}>
-          <EditIcon sx={{ fontSize: 16 }} />
+        {/* View icon */}
+        <IconButton
+          size="small"
+          sx={{ color: '#ccc', p: 0.25 }}
+          onClick={handleViewClick}
+        >
+          <ViewIcon sx={{ fontSize: 16 }} />
         </IconButton>
       </Box>
 
@@ -144,10 +176,10 @@ export default function TaskCard({ task }) {
           textAlign: 'left',
         }}
       >
-        {task.description}
+        {issue.description}
       </Typography>
 
-      {/* Footer: Task ID, Story Points, Assignee */}
+      {/* Footer: Issue ID, Story Points, Assignee */}
       <Box
         sx={{
           display: 'flex',
@@ -155,23 +187,23 @@ export default function TaskCard({ task }) {
           alignItems: 'center',
         }}
       >
-        {/* Task Type Icon and ID */}
+        {/* Issue Type Icon and ID */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-          {getTaskTypeIcon(task.type)}
+          {getIssueTypeIcon(issue.type)}
           <Typography variant="caption" sx={{ color: '#888' }}>
-            {task.title}
+            {issue.title}
           </Typography>
         </Box>
 
         {/* Story Points, Nesting Icon, and Assignee */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <StoryPoints
-            points={task.storyPoints}
+            points={issue.storyPoints}
             onChange={handleStoryPoints}
-            taskId={task.id}
+            issueId={issue.id}
           />
-          {(task.type === TASK_TYPES.EPIC ||
-            task.type === TASK_TYPES.STORY) && (
+          {(issue.type === ISSUE_TYPES.EPIC ||
+            issue.type === ISSUE_TYPES.STORY) && (
             <NestingIcon sx={{ fontSize: 16, color: '#ccc' }} />
           )}
           <Assignee

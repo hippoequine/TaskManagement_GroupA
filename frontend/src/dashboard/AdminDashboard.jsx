@@ -6,7 +6,7 @@ import UserTable from '../components/UserTable';
 import UsersStatCard from '../components/UsersStatCard';
 import ProjectTable from '../components/ProjectTable';
 import IssueTable from '../components/IssueTable';
-import { TasksProvider } from '../context/TasksContext';
+import { IssuesProvider } from '../context/IssuesContext';
 import { BoardProvider } from '../context/BoardContext';
 import OverviewPanel from '../components/OverviewPanel';
 import { ProjectProvider } from '../context/ProjectContext';
@@ -79,9 +79,9 @@ function AdminDashboard() {
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <ProjectProvider>
               <BoardProvider>
-                <TasksProvider>
+                <IssuesProvider>
                   <IssuesStatCard />
-                </TasksProvider>
+                </IssuesProvider>
               </BoardProvider>
             </ProjectProvider>
           </Grid>
@@ -112,9 +112,9 @@ function AdminDashboard() {
           <CustomTabPanel value={value} index={0}>
             <ProjectProvider>
               <BoardProvider>
-                <TasksProvider>
+                <IssuesProvider>
                   <OverviewPanel />
-                </TasksProvider>
+                </IssuesProvider>
               </BoardProvider>
             </ProjectProvider>
           </CustomTabPanel>
@@ -128,9 +128,9 @@ function AdminDashboard() {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <IssueTable />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </CustomTabPanel>
         </Box>

@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography } from '@mui/material';
-import { useAllIssues } from '../context/TasksContext';
+import { useAllIssues } from '../context/IssuesContext';
 
 function IssuesCompletedStatCard() {
   const { issues, loading } = useAllIssues();

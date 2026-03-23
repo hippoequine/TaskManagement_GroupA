@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useAllIssues } from '../context/TasksContext';
+import { useAllIssues } from '../context/IssuesContext';
 import { PieChart } from '@mui/x-charts';
 
 function IssuesPieChart() {

@@ -84,7 +84,7 @@ function CreateIssueForm({
 
     try {
       if (mode === 'edit' && issueId) {
-        await api.put(`/issues/${issueId}`, payload);
+        await api.patch(`/issues/${issueId}`, payload);
         setSuccessMessage('Issue updated successfully!');
       } else {
         await api.post('/issues', payload);

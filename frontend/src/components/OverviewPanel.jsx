@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
-import { useTasks } from '../context/TasksContext';
+import { useIssues } from '../context/IssuesContext';
 import IssuesPieChart from './IssuesPieChart';
 
 const statusColors = {
@@ -29,10 +29,10 @@ const statusColors = {
 function OverviewPanel() {
   const { users, loading: usersLoading } = useUsers();
   const { projects, loading: projectsLoading } = useProject();
-  const { tasks, loading: tasksLoading } = useTasks();
+  const { issues, loading: issuesLoading } = useIssues();
 
   // Get the 3 latest issues
-  const recentIssues = [...tasks]
+  const recentIssues = [...issues]
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     .slice(0, 3);
 
@@ -50,20 +50,20 @@ function OverviewPanel() {
     <Box>
       <Grid container spacing={2} gap={8}>
         {/* ISSUES STATUS CHART */}
-        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Issue Status
           </Typography>
           <IssuesPieChart />
         </Grid>
 
-        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           {/* NEW ISSUES */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Newest Issues
           </Typography>
           <Box sx={{ p: 2, width: '100%' }}>
-            {tasksLoading ? (
+            {issuesLoading ? (
               <Typography>Loading...</Typography>
             ) : (
               <Table size="small">
@@ -118,7 +118,7 @@ function OverviewPanel() {
           </Box>
         </Grid>
 
-        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           {/* NEW USERS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Newest Users
@@ -157,7 +157,7 @@ function OverviewPanel() {
           </Box>
         </Grid>
 
-        <Grid size = {{ xs:12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           {/* NEW PROJECTS */}
           <Typography variant="h6" fontWeight="bold" mb={1}>
             Newest Projects

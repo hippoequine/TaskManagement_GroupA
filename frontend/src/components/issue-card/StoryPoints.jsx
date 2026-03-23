@@ -18,7 +18,7 @@ export default function StoryPoints({ points, onChange }) {
       <Input
         variant="standard"
         onChange={onChange}
-        defaultValue={points ?? '-'}
+        value={points ?? '-'}
         disableUnderline={true}
         inputProps={{
           sx: { textAlign: 'center', padding: 0, minWidth: '4ch' },

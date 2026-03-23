@@ -1,15 +1,15 @@
 import { Outlet, useOutletContext } from 'react-router';
 import { BoardProvider } from '../context/BoardContext';
-import { TasksProvider } from '../context/TasksContext';
+import { IssuesProvider } from '../context/IssuesContext.jsx';
 
 export default function BoardLayout() {
   const { project } = useOutletContext();
 
   return (
     <BoardProvider>
-      <TasksProvider>
+      <IssuesProvider>
         <Outlet context={{ project }} />
-      </TasksProvider>
+      </IssuesProvider>
     </BoardProvider>
   );
 }

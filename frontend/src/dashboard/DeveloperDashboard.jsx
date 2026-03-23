@@ -2,7 +2,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import GetTodaysDate from '../components/GetTodaysDate';
 import { useNavigate } from 'react-router';
 import { BoardProvider } from '../context/BoardContext';
-import { TasksProvider } from '../context/TasksContext';
+import { IssuesProvider } from '../context/IssuesContext';
 import IssueTable from '../components/IssueTable';
 import IssuesPieChart from '../components/IssuesPieChart';
 import IssuesCompletedStatCard from '../components/IssuesCompletedStatCard';
@@ -58,36 +58,36 @@ function DeveloperDashboard() {
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <IssuesBacklogStatCard />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <IssuesInProgressStatCard />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <IssuesInReviewStatCard />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <IssuesCompletedStatCard />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </Grid>
         </Grid>
 
         <Grid container spacing={2} justifyContent={'space-between'}>
-          {/* Task Status */}
+          {/* Issue Status */}
           <Box
             sx={{
               bgcolor: 'background.default',
@@ -103,9 +103,9 @@ function DeveloperDashboard() {
               Issue Status
             </Typography>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <IssuesPieChart />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </Box>
 
@@ -125,9 +125,9 @@ function DeveloperDashboard() {
               Project Status
             </Typography>
             <BoardProvider>
-              <TasksProvider>
+              <IssuesProvider>
                 <ProjectsPieChart />
-              </TasksProvider>
+              </IssuesProvider>
             </BoardProvider>
           </Box>
         </Grid>

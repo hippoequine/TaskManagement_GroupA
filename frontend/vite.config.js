@@ -18,6 +18,7 @@ export default () => {
     plugins: [react()],
     test: {
       environment: 'jsdom',
+      setupFiles: './src/tests/setup.js',
     },
   });
 };

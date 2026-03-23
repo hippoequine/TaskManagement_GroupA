@@ -1,12 +1,14 @@
 // @vitest-environment jsdom
-import React from 'react';
-import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, vi, beforeEach, expect } from 'vitest';
+import * as matchers from '@testing-library/jest-dom/matchers';
+
 import { ProjectProvider } from '../context/ProjectContext';
 import ProjectsPage from '../pages/Projects';
 import { projectsApi } from '../api/projectsApi';
+
+expect.extend(matchers);
 
 // Mock auth hook
 vi.mock('../auth/useAuth', () => ({
@@ -28,7 +30,7 @@ describe('Integration: Project List Retrieval', () => {
     window.localStorage.clear();
   });
 
-  it('fetches and display projects when an authenticated user opens /projects', async () => {
+  it('fetches and displays projects when an authenticated user opens /projects', async () => {
     projectsApi.getAll.mockResolvedValue({
       data: {
         projects: [
@@ -103,6 +105,28 @@ describe('Integration: Project List Retrieval', () => {
 
     expect(
       await screen.findByText('Failed to load projects')
+    ).toBeInTheDocument();
+  });
+
+  it('shows empty state when no projects are returned', async () => {
+    projectsApi.getAll.mockResolvedValue({
+      data: {
+        projects: [],
+      },
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/projects']}>
+        <ProjectProvider>
+          <Routes>
+            <Route path="/projects" element={<ProjectsPage />} />
+          </Routes>
+        </ProjectProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByText('No projects yet. Create your first one!')
     ).toBeInTheDocument();
   });
 });

@@ -3,7 +3,7 @@ import {
   editComment,
   deleteComment,
   listByIssue,
-} from '../services/CommentService';
+} from '../services/CommentService.js';
 
 export const createComment = async (req, res) => {
   try {

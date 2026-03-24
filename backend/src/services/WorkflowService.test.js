@@ -19,6 +19,11 @@ describe('WorkflowService', async () => {
     expect(result).toEqual(['reviewed', 'backlog']);
   });
 
+  it('returns an empty array when no transitions are allowed', () => {
+    const result = WorkflowService.getAllowedTransitions('');
+    expect(result).toEqual([]);
+  });
+
   it('allows a valid transition', () => {
     const result = WorkflowService.validateTransition(
       'in_progress',

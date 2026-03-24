@@ -29,6 +29,9 @@ node_modules
 dist
 dist-ssr
 *.local
+coverage/
+frontend/coverage/
+backend/coverage/
 
 # Editor directories and files
 .vscode/*
@@ -42,9 +45,17 @@ dist-ssr
 *.sw?
 data/uploads/attachments
 
+<<<<<<< HEAD
+=======
+**/coverage
+>>>>>>> 33525af2e71e1cf8b6889cd21b51af7244019e6f
 # Environment variables
 .env
 .env.local
 .env.*.local
 frontend/.env
+<<<<<<< HEAD
 backend/.env
+=======
+backend/.env
+>>>>>>> 33525af2e71e1cf8b6889cd21b51af7244019e6f

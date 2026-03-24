@@ -35,6 +35,11 @@ describe('dateTime utils', () => {
       expect(formatDateTime('bad-date')).toBe('-');
     });
 
+    it('formats valid date with default format', () => {
+      const iso = '2026-02-20T23:59:59.999Z';
+      expect(formatDateTime(iso)).not.toBe('-');
+    });
+
     describeIf(process.env.TZ === 'UTC')('formatDateTime in UTC', () => {
       it('formats correctly', () => {
         const iso = '2026-02-20T23:59:59.999Z';
@@ -77,6 +82,10 @@ describe('dateTime utils', () => {
       expect(formatDueDate(null)).toBe('-');
     });
 
+    it('returns fallback for invalid input', () => {
+      expect(formatDueDate('bad-date')).toBe('-');
+    });
+
     describeIf(process.env.TZ === 'UTC')('in TZ=UTC', () => {
       it('formats due date as local date (UTC)', () => {
         const iso = '2026-02-20T23:59:59.999Z';
@@ -117,6 +126,10 @@ describe('dateTime utils', () => {
   describe('datePickerValueToDueAtUtcIso', () => {
     it('returns null for null input', () => {
       expect(datePickerValueToDueAtUtcIso(null)).toBeNull();
+    });
+
+    it('returns null for invalid dayjs input', () => {
+      expect(datePickerValueToDueAtUtcIso(dayjs('bad-date'))).toBeNull();
     });
 
     describeIf(process.env.TZ === 'UTC')('in TZ=UTC', () => {
@@ -172,6 +185,17 @@ describe('dateTime utils', () => {
       const now = '2026-02-20T00:00:00.000Z';
       const iso = '2026-02-18T12:00:00.000Z';
       expect(getRelativeDueTime(iso, { now })).toBe('2 days ago');
+    });
+
+    it('returns current relative time for same-day timestamp', () => {
+      const now = '2026-02-20T12:00:00.000Z';
+      const iso = '2026-02-20T12:00:00.000Z';
+      expect(getRelativeDueTime(iso, { now })).toContain('a few seconds');
+    });
+
+    it('uses system time when now is not provided', () => {
+      const iso = '2026-02-21T12:00:00.000Z';
+      expect(getRelativeDueTime(iso)).toContain('in');
     });
   });
 });

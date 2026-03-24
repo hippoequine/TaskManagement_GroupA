@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 // integration of UI -> api layer
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';

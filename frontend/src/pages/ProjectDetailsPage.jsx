@@ -14,7 +14,6 @@ import {
 import { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router';
 import { projectsApi } from '../api/projectsApi';
-import Attachment from '../components/Attachment';
 import { useProject } from '../context/ProjectContext';
 
 export default function ProjectDetailsPage() {
@@ -137,8 +136,6 @@ export default function ProjectDetailsPage() {
             rows={5}
             disabled={saving}
           />
-
-          <Attachment projectId={project.id} />
         </Box>
 
         <Box

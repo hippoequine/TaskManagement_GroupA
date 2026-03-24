@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import Attachment from '../models/Attachment.js';
 import AttachmentProject from '../models/AttachmentProject.js';
+import Project from '../models/Project.js';
 import sequelize from '../config/db.js';
 import {
   mapAttachmentType,
@@ -26,14 +27,18 @@ function hasAuthenticatedUser(req) {
   return Boolean(req.user?.sub);
 }
 
-function isAdmin(req) {
-  return Array.isArray(req.user?.roles) && req.user.roles.includes('admin');
-}
-
-async function canAccessAttachment(req, attachment) {
+async function hasProjectAccess(req, projectId) {
   if (!hasAuthenticatedUser(req)) return false;
-  if (isAdmin(req)) return true;
-  return attachment.uploadedBy === req.user.sub;
+
+  const project = await Project.findOne({
+    where: {
+      id: projectId,
+      owner_id: req.user.sub,
+    },
+    attributes: ['id'],
+  });
+
+  return Boolean(project);
 }
 
 export async function listProjectAttachments(req, res, next) {
@@ -43,6 +48,9 @@ export async function listProjectAttachments(req, res, next) {
     if (!hasAuthenticatedUser(req)) {
       return res.status(401).json({ message: 'Login required' });
     }
+
+    const allowed = await hasProjectAccess(req, projectId);
+    if (!allowed) return res.status(403).json({ message: 'Forbidden' });
 
     const links = await AttachmentProject.findAll({
       where: { projectId },
@@ -90,6 +98,11 @@ export async function uploadProjectAttachment(req, res, next) {
 
     const uploadedBy = req.user?.sub;
     if (!uploadedBy) return res.status(401).json({ message: 'Login required' });
+
+    const allowed = await hasProjectAccess(req, projectId);
+    if (!allowed) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
 
     transaction = await sequelize.transaction();
 
@@ -164,7 +177,7 @@ export async function getAttachmentMetadata(req, res, next) {
         .json({ message: 'Attachment project link not found' });
     }
 
-    const allowed = await canAccessAttachment(req, attachment);
+    const allowed = await hasProjectAccess(req, projectLink.projectId);
     if (!allowed) return res.status(403).json({ message: 'Forbidden' });
 
     res.json({ data: attachment });
@@ -191,7 +204,7 @@ export async function downloadAttachment(req, res, next) {
         .json({ message: 'Attachment project link not found' });
     }
 
-    const allowed = await canAccessAttachment(req, attachment);
+    const allowed = await hasProjectAccess(req, projectLink.projectId);
     if (!allowed) return res.status(403).json({ message: 'Forbidden' });
 
     const uploadBase = getUploadBase();
@@ -231,7 +244,7 @@ export async function deleteAttachment(req, res, next) {
         .json({ message: 'Attachment project link not found' });
     }
 
-    const allowed = await canAccessAttachment(req, attachment);
+    const allowed = await hasProjectAccess(req, projectLink.projectId);
     if (!allowed) return res.status(403).json({ message: 'Forbidden' });
 
     const uploadBase = getUploadBase();

@@ -29,7 +29,7 @@ const statusColors = {
 function OverviewPanel() {
   const { users, loading: usersLoading } = useUsers();
   const { projects, loading: projectsLoading } = useProject();
-  const { issues, loading: issuesLoading } = useIssues();
+  const { issues, loading: issuesLoading } = useAllIssues();
 
   // Get the 3 latest issues
   const recentIssues = [...issues]

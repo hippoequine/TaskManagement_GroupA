@@ -2,8 +2,22 @@ import React from 'react';
 globalThis.React = React;
 
 import * as matchers from '@testing-library/jest-dom/matchers';
-import { expect, beforeAll, afterAll } from 'vitest';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 expect.extend(matchers);
+
+vi.mock('@mui/icons-material', () => {
+    return new Proxy(
+        {},
+        {
+            get: (target, prop) => {
+                return (props) => React.createElement('span', {
+                    ...props,
+                    'data-testid': `icon-${prop}`
+                });
+            },
+        }
+    );
+});
 
 const originalError = console.error;
 const originalWarn = console.warn;

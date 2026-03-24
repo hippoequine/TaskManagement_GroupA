@@ -5,9 +5,17 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    setupFiles: ['./frontend/src/setupTests.js'],
-    include: ['./frontend/src/tests/**/*.test.{js,jsx}'],
-    exclude: ['./frontend/src/tests/**/*.integration.test.{js,jsx}'],
+    setupFiles: ['./src/setupTests.js'],
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true,
+        isolate: true,
+      },
+    },
+    testTimeout: 10000,
+    include: ['./src/tests/**/*.test.{js,jsx}'],
+    exclude: ['./src/tests/**/*.integration.test.{js,jsx}'],
     globals: true,
     coverage: {
       provider: 'v8',

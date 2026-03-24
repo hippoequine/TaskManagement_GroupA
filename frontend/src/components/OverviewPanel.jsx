@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
-import { useIssues } from '../context/IssuesContext';
+import { useAllIssues } from '../context/IssuesContext';
 import IssuesPieChart from './IssuesPieChart';
 
 const statusColors = {
@@ -29,7 +29,7 @@ const statusColors = {
 function OverviewPanel() {
   const { users, loading: usersLoading } = useUsers();
   const { projects, loading: projectsLoading } = useProject();
-  const { issues, loading: issuesLoading } = useIssues();
+  const { issues, loading: issuesLoading } = useAllIssues();
 
   // Get the 3 latest issues
   const recentIssues = [...issues]

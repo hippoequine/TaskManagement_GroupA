@@ -30,7 +30,7 @@ function IssuesStatCard() {
         <Typography>Total Issues</Typography>
         <Typography variant="body2">
           {totalBacklog} Backlog, {totalInProgress} In Progress, {totalInReview}{' '}
-          Reviewed, {totalDone} Done
+          In Review, {totalDone} Done
         </Typography>
       </CardContent>
     </Card>

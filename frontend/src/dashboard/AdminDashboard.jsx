@@ -14,6 +14,7 @@ import ProjectsStatCard from '../components/ProjectsStatCard';
 import IssuesStatCard from '../components/IssuesStatCard';
 import ProjectsCompletionRateStatCard from '../components/ProjectsCompletionRateStatCard';
 import { ADMIN_CONSOLE_USERS_URL } from '../constants';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Function to implement accessible tabs following WAI-ARIA Authoring Practices.
@@ -32,6 +33,7 @@ function AdminDashboard() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -61,7 +63,7 @@ function AdminDashboard() {
           <Button
             variant="contained"
             onClick={() => {
-              window.location.href = ADMIN_CONSOLE_USERS_URL;
+              navigate(ADMIN_CONSOLE_USERS_URL);
             }}
           >
             ADD USERS

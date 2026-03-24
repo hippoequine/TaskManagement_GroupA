@@ -1,12 +1,12 @@
 # Jiro
 
-![Jiro](https://github.com/mbokros1/TaskManagement_GroupA/tree/main/Screenshots/SiteMap.png)
+![Jiro](https://github.com/mbokros1/TaskManagement_GroupA/blob/main/Screenshots/SiteMap.png)
 
 ### CSB430 - Software Design & Implementation
 
 #### Riipen Project - UnVRap
 
-#### Stakeholder: Navun Razdan
+#### Stakeholder - Navun Razdan
 
 #### North Seattle College (Winter 2026)
 
@@ -38,7 +38,7 @@ We use **Keycloak** to manage our authentication, authorization, and role-based 
 
 We implemented OpenAPI (Swagger) specification for seamless coordination between the frontend and backend.
 
-![Project Routes](https://github.com/mbokros1/TaskManagement_GroupA/tree/main/Screenshots/Routes.png)
+![Project Routes](https://github.com/mbokros1/TaskManagement_GroupA/blob/main/Screenshots/Routes.png)
 
 ## How to Use
 
@@ -83,6 +83,12 @@ In the root folder, run:
 
 ```
 npm run docker:up
+```
+
+**Note:** You might need to rebuild Docker if you add or remove dependencies, environment variables, items in Dockerfile, and items in the docker-compose.yml
+
+```
+docker-compose up --build
 ```
 
 ### 5. Access the Project
@@ -149,7 +155,7 @@ This focuses on verifying the correctness of the app logic.
 - Jovy Ann Nelson
 - Yuria Loo
 - Zane Schaffer
-  Eric Norman
+- Eric Norman
 
 ### Team Rainbow
 

@@ -1,5 +1,6 @@
 import User from './User.js';
 import Issue from './Issue.js';
+import Comment from './Comment.js';
 import IssueAssignee from './IssueAssignee.js';
 import Attachment from './Attachment.js';
 import Board from './Board.js';
@@ -46,6 +47,21 @@ export function applyAssociations() {
     otherKey: 'issueId',
   });
 
+  // Issue -> Comment
+  Issue.hasMany(Comment, {
+    as: 'comment',
+    foreignKey: 'issueId',
+    onDelete: 'CASCADE',
+  });
+  Comment.belongsTo(Issue, { as: 'issue', foreignKey: 'issueId' });
+
+  // user -> Comment (author)
+  User.hasMany(Comment, {
+    as: 'comment',
+    foreignKey: 'authorId',
+  });
+  Comment.belongsTo(User, { as: 'author', foreignKey: 'authorId' });
+
   // parent/subIssues (self reference)
   Issue.belongsTo(Issue, { as: 'parent', foreignKey: 'parentIssueId' });
   Issue.hasMany(Issue, { as: 'subIssues', foreignKey: 'parentIssueId' });
@@ -72,5 +88,6 @@ export {
   Attachment,
   AttachmentProject,
   Board,
+  Comment,
   Project,
 };

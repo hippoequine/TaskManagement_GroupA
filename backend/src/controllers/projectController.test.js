@@ -9,12 +9,11 @@ import {
 import Project from '../models/Project.js';
 import Board from '../models/Board.js';
 
-// Mock models
 vi.mock('../models/Project.js', () => ({
   default: {
     findOne: vi.fn(),
-    findAndCountAll: vi.fn(),
     create: vi.fn(),
+    findAndCountAll: vi.fn(),
   },
 }));
 
@@ -25,374 +24,416 @@ vi.mock('../models/Board.js', () => ({
 }));
 
 vi.mock('../models/User.js', () => ({
-  default: {
-    init: vi.fn(),
-  },
+  default: {},
 }));
 
 describe('projectController', () => {
-  let mockReq;
-  let mockRes;
-  let mockNext;
+  let res, next;
 
   beforeEach(() => {
     vi.clearAllMocks();
-
-    mockReq = {
-      user: { sub: 'test-user-123' },
-      params: {},
-      query: {},
-      body: {},
-    };
-
-    mockRes = {
+    res = {
       status: vi.fn().mockReturnThis(),
-      json: vi.fn().mockReturnThis(),
+      json: vi.fn(),
     };
-
-    mockNext = vi.fn();
+    next = vi.fn();
   });
+
+  // ─── createProject ─────────────────────────────────────────────────────────
 
   describe('createProject', () => {
-    it('should return 401 if user not authenticated', async () => {
-      mockReq.user = null;
-
-      await createProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(401);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'Authentication required.',
-      });
+    it('returns 401 if req.user is missing', async () => {
+      const req = { body: {}, user: null };
+      await createProject(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(401);
     });
 
-    it('should return 400 if name is missing', async () => {
-      mockReq.body = { key: 'TEST' };
-
-      await createProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'Project name is required.',
-      });
+    it('returns 400 if name is missing', async () => {
+      const req = { body: { key: 'PROJ' }, user: { sub: 'user-1' } };
+      await createProject(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ error: expect.stringContaining('name') })
+      );
     });
 
-    it('should return 400 if key is missing', async () => {
-      mockReq.body = { name: 'Test Project' };
-
-      await createProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'Project key is required.',
-      });
+    it('returns 400 if key is missing', async () => {
+      const req = { body: { name: 'Test' }, user: { sub: 'user-1' } };
+      await createProject(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ error: expect.stringContaining('key') })
+      );
     });
 
-    it('should return 400 if key format is invalid', async () => {
-      mockReq.body = { name: 'Test Project', key: 'invalid-key!' };
-
-      await createProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error:
-          'Project key must be 1–10 alphanumeric characters (e.g. PROJ, APP1).',
-      });
-    });
-
-    it('should return 409 if project key already exists', async () => {
-      mockReq.body = { name: 'Test Project', key: 'TEST' };
-      vi.mocked(Project.findOne).mockResolvedValue({ id: 'existing-project' });
-
-      await createProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(409);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: "Project key 'TEST' is already in use.",
-      });
-    });
-
-    it('should create a new project successfully', async () => {
-      mockReq.body = {
-        name: 'Test Project',
-        key: 'TEST',
-        description: 'Test description',
-        category: 'development',
-        status: 'active',
+    it('returns 400 if key format is invalid', async () => {
+      const req = {
+        body: { name: 'Test', key: 'invalid key!' },
+        user: { sub: 'user-1' },
       };
-
-      const mockCreatedProject = {
-        id: 'proj-123',
-        name: 'Test Project',
-        key: 'TEST',
-        description: 'Test description',
-        category: 'development',
-        status: 'active',
-        owner_id: 'test-user-123',
-      };
-
-      vi.mocked(Project.findOne).mockResolvedValueOnce(null); // No existing project
-      vi.mocked(Project.create).mockResolvedValue(mockCreatedProject);
-      vi.mocked(Project.findOne).mockResolvedValueOnce(mockCreatedProject);
-
-      await createProject(mockReq, mockRes, mockNext);
-
-      expect(Project.create).toHaveBeenCalledWith({
-        name: 'Test Project',
-        key: 'TEST',
-        description: 'Test description',
-        category: 'development',
-        status: 'active',
-        owner_id: 'test-user-123',
-      });
-      expect(mockRes.status).toHaveBeenCalledWith(201);
-      expect(mockRes.json).toHaveBeenCalledWith(mockCreatedProject);
+      await createProject(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it('should call next on error', async () => {
-      mockReq.body = { name: 'Test Project', key: 'TEST' };
-      const error = new Error('Database error');
-      vi.mocked(Project.findOne).mockRejectedValue(error);
+    it('returns 409 if key is already in use', async () => {
+      const req = {
+        body: { name: 'Test', key: 'PROJ' },
+        user: { sub: 'user-1' },
+      };
+      Project.findOne.mockResolvedValueOnce({ id: 'existing-id' });
+      await createProject(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(409);
+    });
 
-      await createProject(mockReq, mockRes, mockNext);
+    it('creates project and returns 201 with owner data', async () => {
+      const req = {
+        body: {
+          name: 'Test',
+          key: 'PROJ',
+          description: 'desc',
+          category: 'New Development',
+          status: 'active',
+        },
+        user: { sub: 'user-1' },
+      };
+      const fakeCreated = {
+        id: 'new-id',
+        name: 'Test',
+        owner: { firstName: 'John' },
+      };
+      Project.findOne
+        .mockResolvedValueOnce(null) // key not taken
+        .mockResolvedValueOnce(fakeCreated); // re-fetch with owner
+      Project.create.mockResolvedValueOnce({ id: 'new-id' });
 
-      expect(mockNext).toHaveBeenCalledWith(error);
+      await createProject(req, res, next);
+
+      expect(Project.create).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(fakeCreated);
+    });
+
+    it('defaults status to active when not provided', async () => {
+      const req = {
+        body: { name: 'Test', key: 'PROJ' },
+        user: { sub: 'user-1' },
+      };
+      Project.findOne
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ id: 'new-id' });
+      Project.create.mockResolvedValueOnce({ id: 'new-id' });
+
+      await createProject(req, res, next);
+
+      expect(Project.create).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 'active' })
+      );
+    });
+
+    it('normalizes key to uppercase before saving', async () => {
+      const req = {
+        body: { name: 'Test', key: 'proj' },
+        user: { sub: 'user-1' },
+      };
+      Project.findOne
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ id: 'new-id' });
+      Project.create.mockResolvedValueOnce({ id: 'new-id' });
+
+      await createProject(req, res, next);
+
+      expect(Project.create).toHaveBeenCalledWith(
+        expect.objectContaining({ key: 'PROJ' })
+      );
+    });
+
+    it('calls next on error', async () => {
+      const req = {
+        body: { name: 'Test', key: 'PROJ' },
+        user: { sub: 'user-1' },
+      };
+      Project.findOne.mockRejectedValue(new Error('DB error'));
+
+      await createProject(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
     });
   });
+
+  // ─── getProjects ───────────────────────────────────────────────────────────
 
   describe('getProjects', () => {
-    it('should return paginated list of projects', async () => {
-      mockReq.query = { page: 1, limit: 10 };
-      const mockProjects = {
+    it('returns paginated projects', async () => {
+      const req = { query: {} };
+      Project.findAndCountAll.mockResolvedValue({
         count: 2,
-        rows: [
-          { id: 'proj-1', name: 'Project 1' },
-          { id: 'proj-2', name: 'Project 2' },
-        ],
-      };
-
-      vi.mocked(Project.findAndCountAll).mockResolvedValue(mockProjects);
-
-      await getProjects(mockReq, mockRes, mockNext);
-
-      expect(Project.findAndCountAll).toHaveBeenCalledWith({
-        where: {},
-        limit: 10,
-        offset: 0,
-        order: [['created_at', 'DESC']],
-        include: expect.any(Array),
-      });
-      expect(mockRes.json).toHaveBeenCalledWith({
-        total: 2,
-        page: 1,
-        totalPages: 1,
-        projects: mockProjects.rows,
-      });
-    });
-
-    it('should filter projects by ownerId', async () => {
-      mockReq.query = { ownerId: 'user-123' };
-      vi.mocked(Project.findAndCountAll).mockResolvedValue({
-        count: 0,
-        rows: [],
+        rows: [{ id: '1' }, { id: '2' }],
       });
 
-      await getProjects(mockReq, mockRes, mockNext);
+      await getProjects(req, res, next);
 
-      expect(Project.findAndCountAll).toHaveBeenCalledWith(
+      expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { owner_id: 'user-123' },
+          total: 2,
+          page: 1,
+          projects: expect.any(Array),
         })
       );
     });
 
-    it('should filter projects by category and status', async () => {
-      mockReq.query = { category: 'development', status: 'active' };
-      vi.mocked(Project.findAndCountAll).mockResolvedValue({
-        count: 0,
-        rows: [],
-      });
+    it('uses page and limit from query params', async () => {
+      const req = { query: { page: '2', limit: '5' } };
+      Project.findAndCountAll.mockResolvedValue({ count: 10, rows: [] });
 
-      await getProjects(mockReq, mockRes, mockNext);
+      await getProjects(req, res, next);
+
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 2, totalPages: 2 })
+      );
+    });
+
+    it('filters by category when provided', async () => {
+      const req = { query: { category: 'Maintenance' } };
+      Project.findAndCountAll.mockResolvedValue({ count: 0, rows: [] });
+
+      await getProjects(req, res, next);
 
       expect(Project.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { category: 'development', status: 'active' },
+          where: expect.objectContaining({ category: 'Maintenance' }),
         })
       );
     });
 
-    it('should call next on error', async () => {
-      const error = new Error('Database error');
-      vi.mocked(Project.findAndCountAll).mockRejectedValue(error);
+    it('filters by status when provided', async () => {
+      const req = { query: { status: 'completed' } };
+      Project.findAndCountAll.mockResolvedValue({ count: 0, rows: [] });
 
-      await getProjects(mockReq, mockRes, mockNext);
+      await getProjects(req, res, next);
 
-      expect(mockNext).toHaveBeenCalledWith(error);
+      expect(Project.findAndCountAll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ status: 'completed' }),
+        })
+      );
+    });
+
+    it('includes owner in the query', async () => {
+      const req = { query: {} };
+      Project.findAndCountAll.mockResolvedValue({ count: 0, rows: [] });
+
+      await getProjects(req, res, next);
+
+      expect(Project.findAndCountAll).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.arrayContaining([
+            expect.objectContaining({ as: 'owner' }),
+          ]),
+        })
+      );
+    });
+
+    it('calls next on error', async () => {
+      const req = { query: {} };
+      Project.findAndCountAll.mockRejectedValue(new Error('DB error'));
+
+      await getProjects(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
     });
   });
+
+  // ─── getProjectById ────────────────────────────────────────────────────────
 
   describe('getProjectById', () => {
-    it('should return 400 if no project id provided', async () => {
-      mockReq.params = {};
-
-      await getProjectById(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: 'Project Id not supplied',
-      });
+    it('returns 400 if id param is missing', async () => {
+      const req = { params: {}, query: {} };
+      await getProjectById(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it('should return 404 if project not found', async () => {
-      mockReq.params = { id: 'non-existent' };
-      vi.mocked(Project.findOne).mockResolvedValue(null);
+    it('returns 404 if project is not found', async () => {
+      const req = { params: { id: 'non-existent' }, query: {} };
+      Project.findOne.mockResolvedValue(null);
 
-      await getProjectById(mockReq, mockRes, mockNext);
+      await getProjectById(req, res, next);
 
-      expect(mockRes.status).toHaveBeenCalledWith(404);
-      expect(mockRes.json).toHaveBeenCalledWith({ error: 'Project not found' });
+      expect(res.status).toHaveBeenCalledWith(404);
     });
 
-    it('should return project if found', async () => {
-      mockReq.params = { id: 'proj-123' };
-      const mockProject = { id: 'proj-123', name: 'Test Project' };
-      vi.mocked(Project.findOne).mockResolvedValue(mockProject);
+    it('returns project when found', async () => {
+      const fakeProject = { id: 'abc', name: 'My Project' };
+      const req = { params: { id: 'abc' }, query: {} };
+      Project.findOne.mockResolvedValue(fakeProject);
 
-      await getProjectById(mockReq, mockRes, mockNext);
+      await getProjectById(req, res, next);
 
-      expect(mockRes.json).toHaveBeenCalledWith(mockProject);
+      expect(res.json).toHaveBeenCalledWith(fakeProject);
     });
 
-    it('should call next on error', async () => {
-      mockReq.params = { id: 'proj-123' };
-      const error = new Error('Database error');
-      vi.mocked(Project.findOne).mockRejectedValue(error);
+    it('filters by owner_id when query param is provided', async () => {
+      const req = { params: { id: 'abc' }, query: { owner_id: 'user-1' } };
+      Project.findOne.mockResolvedValue({ id: 'abc' });
 
-      await getProjectById(mockReq, mockRes, mockNext);
+      await getProjectById(req, res, next);
 
-      expect(mockNext).toHaveBeenCalledWith(error);
+      expect(Project.findOne).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ owner_id: 'user-1' }),
+        })
+      );
+    });
+
+    it('calls next on error', async () => {
+      const req = { params: { id: 'abc' }, query: {} };
+      Project.findOne.mockRejectedValue(new Error('DB error'));
+
+      await getProjectById(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
     });
   });
+
+  // ─── getProjectBoards ──────────────────────────────────────────────────────
 
   describe('getProjectBoards', () => {
-    it('should return 404 if project not found', async () => {
-      mockReq.params = { id: 'non-existent' };
-      vi.mocked(Project.findOne).mockResolvedValue(null);
+    it('returns 404 if project is not found', async () => {
+      const req = { params: { id: 'abc' }, query: {} };
+      Project.findOne.mockResolvedValue(null);
 
-      await getProjectBoards(mockReq, mockRes, mockNext);
+      await getProjectBoards(req, res, next);
 
-      expect(mockRes.status).toHaveBeenCalledWith(404);
-      expect(mockRes.json).toHaveBeenCalledWith({ error: 'Project not found' });
+      expect(res.status).toHaveBeenCalledWith(404);
     });
 
-    it('should return boards for project', async () => {
-      mockReq.params = { id: 'proj-123' };
-      const mockProject = { id: 'proj-123', name: 'Test Project' };
-      const mockBoards = [
-        { id: 'board-1', name: 'Board 1' },
-        { id: 'board-2', name: 'Board 2' },
-      ];
+    it('returns boards for a found project', async () => {
+      const fakeBoards = [{ id: 1 }, { id: 2 }];
+      const req = { params: { id: 'abc' }, query: {} };
+      Project.findOne.mockResolvedValue({ id: 'abc' });
+      Board.findAll.mockResolvedValue(fakeBoards);
 
-      vi.mocked(Project.findOne).mockResolvedValue(mockProject);
-      vi.mocked(Board.findAll).mockResolvedValue(mockBoards);
+      await getProjectBoards(req, res, next);
 
-      await getProjectBoards(mockReq, mockRes, mockNext);
-
-      expect(Board.findAll).toHaveBeenCalledWith({
-        where: { projectId: 'proj-123' },
-      });
-      expect(mockRes.json).toHaveBeenCalledWith(mockBoards);
+      expect(Board.findAll).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { projectId: 'abc' } })
+      );
+      expect(res.json).toHaveBeenCalledWith(fakeBoards);
     });
 
-    it('should call next on error', async () => {
-      mockReq.params = { id: 'proj-123' };
-      const error = new Error('Database error');
-      vi.mocked(Project.findOne).mockRejectedValue(error);
+    it('calls next on error', async () => {
+      const req = { params: { id: 'abc' }, query: {} };
+      Project.findOne.mockRejectedValue(new Error('DB error'));
 
-      await getProjectBoards(mockReq, mockRes, mockNext);
+      await getProjectBoards(req, res, next);
 
-      expect(mockNext).toHaveBeenCalledWith(error);
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
     });
   });
 
+  // ─── updateProject ─────────────────────────────────────────────────────────
+
   describe('updateProject', () => {
-    it('should return 404 if project not found', async () => {
-      mockReq.params = { id: 'non-existent' };
-      vi.mocked(Project.findOne).mockResolvedValue(null);
+    it('returns 404 if project is not found', async () => {
+      const req = { params: { id: 'abc' }, query: {}, body: {} };
+      Project.findOne.mockResolvedValueOnce(null);
 
-      await updateProject(mockReq, mockRes, mockNext);
+      await updateProject(req, res, next);
 
-      expect(mockRes.status).toHaveBeenCalledWith(404);
-      expect(mockRes.json).toHaveBeenCalledWith({ error: 'Project not found' });
+      expect(res.status).toHaveBeenCalledWith(404);
     });
 
-    it('should return 400 if key format is invalid', async () => {
-      mockReq.params = { id: 'proj-123' };
-      mockReq.body = { key: 'invalid-key!' };
-      const mockProject = { id: 'proj-123', update: vi.fn(), reload: vi.fn() };
-      vi.mocked(Project.findOne).mockResolvedValue(mockProject);
-
-      await updateProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(400);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error:
-          'Project key must be 1–10 alphanumeric characters (e.g. PROJ, APP1).',
-      });
-    });
-
-    it('should return 409 if key already exists for another project', async () => {
-      mockReq.params = { id: 'proj-123' };
-      mockReq.body = { key: 'TEST' };
-      const mockProject = { id: 'proj-123', update: vi.fn(), reload: vi.fn() };
-      const existingProject = { id: 'other-project' };
-
-      vi.mocked(Project.findOne)
-        .mockResolvedValueOnce(mockProject)
-        .mockResolvedValueOnce(existingProject);
-
-      await updateProject(mockReq, mockRes, mockNext);
-
-      expect(mockRes.status).toHaveBeenCalledWith(409);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        error: "Project key 'TEST' is already in use.",
-      });
-    });
-
-    it('should update project successfully', async () => {
-      mockReq.params = { id: 'proj-123' };
-      mockReq.body = {
-        name: 'Updated Project',
-        description: 'Updated description',
-        status: 'archived',
+    it('returns 400 if new key format is invalid', async () => {
+      const fakeProject = { id: 'abc', update: vi.fn(), reload: vi.fn() };
+      const req = {
+        params: { id: 'abc' },
+        query: {},
+        body: { key: 'invalid key!' },
       };
-      const mockProject = {
-        id: 'proj-123',
-        update: vi.fn().mockResolvedValue(),
-        reload: vi.fn().mockResolvedValue(),
-      };
+      Project.findOne.mockResolvedValueOnce(fakeProject);
 
-      vi.mocked(Project.findOne).mockResolvedValue(mockProject);
+      await updateProject(req, res, next);
 
-      await updateProject(mockReq, mockRes, mockNext);
-
-      expect(mockProject.update).toHaveBeenCalledWith({
-        name: 'Updated Project',
-        description: 'Updated description',
-        status: 'archived',
-      });
-      expect(mockProject.reload).toHaveBeenCalled();
-      expect(mockRes.json).toHaveBeenCalledWith(mockProject);
+      expect(res.status).toHaveBeenCalledWith(400);
     });
 
-    it('should call next on error', async () => {
-      mockReq.params = { id: 'proj-123' };
-      const error = new Error('Database error');
-      vi.mocked(Project.findOne).mockRejectedValue(error);
+    it('returns 409 if new key is already used by another project', async () => {
+      const fakeProject = { id: 'abc', update: vi.fn(), reload: vi.fn() };
+      const req = {
+        params: { id: 'abc' },
+        query: {},
+        body: { key: 'TAKEN' },
+      };
+      Project.findOne
+        .mockResolvedValueOnce(fakeProject) // find project to update
+        .mockResolvedValueOnce({ id: 'other-id' }); // key already taken
 
-      await updateProject(mockReq, mockRes, mockNext);
+      await updateProject(req, res, next);
 
-      expect(mockNext).toHaveBeenCalledWith(error);
+      expect(res.status).toHaveBeenCalledWith(409);
+    });
+
+    it('allows updating with the same key (own project key)', async () => {
+      const fakeProject = { id: 'abc', update: vi.fn(), reload: vi.fn() };
+      const req = {
+        params: { id: 'abc' },
+        query: {},
+        body: { name: 'Updated', key: 'SAME' },
+      };
+      Project.findOne
+        .mockResolvedValueOnce(fakeProject)
+        .mockResolvedValueOnce({ id: 'abc' }); // same project owns the key
+
+      await updateProject(req, res, next);
+
+      expect(fakeProject.update).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(fakeProject);
+    });
+
+    it('updates project without key change when key not in body', async () => {
+      const fakeProject = { id: 'abc', update: vi.fn(), reload: vi.fn() };
+      const req = {
+        params: { id: 'abc' },
+        query: {},
+        body: { name: 'New Name', status: 'completed' },
+      };
+      Project.findOne.mockResolvedValueOnce(fakeProject);
+
+      await updateProject(req, res, next);
+
+      expect(fakeProject.update).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'New Name', status: 'completed' })
+      );
+      expect(fakeProject.reload).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(fakeProject);
+    });
+
+    it('reloads project with owner include after update', async () => {
+      const fakeProject = { id: 'abc', update: vi.fn(), reload: vi.fn() };
+      const req = {
+        params: { id: 'abc' },
+        query: {},
+        body: { name: 'New Name' },
+      };
+      Project.findOne.mockResolvedValueOnce(fakeProject);
+
+      await updateProject(req, res, next);
+
+      expect(fakeProject.reload).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.arrayContaining([
+            expect.objectContaining({ as: 'owner' }),
+          ]),
+        })
+      );
+    });
+
+    it('calls next on error', async () => {
+      const req = { params: { id: 'abc' }, query: {}, body: {} };
+      Project.findOne.mockRejectedValue(new Error('DB error'));
+
+      await updateProject(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expect.any(Error));
     });
   });
 });

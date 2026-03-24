@@ -9,21 +9,24 @@ import useAuth from '../auth/useAuth';
 
 //Mock the admin dashboards
 vi.mock('../dashboard/AdminDashboard.jsx', () => ({
-  default: () => <div>Admin Dashboard</div>,
+  default: () => 'Admin Dashboard',
 }));
 
 //Mock the clinician dashboard
 vi.mock('../dashboard/ClinicianDashboard.jsx', () => ({
-  default: () => <div>Clinician Dashboard</div>,
+  default: () => 'Clinician Dashboard',
 }));
 
 //Mock the developer dashboard
 vi.mock('../dashboard/DeveloperDashboard.jsx', () => ({
-  default: () => <div>Developer Dashboard</div>,
+  default: () => 'Developer Dashboard',
 }));
 
 // Mock useAuth (custom hook)
 vi.mock('../auth/useAuth.js');
+
+// Mock MUI icons to prevent EMFILE error on Windows
+vi.mock('@mui/icons-material', () => ({ Lock: () => null }));
 
 describe('App: role-based rendering for dashboards', () => {
   const loginMock = vi.fn();

@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { normalizeUploadedFilename } from '../utils/filename.js';
 
 const uploadDir = process.env.UPLOAD_DIR || path.resolve('uploads');
 
@@ -16,7 +17,9 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    const safeOriginal = path.basename(file.originalname).replace(/\s+/g, '_');
+    const normalizedOriginal = normalizeUploadedFilename(file.originalname);
+    file.originalname = normalizedOriginal;
+    const safeOriginal = path.basename(normalizedOriginal).replace(/\s+/g, '_');
     const unique = cryptoRandomString();
     cb(null, `${unique}_${safeOriginal}`);
   },

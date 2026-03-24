@@ -29,6 +29,9 @@ node_modules
 dist
 dist-ssr
 *.local
+coverage/
+frontend/coverage/
+backend/coverage/
 
 # Editor directories and files
 .vscode/*
@@ -41,3 +44,11 @@ dist-ssr
 *.sln
 *.sw?
 data/uploads/attachments
+
+**/coverage
+# Environment variables
+.env
+.env.local
+.env.*.local
+frontend/.env
+backend/.env

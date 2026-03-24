@@ -1,24 +1,28 @@
 import { Dashboard, Settings } from '@mui/icons-material';
 import { Avatar, Box, Button, Chip, Divider, Typography } from '@mui/material';
 import { Link, useOutletContext } from 'react-router';
+import Attachment from '../components/Attachment';
+import ProjectFieldsDisplay from '../components/ProjectFieldsDisplay';
 
 export default function ProjectOverview() {
   const { project } = useOutletContext();
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
       <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
         <Box
           sx={{
             display: 'flex',
+            flexWrap: 'wrap',
             justifyContent: 'space-between',
             alignItems: 'flex-start',
-            mb: 2,
+            gap: 2,
+            mb: 1.5,
           }}
         >
           <Box>
-            <Typography variant="h4">{project.name}</Typography>
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography variant="h5">{project.name}</Typography>
+            <Typography variant="body2" color="text.secondary">
               Key: {project.key || 'N/A'}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
@@ -52,12 +56,13 @@ export default function ProjectOverview() {
               )}
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             <Button
               variant="outlined"
               startIcon={<Settings />}
               component={Link}
               to="details"
+              size="small"
             >
               Edit Details
             </Button>
@@ -66,23 +71,20 @@ export default function ProjectOverview() {
               startIcon={<Dashboard />}
               component={Link}
               to="board"
+              size="small"
             >
               Go to Boards
             </Button>
           </Box>
         </Box>
 
-        <Divider sx={{ my: 3 }} />
+        <Divider sx={{ my: 2 }} />
 
-        <Typography variant="h6" gutterBottom>
-          Description
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ color: 'text.secondary', lineHeight: 1.6 }}
-        >
-          {project.description || 'No description provided for this project.'}
-        </Typography>
+        <ProjectFieldsDisplay project={project} />
+
+        <Divider sx={{ my: 2 }} />
+
+        <Attachment projectId={project.id} />
       </Box>
     </Box>
   );

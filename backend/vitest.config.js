@@ -6,6 +6,10 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: ['**/*.test.js'],
-    setupFiles: ['./src/tests/setup.js'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      exclude: ['src/config/keycloak.js', 'src/config/uploadConfig.js'],
+    },
   },
 });

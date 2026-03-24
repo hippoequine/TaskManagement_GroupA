@@ -24,7 +24,7 @@ function IssuesInReviewStatCard() {
         <Typography variant="h5" fontWeight="bold">
           {loading ? 'Loading...' : totalIssuesInReview}
         </Typography>
-        <Typography>Reviewed Issues</Typography>
+        <Typography>In Review Issues</Typography>
         <Typography variant="body2">
           {loading ? 'Loading...' : `of ${totalIssues} issues`}
         </Typography>

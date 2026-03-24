@@ -187,7 +187,7 @@ export function useAllIssues() {
     const fetchIssues = async () => {
       setLoading(true);
       try {
-        const { data } = await tasksApi.getAllIssues();
+        const { data } = await issuesApi.getAllIssues();
 
         setIssues(data.issues);
       } catch (err) {

@@ -177,3 +177,27 @@ export function IssuesProvider({ children }) {
 }
 
 export const useIssues = () => useContext(IssuesContext);
+
+export function useAllIssues() {
+  const [issues, setIssues] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      setLoading(true);
+      try {
+        const { data } = await issuesApi.getAllIssues();
+
+        setIssues(data.issues);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchIssues();
+  }, []);
+
+  return { issues, loading, error };
+}

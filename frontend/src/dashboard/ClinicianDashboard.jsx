@@ -1,76 +1,14 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-} from '@mui/material';
-import StatCard from '../components/StatCard';
-import NotificationPanel from '../components/NotificationPanel';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import GetTodaysDate from '../components/GetTodaysDate';
-
-/**
- * Displays a Sample Ticket table information
- * @param {*} ticketID
- * @param {*} description
- * @param {*} date
- * @param {*} status
- * @param {*} comment
- * @returns
- */
-function createSampleData(ticketID, description, datecreated, status, comment) {
-  return { ticketID, description, datecreated, status, comment };
-}
-
-const rows = [
-  createSampleData(
-    'Ticket #1',
-    'Description goes here',
-    '2026-01-01',
-    'Submitted',
-    <Button>Leave Comment</Button>
-  ),
-  createSampleData(
-    'Ticket #2',
-    'Description goes here',
-    '2025-12-01',
-    'In Review',
-    <Button>Leave Comment</Button>
-  ),
-  createSampleData(
-    'Ticket #3',
-    'Description goes here',
-    '2025-11-01',
-    'In Review',
-    <Button>Leave Comment</Button>
-  ),
-  createSampleData(
-    'Ticket #4',
-    'Description goes here',
-    '2025-10-01',
-    'In Progress',
-    <Button>Leave Comment</Button>
-  ),
-  createSampleData(
-    'Ticket #5',
-    'Description goes here',
-    '2025-05-01',
-    'Completed',
-    <Button>Leave Comment</Button>
-  ),
-];
+import ProjectsStatCard from '../components/ProjectsStatCard';
+import ProjectTable from '../components/ProjectTable';
+import { useNavigate } from 'react-router';
+import ProjectsCompletedStatCard from '../components/ProjectsCompletedStatCard';
+import ProjectsActiveStatCard from '../components/ProjectsActiveStatCard';
+import ProjectsCompletionRateStatCard from '../components/ProjectsCompletionRateStatCard';
 
 function ClinicianDashboard() {
-  const inputNotifications = [
-    { id: 1, message: 'Ticket #1 Cat ipsum dolor sit amet', read: false },
-    { id: 2, message: 'Ticket #2 Cat ipsum dolor sit amet', read: false },
-  ];
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -81,7 +19,7 @@ function ClinicianDashboard() {
         mx: 'auto',
       }}
     >
-      <Box sx={{ py: 3 }}>
+      <Box sx={{ py: 3, margin: '2em' }}>
         {/* Header */}
         <Box
           sx={{
@@ -97,27 +35,29 @@ function ClinicianDashboard() {
             </Typography>
             <GetTodaysDate />
           </Box>
-          <Button variant="contained">+ Create Ticket</Button>
+          <Button
+            variant="contained"
+            onClick={() => navigate('/projects/create')}
+          >
+            + Create Project
+          </Button>
         </Box>
 
         {/* Stat cards */}
-        <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="5" title="Total Tickets" />
+        <Grid container spacing={2} sx={{ mb: 2 }} alignItems="stretch">
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <ProjectsStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="2" title="In Review" />
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <ProjectsActiveStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="1" title="In Progress" />
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <ProjectsCompletedStatCard />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <StatCard value="1" title="Completed" />
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <ProjectsCompletionRateStatCard />
           </Grid>
         </Grid>
-
-        {/* Notification Panel */}
-        <NotificationPanel inputNotifications={inputNotifications} />
 
         {/* Main Panel */}
         <Box
@@ -128,47 +68,10 @@ function ClinicianDashboard() {
             boxShadow: 1,
           }}
         >
-          <Typography variant="h5" fontWeight="bold">
-            My Tickets
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            My Projects
           </Typography>
-          <TableContainer component={Paper}>
-            <Table aria-label="My ticket table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Ticket ID</TableCell>
-                  <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-                    Description
-                  </TableCell>
-                  <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-                    Date Created
-                  </TableCell>
-                  <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-                    Status
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ fontWeight: 'bold' }}
-                  ></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.ticketID}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.ticketID}
-                    </TableCell>
-                    <TableCell align="left">{row.description}</TableCell>
-                    <TableCell align="left">{row.datecreated}</TableCell>
-                    <TableCell align="left">{row.status}</TableCell>
-                    <TableCell align="left">{row.comment}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <ProjectTable />
         </Box>
       </Box>
     </Box>

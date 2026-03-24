@@ -25,6 +25,9 @@ vi.mock('../dashboard/DeveloperDashboard.jsx', () => ({
 // Mock useAuth (custom hook)
 vi.mock('../auth/useAuth.js');
 
+// Mock MUI icons to prevent EMFILE error on Windows
+vi.mock('@mui/icons-material', () => ({ Lock: () => null }));
+
 describe('App: role-based rendering for dashboards', () => {
   const loginMock = vi.fn();
   const logoutMock = vi.fn();

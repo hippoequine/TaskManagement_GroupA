@@ -3,12 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import OverviewPanel from '../components/OverviewPanel';
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
-import { useIssues, useAllIssues } from '../context/IssuesContext';
+import { useAllIssues } from '../context/IssuesContext';
 
 vi.mock('../context/UsersContext', () => ({ useUsers: vi.fn() }));
 vi.mock('../context/ProjectContext', () => ({ useProject: vi.fn() }));
 vi.mock('../context/IssuesContext', () => ({
-  useIssues: vi.fn(),
   useAllIssues: vi.fn(),
 }));
 
@@ -24,14 +23,14 @@ describe('OverviewPanel', () => {
     useProject.mockReturnValue({ projects: [], loading: false });
 
     const defaultIssues = { issues: [], loading: false, error: null };
-    useIssues.mockReturnValue(defaultIssues);
+    useAllIssues.mockReturnValue(defaultIssues);
     useAllIssues.mockReturnValue(defaultIssues);
   });
 
   it('Shows loading states for all sections', () => {
     useUsers.mockReturnValue({ users: [], loading: true });
     useProject.mockReturnValue({ projects: [], loading: true });
-    useIssues.mockReturnValue({ issues: [], loading: true });
+    useAllIssues.mockReturnValue({ issues: [], loading: true });
     useAllIssues.mockReturnValue({ issues: [], loading: true });
 
     render(<OverviewPanel />);
@@ -60,7 +59,7 @@ describe('OverviewPanel', () => {
       { id: '4', title: 'Hello there', updatedAt: '2019-01-01' },
     ];
 
-    useIssues.mockReturnValue({ issues: mockIssues, loading: false });
+    useAllIssues.mockReturnValue({ issues: mockIssues, loading: false });
     useAllIssues.mockReturnValue({ issues: mockIssues, loading: false });
 
     render(<OverviewPanel />);
@@ -160,7 +159,7 @@ describe('OverviewPanel', () => {
       },
     ];
 
-    useIssues.mockReturnValue({ issues: mockIssues, loading: false });
+    useAllIssues.mockReturnValue({ issues: mockIssues, loading: false });
     useProject.mockReturnValue({ projects: mockProjects, loading: false });
 
     render(<OverviewPanel />);
@@ -170,7 +169,7 @@ describe('OverviewPanel', () => {
   });
 
   it('Shows N/A for missing dates', () => {
-    useIssues.mockReturnValue({
+    useAllIssues.mockReturnValue({
       issues: [{ id: '1', title: 'Test', updatedAt: null }],
       loading: false,
     });

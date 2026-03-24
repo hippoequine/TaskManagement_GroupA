@@ -4,7 +4,7 @@
  */
 import Project from '../models/Project.js';
 import Board from '../models/Board.js';
-import User from '../models/User.js';
+import User from '../models/User.js'; // ← Add this import
 
 // POST /api/projects
 export const createProject = async (req, res, next) => {
@@ -32,7 +32,7 @@ export const createProject = async (req, res, next) => {
       });
     }
 
-    //Validation checks can go here
+    //Validation checks go here
 
     const existing = await Project.findOne({
       where: { key: normalizedKey },
@@ -78,7 +78,7 @@ export const getProjects = async (req, res, next) => {
 
     const where = {};
     if (req.query.ownerId) {
-      where.owner_id = req.query.owner_id;
+      where.owner_id = req.query.ownerId; // ← Fixed: now uses ownerId consistently
     }
     if (req.query.category) {
       where.category = req.query.category;

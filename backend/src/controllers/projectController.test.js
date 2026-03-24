@@ -1,4 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import {
+  createProject,
+  getProjects,
+  getProjectById,
+  getProjectBoards,
+  updateProject,
+} from './projectController.js';
+import Project from '../models/Project.js';
+import Board from '../models/Board.js';
 
 vi.mock('../models/Project.js', () => ({
   default: {
@@ -17,17 +26,6 @@ vi.mock('../models/Board.js', () => ({
 vi.mock('../models/User.js', () => ({
   default: {},
 }));
-
-import {
-  createProject,
-  getProjects,
-  getProjectById,
-  getProjectBoards,
-  updateProject,
-} from './projectController.js';
-
-import Project from '../models/Project.js';
-import Board from '../models/Board.js';
 
 describe('projectController', () => {
   let res, next;

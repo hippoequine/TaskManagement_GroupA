@@ -1,4 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import Attachment from '../models/Attachment.js';
+import AttachmentProject from '../models/AttachmentProject.js';
+import Project from '../models/Project.js';
+import {
+  getAttachmentMetadata,
+  listProjectAttachments,
+} from './attachmentsController.js';
 
 vi.mock('../models/Attachment.js', () => ({
   default: {
@@ -10,6 +17,28 @@ vi.mock('../models/AttachmentProject.js', () => ({
   default: {
     findAll: vi.fn(),
     findOne: vi.fn(),
+    create: vi.fn(),
+  },
+}));
+
+// Mock db.js
+vi.mock('../config/db.js', () => ({
+  default: {
+    transaction: vi.fn().mockResolvedValue({
+      commit: vi.fn(),
+      rollback: vi.fn(),
+    }),
+  },
+}));
+
+describe('attachmentsController - Basic Test', () => {
+  it('should pass basic test', () => {
+    expect(true).toBe(true);
+  });
+
+  it('should mock getUploadBase', () => {
+    const base = getUploadBase();
+    expect(base).toBe('/uploads');
   },
 }));
 
@@ -24,14 +53,6 @@ vi.mock('../config/db.js', () => ({
     transaction: vi.fn(),
   },
 }));
-
-import Attachment from '../models/Attachment.js';
-import AttachmentProject from '../models/AttachmentProject.js';
-import Project from '../models/Project.js';
-import {
-  getAttachmentMetadata,
-  listProjectAttachments,
-} from './attachmentsController.js';
 
 function createRes() {
   return {

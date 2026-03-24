@@ -15,6 +15,14 @@ export const createIssue = async (req, res) => {
       assigneeIds,
     } = req.body;
 
+    // Add title validation
+    if (!title) {
+      return res.status(400).json({
+        success: false,
+        error: 'Title is required',
+      });
+    }
+
     const issue = await Issue.create({
       type,
       description,

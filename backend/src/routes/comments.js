@@ -2,7 +2,7 @@ import express from 'express';
 import {
   updateComment,
   removeComment,
-} from '../controllers/commentsController';
+} from '../controllers/commentsController.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();

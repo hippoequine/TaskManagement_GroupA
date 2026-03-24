@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useUsers } from '../context/UsersContext';
 import { useProject } from '../context/ProjectContext';
-import { useIssues } from '../context/IssuesContext';
+import { useAllIssues } from '../context/IssuesContext';
 import IssuesPieChart from './IssuesPieChart';
 
 const statusColors = {

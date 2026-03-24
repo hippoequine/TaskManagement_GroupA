@@ -2,7 +2,6 @@ import { render, screen, cleanup } from '@testing-library/react';
 import IssuesPieChart from '../components/IssuesPieChart';
 import { useAllIssues } from '../context/IssuesContext';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { PieChart } from '@mui/x-charts';
 
 vi.mock('../context/IssuesContext', () => ({
   __esModule: true,
